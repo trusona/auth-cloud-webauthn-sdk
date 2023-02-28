@@ -1,12 +1,16 @@
 {
-  "name": "webauthn-preflight",
+  "name": "@trusona/webauthn-preflight",
   "version": "0.0.1",
+  "repository": "https://github.com/lighthauz/auth-cloud-webauthn-sdk",
   "peerDependencies": {
     "@angular/common": "^15.2.0",
     "@angular/core": "^15.2.0"
   },
   "dependencies": {
     "tslib": "^2.3.0"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
   },
   "sideEffects": false
 }
