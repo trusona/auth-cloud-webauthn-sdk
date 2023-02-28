@@ -1,0 +1,6 @@
+{
+ "preset": "jest-preset-angular",
+ "roots": [ "./projects" ],
+ "verbose": false,
+ "setupFilesAfterEnv": ["./setup-jest.ts"]
+}

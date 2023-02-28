@@ -1,0 +1,42 @@
+{
+  "name": "@trusona/webauthn",
+  "description": "Trusona WebAuthn SDK",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "clean": "rm -rf dist",
+    "build": "npm run clean && ng build webauthn-preflight && ng build webauthn-core",
+    "watch": "ng build --watch --configuration development",
+    "test": "jest",
+    "lint": "ts-standard projects",
+    "lint-fix": "ts-standard --fix projects"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/animations": "^15.2.0",
+    "@angular/common": "^15.2.0",
+    "@angular/compiler": "^15.2.0",
+    "@angular/core": "^15.2.0",
+    "@angular/forms": "^15.2.0",
+    "@angular/platform-browser": "^15.2.0",
+    "@angular/platform-browser-dynamic": "^15.2.0",
+    "@angular/router": "^15.2.0",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.12.0"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^15.2.0",
+    "@angular/cli": "~15.2.0",
+    "@angular/compiler-cli": "^15.2.0",
+    "@types/jasmine": "~4.3.0",
+    "@types/jest": "^29.4.0",
+    "jasmine-core": "~4.5.0",
+    "jest": "^29.4.3",
+    "jest-environment-jsdom": "^29.4.3",
+    "jest-preset-angular": "^13.0.0",
+    "ng-packagr": "^15.2.2",
+    "ts-standard": "^12.0.2",
+    "typescript": "~4.9.4"
+  }
+}
