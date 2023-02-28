@@ -6,12 +6,12 @@
     "ng": "ng",
     "clean": "rm -rf dist",
     "build": "npm run clean && ng build webauthn-preflight && ng build webauthn-core",
+    "publish": "./bin/publisher.sh",
     "watch": "ng build --watch --configuration development",
     "test": "jest",
     "lint": "ts-standard projects",
     "lint-fix": "ts-standard --fix projects"
   },
-  "private": true,
   "dependencies": {
     "@angular/animations": "^15.2.0",
     "@angular/common": "^15.2.0",
@@ -38,5 +38,8 @@
     "ng-packagr": "^15.2.2",
     "ts-standard": "^12.0.2",
     "typescript": "~4.9.4"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
   }
 }
