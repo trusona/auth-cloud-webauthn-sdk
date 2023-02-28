@@ -3,9 +3,8 @@
   "description": "Trusona WebAuthn SDK",
   "version": "0.0.0",
   "scripts": {
-    "ng": "ng",
     "clean": "rm -rf dist",
-    "build": "npm run clean && ng build webauthn-preflight && ng build webauthn-core",
+    "build": "npm run clean && npx ng build webauthn-preflight && ng build webauthn-core",
     "publish": "./bin/publisher.sh",
     "watch": "ng build --watch --configuration development",
     "test": "jest",

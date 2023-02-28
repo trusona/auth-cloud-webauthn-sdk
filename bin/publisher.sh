@@ -14,3 +14,5 @@ for project in $projects; do
   npm publish --dry-run --access public
   cd ../../..
 done
+
+rm -rf dist
