@@ -1,4 +1,3 @@
-
 export interface PreflightChecks {
   supportsCui: () => Promise<boolean>
 }
