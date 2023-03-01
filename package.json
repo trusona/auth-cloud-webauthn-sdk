@@ -9,7 +9,7 @@
   "license": "MIT",
   "keywords": [],
   "scripts": {
-    "build": "run-p build:*",
+    "build": "rm -rf build && run-p build:*",
     "build:main": "tsc -p tsconfig.json",
     "build:module": "tsc -p tsconfig.module.json",
     "fix": "run-s fix:*",
@@ -54,11 +54,10 @@
     "ts-node-dev": "^2.0.0",
     "typedoc": "^0.23.26",
     "typescript": "*"
-  },
+  },  
   "files": [
     "build/main",
     "build/module",
-    "!**/*.spec.*",
     "!**/*.json",
     "CHANGELOG.md",
     "LICENSE",
