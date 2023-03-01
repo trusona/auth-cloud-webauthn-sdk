@@ -2,5 +2,9 @@
   "ignorePaths": [
     "node_modules/**",
     "package.json"
+  ],
+  "words": [
+    "trusona",
+    "webauthn"
   ]
 }
