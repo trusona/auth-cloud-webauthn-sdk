@@ -1,1 +1,1 @@
-export * from './lib/webauthn/preflight/preflight_checks'
+export * from './lib/webauthn/preflight/preflight-checks'
