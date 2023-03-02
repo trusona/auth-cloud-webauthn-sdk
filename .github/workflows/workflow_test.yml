@@ -1,0 +1,26 @@
+name: Typescript Build
+on: [ workflow_call ]
+permissions:
+  id-token: write
+  contents: read
+  packages: read
+jobs:
+  test:
+    name: Angular
+    runs-on: ubuntu-latest
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+    - uses: actions/checkout@v3
+
+    - uses: actions/setup-node@v3
+      with:
+        cache-dependency-path: auth-ui/package-lock.json
+        registry-url: 'https://npm.pkg.github.com'
+        scope: '@lighthauz'
+        check-latest: true
+        node-version: 16
+        cache: 'npm'
+
+    - run: npm install
+    - run: npm run jest

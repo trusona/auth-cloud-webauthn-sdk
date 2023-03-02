@@ -1,0 +1,37 @@
+name: CI
+on: [ push ]
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  id-token: write
+  contents: read
+  packages: read
+jobs:
+  test:
+    uses: ./.github/workflows/workflow_test.yml
+
+  analysis:
+    uses: ./.github/workflows/workflow_static-analysis.yml
+
+  success_notification:
+    uses: ./.github/workflows/workflow_slack-notification.yml
+    needs: [ test, analysis ]
+    if: ${{ success() }}
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    with:
+      DISPLAYED_USERNAME: Auth Cloud WebAuthn SDK CI
+      MESSAGE: 'CI run completed successfully! :tada: :tada:'
+      COLOR: good
+
+  failure_notification:
+    uses: ./.github/workflows/workflow_slack-notification.yml
+    needs: [ test, analysis ]
+    if: ${{ failure() }}
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    with:
+      DISPLAYED_USERNAME: Auth CLoud WebAuthn SDK CI
+      MESSAGE: 'CI run failed! Shame! Shame! :sadpanda: :sadpanda:'
+      COLOR: danger

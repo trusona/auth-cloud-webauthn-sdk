@@ -1,0 +1,39 @@
+name: Static Analysis
+on: [ workflow_call ]
+permissions:
+  id-token: write
+  contents: read
+  packages: read
+jobs:
+  static:
+    name: Static Analysis
+    runs-on: ubuntu-latest
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        cache-dependency-path: package-lock.json
+        registry-url: https://npm.pkg.github.com
+        scope: '@lighthauz'
+        check-latest: true
+        node-version: 16
+        cache: 'npm'
+    - run: npm install
+    - uses: dependency-check/Dependency-Check_Action@main
+      with:
+        project: ${{ github.repository }}
+        path: 'package-lock.json'
+        format: 'HTML'
+        args: >
+          --failOnCVSS 0
+          --suppression suppression.xml
+          --nodeAuditSkipDevDependencies
+          --nodePackageSkipDevDependencies
+    - name: Upload Dependency Check Report
+      if: ${{ success() || failure() }}
+      uses: actions/upload-artifact@v3
+      with:
+          name: Dependency Check Report
+          path: ${{github.workspace}}/reports
