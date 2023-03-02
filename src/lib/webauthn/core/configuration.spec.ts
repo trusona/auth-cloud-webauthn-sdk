@@ -33,13 +33,12 @@ describe('Configuration', () => {
           await Promise.resolve({
             headers: {},
             status: 404,
-            ok: false,
-            json: () => Promise.resolve({ })
+            ok: false
           }))
       })
 
       it('will throw an error', async () => {
-        expect(await Initializer.initialize('http://localhost')).toThrow()
+        await expect(Initializer.initialize('http://localhost')).rejects.toThrowError('Configuration was not loaded')
       })
     })
   })

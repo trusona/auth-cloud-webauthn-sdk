@@ -5,22 +5,23 @@ export interface Configuration {
   // more data ???
 }
 
-export class Initializer {
-  private static config?: Configuration
+export const Initializer = {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+  config: {} as Configuration | undefined,
 
-  static async initialize (tenantUrl: string): Promise<void> {
+  async initialize (tenantUrl: string): Promise<void> {
     this.config = await this.loadConfiguration(tenantUrl)
 
-    if (this.configuration === undefined) {
-      throw new Error('Configuration was not loaded')
-    }
-  }
+    return this.configuration !== undefined
+      ? await Promise.resolve()
+      : await Promise.reject(new Error('Configuration was not loaded'))
+  },
 
-  static get configuration (): Configuration | undefined {
+  get configuration (): Configuration | undefined {
     return this.config
-  }
+  },
 
-  private static async loadConfiguration (tenantUrl: string): Promise<Configuration | undefined> {
+  async loadConfiguration (tenantUrl: string): Promise<Configuration | undefined> {
     const response = await fetch(`${tenantUrl}/configuration`)
 
     if (response.ok) {
