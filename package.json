@@ -32,7 +32,8 @@
     "node": ">=10"
   },
   "dependencies": {
-    "@github/webauthn-json": "^2.1.1",    
+    "@github/webauthn-json": "^2.1.1",
+    "node-fetch": "^3.3.0",
     "rxjs": "^7.8.0"
   },
   "devDependencies": {
