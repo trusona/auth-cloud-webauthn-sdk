@@ -6,16 +6,14 @@ permissions:
   packages: read
 jobs:
   test:
-    name: Angular
+    name: Typescript
     runs-on: ubuntu-latest
-    env:
-      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
     - uses: actions/checkout@v3
 
     - uses: actions/setup-node@v3
       with:
-        cache-dependency-path: auth-ui/package-lock.json
+        cache-dependency-path: package-lock.json
         registry-url: 'https://npm.pkg.github.com'
         scope: '@lighthauz'
         check-latest: true
