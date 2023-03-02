@@ -1,3 +1,3 @@
-# webauthn
+# Auth Cloud WebAuthn SDK
 
-auth-cloud-webauthn-sdk
+[![CI](https://github.com/lighthauz/auth-cloud-webauthn-sdk/actions/workflows/ci-tester.yml/badge.svg)](https://github.com/lighthauz/auth-cloud-webauthn-sdk/actions/workflows/ci-tester.yml)
