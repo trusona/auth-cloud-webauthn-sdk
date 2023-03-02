@@ -1,5 +1,8 @@
 import { DefaultPreflightChecks, PreflightChecks } from '../preflight/preflight-checks'
 import { Initializer } from './configuration'
+import { buildUrl } from 'build-url-ts'
+import { uuidV4 } from 'fast-uuidv4'
+import parseUrl from 'parse-url'
 
 export interface AuthenticationResult {
   token?: string
@@ -34,25 +37,39 @@ export class WebAuthnAuthentication implements Authentication {
       return await Promise.reject(new Error('Blank user identifier was provided'))
     }
 
-    // make a request to oath2 to get a challenge
+    const challenge = await this.challenge()
 
-    // build a LOGIN object
+    if (challenge === undefined) {
+      return await Promise.reject(new Error('Failed to obtain challenge'))
+    }
 
-    /**
- * code flow
- *
- * curl -v  "https://authcloud.staging.trusona.net/oauth2/auth?
- * client_id=e161b4ce-fb40-4c69-ac31-3fc7886015ab&scope=openid
- * &state=682ce22c-4f4c-4db8-b849-29142761993c
- * &nonce=tacos&redirect_uri=http://localhost:8080/...
- *
- * hydra will return a path ath will have access to the token
- *
- *
- */
+    // prompt for webauthn
+
+    // build a LOGIN object and POST
 
     // stuff it (LOGIN) correctly
 
     return await Promise.resolve({} as AuthenticationResult)
+  }
+
+  private async challenge (): Promise<string | undefined> {
+    const url: string = buildUrl(Initializer.configuration?.tenantUrl, {
+      path: 'oauth2/auth',
+      queryParams: {
+        client_id: Initializer.configuration?.clientId,
+        response_type: 'id_token',
+        state: uuidV4(),
+        nonce: uuidV4()
+      }
+    })
+
+    const response = await fetch(url, { redirect: 'manual' })
+    const loginUrl = response.ok ? response.headers.get('location') : undefined
+
+    if (loginUrl) {
+      return await Promise.resolve(parseUrl(loginUrl).query.login_challenge)
+    }
+
+    return await Promise.resolve(undefined)
   }
 }
