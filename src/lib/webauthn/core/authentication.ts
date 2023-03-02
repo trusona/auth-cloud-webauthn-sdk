@@ -1,3 +1,5 @@
+import { DefaultPreflightChecks, PreflightChecks } from '../preflight/preflight-checks'
+import { Initializer } from './configuration'
 
 export interface AuthenticationResult {
   token?: string
@@ -15,15 +17,26 @@ export interface Authentication {
 }
 
 export class WebAuthnAuthentication implements Authentication {
+  constructor (
+    private readonly preflightChecks: PreflightChecks = new DefaultPreflightChecks()
+  ) { }
+
   async authenticate (userIdentifier: string): Promise<AuthenticationResult> {
+    if (Initializer.configuration?.clientId === undefined) {
+      return await Promise.reject(new Error('Initialization has not yet occurred'))
+    }
 
-    // fail if NOT supported by preflight
+    if (!(await this.preflightChecks.isSupported())) {
+      return await Promise.reject(new Error('This browser is not supported'))
+    }
 
-    // FAIL if initialization is not set - exception
-
-    // build a LOGIN object
+    if (userIdentifier.trim() === '') {
+      return await Promise.reject(new Error('Blank user identifier was provided'))
+    }
 
     // make a request to oath2 to get a challenge
+
+    // build a LOGIN object
 
     /**
  * code flow
@@ -40,5 +53,6 @@ export class WebAuthnAuthentication implements Authentication {
 
     // stuff it (LOGIN) correctly
 
+    return await Promise.resolve({} as AuthenticationResult)
   }
 }
