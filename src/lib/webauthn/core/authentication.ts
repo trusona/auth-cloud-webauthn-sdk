@@ -48,7 +48,7 @@ export class WebAuthnAuthentication implements Authentication {
 
     const credential = await this.webAuthnOptions.getCredential(abortSignal, userIdentifier)
     const login = { method: 'VERIFY_PUBLIC_KEY_CREDENTIAL', challenge, userIdentifier, displayName: userIdentifier, response: credential }
-    const response = await fetch(Initializer.loginEndpoint,
+    const response = await fetch(Initializer.loginsEndpoint,
       { method: 'POST', credentials: 'include', body: JSON.stringify(login), headers: { 'Content-Type': 'application/json' } }
     )
 

@@ -18,7 +18,7 @@ describe('Configuration', () => {
       })
 
       it('resolves a valid login endpoint', () => {
-        expect(Initializer.loginEndpoint).toBe('http://localhost/api/logins')
+        expect(Initializer.loginsEndpoint).toBe('http://localhost/api/logins')
       })
 
       it('resolves a valid assertion options endpoint', () => {
@@ -27,6 +27,10 @@ describe('Configuration', () => {
 
       it('resolves a valid attestation options endpoint', () => {
         expect(Initializer.attestationOptionsEndpoint).toBe('http://localhost/fido2/attestation/options')
+      })
+
+      it('resolves a valid credentials endpoint', () => {
+        expect(Initializer.credentialsEndpoint).toBe('http://localhost/api/credentials')
       })
 
       it('will initialize a valid configuration', () => {

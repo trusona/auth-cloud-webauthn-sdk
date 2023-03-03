@@ -36,7 +36,7 @@ export const Initializer = {
     }
   },
 
-  get loginEndpoint (): string {
+  get loginsEndpoint (): string {
     return `${this.configuration?.tenantUrl ?? ''}/api/logins`
   },
 
@@ -46,5 +46,9 @@ export const Initializer = {
 
   get assertionOptionsEndpoint (): string {
     return `${this.configuration?.tenantUrl ?? ''}/fido2/assertion/options`
+  },
+
+  get credentialsEndpoint (): string {
+    return `${this.configuration?.tenantUrl ?? ''}/api/credentials`
   }
 }
