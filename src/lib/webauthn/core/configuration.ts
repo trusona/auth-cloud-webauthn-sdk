@@ -34,5 +34,17 @@ export const Initializer = {
     } else {
       return await Promise.resolve(undefined)
     }
+  },
+
+  get loginEndpoint (): string {
+    return `${this.configuration?.tenantUrl ?? ''}/api/logins`
+  },
+
+  get attestationOptionsEndpoint (): string {
+    return `${this.configuration?.tenantUrl ?? ''}/fido2/attestation/options`
+  },
+
+  get assertionOptionsEndpoint (): string {
+    return `${this.configuration?.tenantUrl ?? ''}/fido2/assertion/options`
   }
 }

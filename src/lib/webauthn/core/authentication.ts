@@ -3,10 +3,12 @@ import { Initializer } from './configuration'
 import { buildUrl } from 'build-url-ts'
 import { uuidV4 } from 'fast-uuidv4'
 import parseUrl from 'parse-url'
+import { WebAuthnOptions } from './webauthn.options'
 
 export interface AuthenticationResult {
   token?: string
   status: AuthenticationStatus
+  error?: string
 }
 
 export enum AuthenticationStatus {
@@ -16,15 +18,16 @@ export enum AuthenticationStatus {
 }
 
 export interface Authentication {
-  authenticate: (userIdentifier: string) => Promise<AuthenticationResult>
+  authenticate: (userIdentifier: string, abortSignal: AbortSignal) => Promise<AuthenticationResult>
 }
 
 export class WebAuthnAuthentication implements Authentication {
   constructor (
-    private readonly preflightChecks: PreflightChecks = new DefaultPreflightChecks()
+    private readonly preflightChecks: PreflightChecks = new DefaultPreflightChecks(),
+    private readonly webAuthnOptions: WebAuthnOptions = new WebAuthnOptions()
   ) { }
 
-  async authenticate (userIdentifier: string): Promise<AuthenticationResult> {
+  async authenticate (userIdentifier: string, abortSignal: AbortSignal): Promise<AuthenticationResult> {
     if (Initializer.configuration?.clientId === undefined) {
       return await Promise.reject(new Error('Initialization has not yet occurred'))
     }
@@ -43,16 +46,16 @@ export class WebAuthnAuthentication implements Authentication {
       return await Promise.reject(new Error('Failed to obtain challenge'))
     }
 
-    // prompt for webauthn
+    const credential = await this.webAuthnOptions.getCredential(abortSignal, userIdentifier)
+    const login = { method: 'VERIFY_PUBLIC_KEY_CREDENTIAL', challenge, userIdentifier, displayName: userIdentifier, response: credential }
+    const response = await fetch(Initializer.loginEndpoint,
+      { method: 'POST', credentials: 'include', body: JSON.stringify(login), headers: { 'Content-Type': 'application/json' } }
+    )
 
-    // build a LOGIN object and POST
-
-    // stuff it (LOGIN) correctly
-
-    return await Promise.resolve({} as AuthenticationResult)
+    return await Promise.resolve({ status: response.ok ? AuthenticationStatus.SUCCESS : AuthenticationStatus.FAILED })
   }
 
-  private async challenge (): Promise<string | undefined> {
+  async challenge (): Promise<string | undefined> {
     const url: string = buildUrl(Initializer.configuration?.tenantUrl, {
       path: 'oauth2/auth',
       queryParams: {
@@ -64,9 +67,9 @@ export class WebAuthnAuthentication implements Authentication {
     })
 
     const response = await fetch(url, { redirect: 'manual' })
-    const loginUrl = response.ok ? response.headers.get('location') : undefined
+    const loginUrl = response.ok ? response.headers.get('location') : ''
 
-    if (loginUrl) {
+    if (loginUrl != null) {
       return await Promise.resolve(parseUrl(loginUrl).query.login_challenge)
     }
 

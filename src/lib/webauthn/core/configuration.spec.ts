@@ -4,7 +4,7 @@ import { Initializer } from './configuration'
 describe('Configuration', () => {
   describe('#initialize', () => {
     describe('when a valid URL is provided', () => {
-      beforeEach(() => {
+      beforeEach(async () => {
         // @ts-expect-error
         global.fetch = jest.fn(async () =>
           await Promise.resolve({
@@ -13,15 +13,27 @@ describe('Configuration', () => {
             ok: true,
             json: async () => await Promise.resolve({ clientId: 'clientId' })
           }))
+
+        await Initializer.initialize('http://localhost')
       })
 
-      it('will initialize a valid configuration', async () => {
-        await Initializer.initialize('http://localhost')
+      it('resolves a valid login endpoint', () => {
+        expect(Initializer.loginEndpoint).toBe('http://localhost/api/logins')
+      })
+
+      it('resolves a valid assertion options endpoint', () => {
+        expect(Initializer.assertionOptionsEndpoint).toBe('http://localhost/fido2/assertion/options')
+      })
+
+      it('resolves a valid attestation options endpoint', () => {
+        expect(Initializer.attestationOptionsEndpoint).toBe('http://localhost/fido2/attestation/options')
+      })
+
+      it('will initialize a valid configuration', () => {
         expect(Initializer.configuration).toBeTruthy()
       })
 
-      it('will initialize a clientId value', async () => {
-        await Initializer.initialize('http://localhost')
+      it('will initialize a clientId value', () => {
         expect(Initializer.configuration?.clientId).toBe('clientId')
       })
     })

@@ -7,20 +7,27 @@ import { Initializer } from './configuration'
 
 describe('WebAuthnAuthentication', () => {
   let authentication: WebAuthnAuthentication
+  let preflightChecks: PreflightChecks
+  let abortSignal: AbortSignal
 
   describe('#authenticate', () => {
+    afterAll(() => {
+      jest.clearAllMocks()
+      jest.resetAllMocks()
+    })
+
     describe('when initialization has not yet occurred', () => {
       beforeEach(() => {
         authentication = new WebAuthnAuthentication()
+        abortSignal = new AbortController().signal
       })
 
       it('returns a rejection', async () => {
-        await expect(authentication.authenticate('test')).rejects.toThrowError('Initialization has not yet occurred')
+        await expect(authentication.authenticate('test', abortSignal)).rejects.toThrowError('Initialization has not yet occurred')
       })
     })
 
     describe('when the browser is not supported', () => {
-      let preflightChecks: PreflightChecks
       beforeEach(() => {
         Initializer.config = { clientId: 'clientId', tenantUrl: 'tenantUrl' }
         preflightChecks = { isSupported: jest.fn().mockReturnValue(Promise.resolve(false)) }
@@ -28,12 +35,11 @@ describe('WebAuthnAuthentication', () => {
       })
 
       it('returns a rejection', async () => {
-        await expect(authentication.authenticate('test')).rejects.toThrowError('This browser is not supported')
+        await expect(authentication.authenticate('test', abortSignal)).rejects.toThrowError('This browser is not supported')
       })
     })
 
     describe('when a blank user-identifier is provided', () => {
-      let preflightChecks: PreflightChecks
       beforeEach(() => {
         Initializer.config = { clientId: 'clientId', tenantUrl: 'tenantUrl' }
         preflightChecks = { isSupported: jest.fn().mockReturnValue(Promise.resolve(true)) }
@@ -41,12 +47,11 @@ describe('WebAuthnAuthentication', () => {
       })
 
       it('returns a rejection', async () => {
-        await expect(authentication.authenticate('    ')).rejects.toThrowError('Blank user identifier was provided')
+        await expect(authentication.authenticate('    ', abortSignal)).rejects.toThrowError('Blank user identifier was provided')
       })
     })
 
     describe('when fetching the challenge fails', () => {
-      let preflightChecks: PreflightChecks
       beforeEach(() => {
         Initializer.config = { clientId: 'clientId', tenantUrl: 'tenantUrl' }
         preflightChecks = { isSupported: jest.fn().mockReturnValue(Promise.resolve(true)) }
@@ -62,19 +67,18 @@ describe('WebAuthnAuthentication', () => {
       })
 
       it('returns a rejection', async () => {
-        await expect(authentication.authenticate('user')).rejects.toThrowError('Failed to obtain challenge')
+        await expect(authentication.authenticate('user', abortSignal)).rejects.toThrowError('Failed to obtain challenge')
       })
     })
 
     describe('when fetching the challenge succeeds', () => {
-      let preflightChecks: PreflightChecks
+      const headers = new Headers()
+      headers.set('location', 'http://localhost?login_challenge=86628adf-63cb-473e-bafc-c4b6fa3f3941')
+
       beforeEach(() => {
         Initializer.config = { clientId: 'clientId', tenantUrl: 'tenantUrl' }
         preflightChecks = { isSupported: jest.fn().mockReturnValue(Promise.resolve(true)) }
         authentication = new WebAuthnAuthentication(preflightChecks)
-
-        const headers = new Headers()
-        headers.set('location', 'http://localhost?login_challenge=86628adf-63cb-473e-bafc-c4b6fa3f3941')
 
         // @ts-expect-error
         global.fetch = jest.fn(async () =>
@@ -86,7 +90,7 @@ describe('WebAuthnAuthentication', () => {
       })
 
       it('does not return a rejection', async () => {
-        await expect(authentication.authenticate('user')).resolves.not.toThrow()
+        await expect(authentication.authenticate('user', abortSignal)).rejects.not.toThrowError('Failed to obtain challenge')
       })
     })
   })
