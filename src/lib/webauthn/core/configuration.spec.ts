@@ -33,6 +33,10 @@ describe('Configuration', () => {
         expect(Initializer.credentialsEndpoint).toBe('http://localhost/api/credentials')
       })
 
+      it('resolves a valid enrollments endpoint', () => {
+        expect(Initializer.enrollmentsEndpoint).toBe('http://localhost/api/enrollments')
+      })
+
       it('will initialize a valid configuration', () => {
         expect(Initializer.configuration).toBeTruthy()
       })

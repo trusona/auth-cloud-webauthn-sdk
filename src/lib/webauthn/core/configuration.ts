@@ -50,5 +50,9 @@ export const Initializer = {
 
   get credentialsEndpoint (): string {
     return `${this.configuration?.tenantUrl ?? ''}/api/credentials`
+  },
+
+  get enrollmentsEndpoint (): string {
+    return `${this.configuration?.tenantUrl ?? ''}/api/enrollments`
   }
 }
