@@ -1,5 +1,6 @@
 import { DefaultPreflightChecks, PreflightChecks } from '../preflight/preflight-checks'
 import { Strings } from '../utils/strings'
+import { SdkInitializationError, UnsupportedBrowserError } from '../utils/errors'
 import { Initializer } from './configuration'
 import { WebAuthnOptions } from './webauthn.options'
 
@@ -14,7 +15,6 @@ export enum EnrollmentStatus {
 
 export interface EnrollmentResult {
   status: EnrollmentStatus
-
 }
 
 export interface Enrollment {
@@ -29,11 +29,11 @@ export class WebAuthnEnrollment implements Enrollment {
 
   async enroll (token: string, abortSignal: AbortSignal): Promise<EnrollmentResult> {
     if (Initializer.configuration?.clientId === undefined) {
-      return await Promise.resolve({ status: EnrollmentStatus.SDK_NOT_INITIALIZED })
+      return await Promise.reject(new SdkInitializationError())
     }
 
     if (!(await this.preflightChecks.isSupported())) {
-      return await Promise.resolve({ status: EnrollmentStatus.UNSUPPORTED_BROWSER })
+      return await Promise.reject(new UnsupportedBrowserError())
     }
 
     if (Strings.blank(token)) {
@@ -42,7 +42,7 @@ export class WebAuthnEnrollment implements Enrollment {
 
     const credential = await this.webAuthnOptions.createCredential(abortSignal)
 
-    if (credential === undefined) {
+    if (credential === undefined || abortSignal.aborted) {
       return await Promise.resolve({ status: EnrollmentStatus.CANCELLED })
     }
 
