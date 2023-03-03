@@ -23,7 +23,7 @@ describe('WebAuthnAuthentication', () => {
       })
 
       it('returns a rejection', async () => {
-        await expect(authentication.authenticate('test', abortSignal)).rejects.toThrowError('Initialization has not yet occurred')
+        await expect(authentication.authenticate('test', abortSignal)).rejects.toThrowError('The SDK is not yet initialized')
       })
     })
 

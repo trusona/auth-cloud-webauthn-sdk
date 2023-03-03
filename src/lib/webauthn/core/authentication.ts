@@ -4,6 +4,7 @@ import { buildUrl } from 'build-url-ts'
 import { uuidV4 } from 'fast-uuidv4'
 import parseUrl from 'parse-url'
 import { WebAuthnOptions } from './webauthn.options'
+import { SdkInitializationError, UnsupportedBrowserError } from '../utils/errors'
 
 export interface AuthenticationResult {
   token?: string
@@ -29,11 +30,11 @@ export class WebAuthnAuthentication implements Authentication {
 
   async authenticate (userIdentifier: string, abortSignal: AbortSignal): Promise<AuthenticationResult> {
     if (Initializer.configuration?.clientId === undefined) {
-      return await Promise.reject(new Error('Initialization has not yet occurred'))
+      return await Promise.reject(new SdkInitializationError())
     }
 
     if (!(await this.preflightChecks.isSupported())) {
-      return await Promise.reject(new Error('This browser is not supported'))
+      return await Promise.reject(new UnsupportedBrowserError())
     }
 
     if (userIdentifier.trim() === '') {

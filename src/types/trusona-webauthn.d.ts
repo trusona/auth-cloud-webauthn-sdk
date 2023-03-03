@@ -1,4 +1,6 @@
 declare module '@types/trusona-webauthn' {
   const PreflightChecks: any
-  export = PreflightChecks
+  const WebAuthnEnrollment: any
+  const WebAuthnOptions: any
+  const WebAuthnAuthentication: any 
 }
