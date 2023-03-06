@@ -11,10 +11,14 @@ export class WebAuthnOptions {
   }
 
   async createCredential (abortSignal: AbortSignal): Promise<WebAuthn.PublicKeyCredentialWithAttestationJSON | undefined> {
-    const attestationOptions: PublicKeyCredentialCreationOptionsJSON = await this.attestationOptions()
-    return attestationOptions !== undefined
-      ? await WebAuthn.create({ publicKey: attestationOptions, signal: abortSignal })
-      : await Promise.resolve(undefined)
+    return await this.attestationOptions()
+      .then(async (options) => {
+        options.rp.name = window.location.hostname
+        options.rp.id = undefined
+
+        return await WebAuthn.create({ publicKey: options, signal: abortSignal })
+      })
+      .then(async (c) => await Promise.resolve(c))
   }
 
   private async attestationOptions (): Promise<PublicKeyCredentialCreationOptionsJSON> {

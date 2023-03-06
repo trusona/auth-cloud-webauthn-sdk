@@ -19,7 +19,6 @@ export interface EnrollmentResult {
 
 export interface Enrollment {
   enroll: (token: string, abortSignal: AbortSignal) => Promise<EnrollmentResult>
-  register: (abortSignal: AbortSignal) => Promise<EnrollmentResult>
 }
 
 export class WebAuthnEnrollment implements Enrollment {
@@ -42,21 +41,9 @@ export class WebAuthnEnrollment implements Enrollment {
     }
 
     const response = await fetch(Initializer.enrollmentsEndpoint,
-      { method: 'POST', body: JSON.stringify({ token }), headers: { 'Content-Type': 'application/json' } })
+      { method: 'POST', body: JSON.stringify({ token }), credentials: 'include', headers: { 'Content-Type': 'application/json' } })
 
     return response.ok ? await this.finalizeEnrollment(abortSignal) : await Promise.resolve({ status: EnrollmentStatus.INVALID_TOKEN })
-  }
-
-  async register (abortSignal: AbortSignal): Promise<EnrollmentResult> {
-    if (Initializer.configuration?.clientId === undefined) {
-      return await Promise.reject(new SdkInitializationError())
-    }
-
-    if (!(await this.preflightChecks.isSupported())) {
-      return await Promise.reject(new UnsupportedBrowserError())
-    }
-
-    return await this.finalizeEnrollment(abortSignal)
   }
 
   private async finalizeEnrollment (abortSignal: AbortSignal): Promise<EnrollmentResult> {

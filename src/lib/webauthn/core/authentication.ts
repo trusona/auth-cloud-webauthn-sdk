@@ -1,11 +1,8 @@
 import { DefaultPreflightChecks, PreflightChecks } from '../preflight/preflight-checks'
 import { Initializer } from './configuration'
-import { buildUrl } from 'build-url-ts'
 import { WebAuthnOptions } from './webauthn.options'
 import { SdkInitializationError, UnsupportedBrowserError } from '../utils/errors'
-
-import generator from 'generate-password'
-import parseUrl from 'parse-url'
+import { Strings } from '../utils/strings'
 
 export interface AuthenticationResult {
   token?: string
@@ -38,7 +35,7 @@ export class WebAuthnAuthentication implements Authentication {
       return await Promise.reject(new UnsupportedBrowserError())
     }
 
-    if (userIdentifier.trim() === '') {
+    if (Strings.blank(userIdentifier)) {
       return await Promise.reject(new Error('Blank user identifier was provided'))
     }
 
@@ -67,23 +64,11 @@ export class WebAuthnAuthentication implements Authentication {
   }
 
   async challenge (): Promise<string | undefined> {
-    const url: string = buildUrl(Initializer.configuration?.tenantUrl, {
-      path: 'oauth2/auth',
-      queryParams: {
-        client_id: Initializer.configuration?.clientId,
-        response_type: 'id_token',
-        state: generator.generate({ length: 32, numbers: true }),
-        nonce: generator.generate({ length: 32, numbers: true })
-      }
-    })
+    const url: string = `${Initializer.configuration?.tenantUrl ?? ''}/api/login_challenges`
 
-    const response = await fetch(url, { redirect: 'manual' })
-    const loginUrl = response.ok ? response.headers.get('location') : ''
+    const response = await fetch(url, { method: 'POST', body: '{}', headers: { 'Content-Type': 'application/json' } })
+    const map = await response.json()
 
-    if (loginUrl != null) {
-      return await Promise.resolve(parseUrl(loginUrl).query.login_challenge)
-    }
-
-    return await Promise.resolve(undefined)
+    return await Promise.resolve(map?.login_challenge)
   }
 }

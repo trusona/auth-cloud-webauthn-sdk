@@ -34,11 +34,7 @@
   },
   "dependencies": {
     "@github/webauthn-json": "^2.1.1",
-    "build-url-ts": "^6.1.5",
-    "fast-uuidv4": "^1.4.19",
-    "generate-password": "^1.7.0",
-    "node-fetch": "^3.3.0",
-    "parse-url": "^8.1.0"
+    "node-fetch": "^3.3.0"
   },
   "devDependencies": {
     "@babel/plugin-transform-modules-commonjs": "^7.21.2",

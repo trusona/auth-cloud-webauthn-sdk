@@ -60,8 +60,8 @@ describe('WebAuthnAuthentication', () => {
         // @ts-expect-error
         global.fetch = jest.fn(async () =>
           await Promise.resolve({
-            headers: new Headers(),
-            status: 302,
+            status: 404,
+            json: jest.fn().mockReturnValue({}),
             ok: true
           }))
       })
@@ -72,9 +72,6 @@ describe('WebAuthnAuthentication', () => {
     })
 
     describe('when fetching the challenge succeeds', () => {
-      const headers = new Headers()
-      headers.set('location', 'http://localhost?login_challenge=86628adf-63cb-473e-bafc-c4b6fa3f3941')
-
       beforeEach(() => {
         Initializer.config = { clientId: 'clientId', tenantUrl: 'tenantUrl' }
         preflightChecks = { isSupported: jest.fn().mockReturnValue(Promise.resolve(true)) }
@@ -83,8 +80,8 @@ describe('WebAuthnAuthentication', () => {
         // @ts-expect-error
         global.fetch = jest.fn(async () =>
           await Promise.resolve({
-            headers,
-            status: 302,
+            status: 202,
+            json: jest.fn().mockReturnValue({ login_challenge: '86628adf-63cb-473e-bafc-c4b6fa3f3941' }),
             ok: true
           }))
       })
