@@ -1,6 +1,7 @@
 module.exports = {
   presets: [
-    ['@babel/preset-env', { targets: { node: 'current' } }],
+    ["env",{ targets: { 'chrome': '60' } }],
+    ['@babel/preset-env', { targets: { 'chrome': '60' } }],
     '@babel/preset-typescript'
   ],
   env: {
