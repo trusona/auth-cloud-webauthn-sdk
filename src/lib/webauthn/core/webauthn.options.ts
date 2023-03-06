@@ -5,6 +5,8 @@ import * as WebAuthn from '@github/webauthn-json'
 export class WebAuthnOptions {
   async getCredential (abortSignal: AbortSignal, userIdentifier?: string): Promise<PublicKeyCredentialWithAssertionJSON | undefined> {
     const requestOptions: PublicKeyCredentialRequestOptionsJSON = await this.requestOptions(userIdentifier)
+    requestOptions.rpId = window.location.hostname
+
     return requestOptions !== undefined
       ? await WebAuthn.get({ publicKey: requestOptions, signal: abortSignal })
       : await Promise.resolve(undefined)

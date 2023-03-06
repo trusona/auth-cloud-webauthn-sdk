@@ -46,18 +46,20 @@ export class WebAuthnAuthentication implements Authentication {
     }
 
     const credential = await this.webAuthnOptions.getCredential(abortSignal, userIdentifier)
-    const login = { method: 'VERIFY_PUBLIC_KEY_CREDENTIAL', challenge, userIdentifier, displayName: userIdentifier, response: credential }
+    const login = {
+      method: 'PUBLIC_KEY_CREDENTIAL',
+      nextStep: 'VERIFY_PUBLIC_KEY_CREDENTIAL',
+      challenge,
+      userIdentifier,
+      displayName: userIdentifier,
+      response: credential
+    }
     const response = await fetch(Initializer.loginsEndpoint,
       { method: 'POST', credentials: 'include', body: JSON.stringify(login), headers: { 'Content-Type': 'application/json' } }
     )
 
     if (response.ok) {
-    ///
-    // todo:
-    // look at the redirect to value - go there - follow the redirects .. parse out the resulting body for a token
-
-      const url = (await response.json()).redirectTo
-      console.log(url)
+      // todo: figure out where hydra is hiding the jwt token
     }
 
     return await Promise.resolve({ status: response.ok ? AuthenticationStatus.SUCCESS : AuthenticationStatus.FAILED })
