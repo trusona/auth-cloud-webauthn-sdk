@@ -1,10 +1,11 @@
 import { DefaultPreflightChecks, PreflightChecks } from '../preflight/preflight-checks'
 import { Initializer } from './configuration'
 import { buildUrl } from 'build-url-ts'
-import { uuidV4 } from 'fast-uuidv4'
-import parseUrl from 'parse-url'
 import { WebAuthnOptions } from './webauthn.options'
 import { SdkInitializationError, UnsupportedBrowserError } from '../utils/errors'
+
+import generator from 'generate-password'
+import parseUrl from 'parse-url'
 
 export interface AuthenticationResult {
   token?: string
@@ -53,6 +54,15 @@ export class WebAuthnAuthentication implements Authentication {
       { method: 'POST', credentials: 'include', body: JSON.stringify(login), headers: { 'Content-Type': 'application/json' } }
     )
 
+    if (response.ok) {
+    ///
+    // todo:
+    // look at the redirect to value - go there - follow the redirects .. parse out the resulting body for a token
+
+      const url = (await response.json()).redirectTo
+      console.log(url)
+    }
+
     return await Promise.resolve({ status: response.ok ? AuthenticationStatus.SUCCESS : AuthenticationStatus.FAILED })
   }
 
@@ -62,8 +72,8 @@ export class WebAuthnAuthentication implements Authentication {
       queryParams: {
         client_id: Initializer.configuration?.clientId,
         response_type: 'id_token',
-        state: uuidV4(),
-        nonce: uuidV4()
+        state: generator.generate({ length: 32, numbers: true }),
+        nonce: generator.generate({ length: 32, numbers: true })
       }
     })
 

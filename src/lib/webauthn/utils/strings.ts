@@ -2,7 +2,6 @@
 export const Strings = {
 
   blank (value: string): boolean {
-    return value?.trim().length > 0
+    return !(value?.trim().length > 0)
   }
-
 }
