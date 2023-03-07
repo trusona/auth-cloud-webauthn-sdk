@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css"
+      integrity="sha512-wnea99uKIC3TJF7v4eKk4Y+lMz2Mklv18+r4na2Gn1abDRPPOeef95xTzdwGD9e6zXJBteMIhZ1+68QC5byJZw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+  <body class="container">
+    <div class="flex h-screen flex-shrink-0">
+      <div class="mx-auto my-auto border border-purple-200 p-32 rounded flex-shrink-0">
+        <div class="pb-12 flex-shrink-0">
+          <form method="post" onsubmit="getJwt(event);">
+            <input type="hidden" id="jwt" />
+            <input
+              id="username"
+              type="text"
+              value=""
+              placeholder="Enter your username"
+              onkeypress="keypress(event)"
+              autofocus
+              aria-autocomplete="none"
+              autocomplete="none"
+              autocapitalize="no"
+              size="16"
+              maxlength="32"
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            />
+            <button
+              id="submitBtn"
+              data-next="submit"
+              onclick="next(event);"
+              class="bg-purple-500 my-8 w-32 text-white font-semibold py-2 px-6 rounded focus:outline-none focus:shadow-outline"
+              type="button"
+            >
+              Submit
+            </button>
+
+            <button
+              id="resetBtn"
+              data-next="reset"
+              onclick="next(event);"
+              class="bg-gray-500 my-8 w-32 text-white font-semibold py-2 px-6 ml-8 rounded focus:outline-none focus:shadow-outline"
+              type="button"
+            >
+              Reset
+            </button>
+          </form>
+        </div>
+
+        <div class="text-xs font-light h-4 mt-16 text-gray-700 flex-shrink-0">
+          <div class="h-4 py-5 flex-shrink-0">
+            <div id="msg" class="align-middle py-5 flex-shrink-0">
+              If you've previously enrolled, you may <a href='#' class="underline" data-next='sign_in' onclick="next(event);">sign-in here</a>.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="./trusona-webauthn.standalone.js"></script>
+  <script src="./index.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function (event) {
+      trusona.Initializer.initialize("https://thitu.trusonasandbox.com")
+      });
+</script>
+</html>
