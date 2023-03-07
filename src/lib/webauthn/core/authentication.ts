@@ -2,7 +2,6 @@ import { DefaultPreflightChecks, PreflightChecks } from '../preflight/preflight-
 import { Initializer } from './configuration'
 import { WebAuthnOptions } from './webauthn.options'
 import { SdkInitializationError, UnsupportedBrowserError } from '../utils/errors'
-import { Strings } from '../utils/strings'
 
 export interface AuthenticationResult {
   token?: string
@@ -33,24 +32,21 @@ export class WebAuthnAuthentication implements Authentication {
       return await Promise.reject(new UnsupportedBrowserError())
     }
 
-    if (Strings.blank(userIdentifier)) {
-      return await Promise.reject(new Error('Blank user identifier was provided'))
-    }
-
     const challenge = await this.challenge()
 
     if (challenge === undefined) {
       return await Promise.reject(new Error('Failed to obtain challenge'))
     }
 
-    const credential = await this.webAuthnOptions.getCredential(abortSignal, userIdentifier)
+    const credential = await this.webAuthnOptions.getCredential(abortSignal, userIdentifier.trim())
+    const credentialUserIdentifier = window.atob(credential?.response.userHandle ?? '')
 
     const login = {
       method: 'PUBLIC_KEY_CREDENTIAL',
       nextStep: 'VERIFY_PUBLIC_KEY_CREDENTIAL',
       challenge,
-      userIdentifier,
-      displayName: userIdentifier,
+      userIdentifier: credentialUserIdentifier,
+      displayName: credentialUserIdentifier,
       response: credential
     }
 
