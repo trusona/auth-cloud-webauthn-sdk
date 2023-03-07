@@ -7,13 +7,11 @@ import { Strings } from '../utils/strings'
 export interface AuthenticationResult {
   token?: string
   status: AuthenticationStatus
-  error?: string
 }
 
 export enum AuthenticationStatus {
-  SUCCESS,
-  FAILED,
-  UNSUPPORTED_BROWSER
+  SUCCESS = 'SUCCESS',
+  FAILED = 'FAILED'
 }
 
 export interface Authentication {
@@ -46,6 +44,7 @@ export class WebAuthnAuthentication implements Authentication {
     }
 
     const credential = await this.webAuthnOptions.getCredential(abortSignal, userIdentifier)
+
     const login = {
       method: 'PUBLIC_KEY_CREDENTIAL',
       nextStep: 'VERIFY_PUBLIC_KEY_CREDENTIAL',
@@ -54,15 +53,21 @@ export class WebAuthnAuthentication implements Authentication {
       displayName: userIdentifier,
       response: credential
     }
+
     const response = await fetch(Initializer.loginsEndpoint,
-      { method: 'POST', credentials: 'include', body: JSON.stringify(login), headers: { 'Content-Type': 'application/json' } }
-    )
+      {
+        method: 'POST',
+        credentials: 'include',
+        body: JSON.stringify(login),
+        headers: { 'Content-Type': 'application/json' }
+      })
 
-    if (response.ok) {
-      // todo: figure out where hydra is hiding the jwt token
-    }
+    const map = response.ok ? await response.json() : undefined
 
-    return await Promise.resolve({ status: response.ok ? AuthenticationStatus.SUCCESS : AuthenticationStatus.FAILED })
+    return await Promise.resolve({
+      status: map?.token !== undefined ? AuthenticationStatus.SUCCESS : AuthenticationStatus.FAILED,
+      token: map?.token
+    })
   }
 
   async challenge (): Promise<string | undefined> {
