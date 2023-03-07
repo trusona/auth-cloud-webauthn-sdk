@@ -2,6 +2,7 @@ import { DefaultPreflightChecks, PreflightChecks } from '../preflight/preflight-
 import { Initializer } from './configuration'
 import { WebAuthnOptions } from './webauthn.options'
 import { SdkInitializationError, UnsupportedBrowserError } from '../utils/errors'
+import { Strings } from '../utils/strings'
 
 export interface AuthenticationResult {
   token?: string
@@ -38,7 +39,8 @@ export class WebAuthnAuthentication implements Authentication {
       return await Promise.reject(new Error('Failed to obtain challenge'))
     }
 
-    const credential = await this.webAuthnOptions.getCredential(abortSignal, userIdentifier.trim())
+    const blank: boolean = Strings.blank(userIdentifier)
+    const credential = await this.webAuthnOptions.getCredential(abortSignal, blank ? undefined : userIdentifier.trim())
     const credentialUserIdentifier = window.atob(credential?.response.userHandle ?? '')
 
     const login = {
