@@ -281,6 +281,10 @@ exports.Initializer = {
     get enrollmentsEndpoint() {
         var _a, _b;
         return "".concat((_b = (_a = this.configuration) === null || _a === void 0 ? void 0 : _a.tenantUrl) !== null && _b !== void 0 ? _b : '', "/api/enrollments");
+    },
+    get jwksEndpoint() {
+        var _a, _b;
+        return "".concat((_b = (_a = this.configuration) === null || _a === void 0 ? void 0 : _a.tenantUrl) !== null && _b !== void 0 ? _b : '', "/.well-known/jwks");
     }
 };
 
