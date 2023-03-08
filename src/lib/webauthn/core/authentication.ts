@@ -33,10 +33,12 @@ export class WebAuthnAuthentication implements Authentication {
   ) { }
 
   /**
+   * Authenticate the user.
    *
-   * @param userIdentifier
    * @param abortSignal
-   * @returns
+   * @param userIdentifier - Optional. If not provided, discoverable credentials with prompt the user.
+   *
+   * @returns @see AuthenticationResult
    */
   async authenticate (abortSignal: AbortSignal, userIdentifier?: string): Promise<AuthenticationResult> {
     if (Initializer.configuration?.clientId === undefined) {

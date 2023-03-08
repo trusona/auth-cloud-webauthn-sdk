@@ -27,6 +27,15 @@ export class WebAuthnEnrollment implements Enrollment {
     private readonly webAuthnOptions: WebAuthnOptions = new WebAuthnOptions()
   ) { }
 
+  /**
+   * Enrolls the user. This is typically the next method called after initialization if a user
+   * has not been previously enrolled.
+   *
+   * @param token a valid JWT token
+   * @param abortSignal
+   *
+   * @returns @see EnrollmentStatus - indicating the status of the enrollment
+   */
   async enroll (token: string, abortSignal: AbortSignal): Promise<EnrollmentResult> {
     if (Initializer.configuration?.clientId === undefined) {
       return await Promise.reject(new SdkInitializationError())
