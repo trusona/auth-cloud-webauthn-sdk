@@ -79,7 +79,7 @@ var WebAuthnAuthentication = (function () {
         this.preflightChecks = preflightChecks;
         this.webAuthnOptions = webAuthnOptions;
     }
-    WebAuthnAuthentication.prototype.authenticate = function (abortSignal, userIdentifier) {
+    WebAuthnAuthentication.prototype.authenticate = function (userIdentifier, abortSignal) {
         var _a, _b;
         return __awaiter(this, void 0, void 0, function () {
             var challenge, blank, credential, credentialUserIdentifier, login, response, map, _c, _d;
