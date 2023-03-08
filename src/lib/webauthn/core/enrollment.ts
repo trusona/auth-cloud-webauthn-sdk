@@ -1,6 +1,6 @@
 import { DefaultPreflightChecks, PreflightChecks } from '../preflight/preflight-checks'
 import { Strings } from '../utils/strings'
-import { SdkInitializationError, UnsupportedBrowserError } from '../utils/errors'
+import * as errors from '../utils/errors'
 import { Initializer } from './configuration'
 import { WebAuthnOptions } from './webauthn.options'
 
@@ -36,13 +36,13 @@ export class WebAuthnEnrollment implements Enrollment {
    *
    * @returns @see EnrollmentStatus - indicating the status of the enrollment
    */
-  async enroll (token: string, abortSignal: AbortSignal): Promise<EnrollmentResult> {
+  async enroll (token: string, abortSignal?: AbortSignal): Promise<EnrollmentResult> {
     if (Initializer.configuration?.clientId === undefined) {
-      return await Promise.reject(new SdkInitializationError())
+      return await Promise.reject(new errors.SdkInitializationError())
     }
 
     if (!(await this.preflightChecks.isSupported())) {
-      return await Promise.reject(new UnsupportedBrowserError())
+      return await Promise.reject(new errors.UnsupportedBrowserError())
     }
 
     if (Strings.blank(token)) {
@@ -52,19 +52,19 @@ export class WebAuthnEnrollment implements Enrollment {
     const response = await fetch(Initializer.enrollmentsEndpoint,
       { method: 'POST', body: JSON.stringify({ token }), credentials: 'include', headers: { 'Content-Type': 'application/json' } })
 
-    return response.ok ? await this.finalizeEnrollment(abortSignal) : await Promise.resolve({ status: EnrollmentStatus.INVALID_TOKEN })
+    return response.ok ? await this.finalizeEnrollment(abortSignal) : await Promise.reject(new errors.InvalidTokenEnrollmentError())
   }
 
-  private async finalizeEnrollment (abortSignal: AbortSignal): Promise<EnrollmentResult> {
+  private async finalizeEnrollment (abortSignal?: AbortSignal): Promise<EnrollmentResult> {
     const credential = await this.webAuthnOptions.createCredential(abortSignal)
 
-    if (credential === undefined || abortSignal.aborted) {
-      return await Promise.resolve({ status: EnrollmentStatus.CANCELLED })
+    if (credential === undefined) {
+      return await Promise.reject(new errors.CancelledEnrollmentError())
     }
 
     const response = await fetch(Initializer.credentialsEndpoint,
       { method: 'POST', body: JSON.stringify(credential), credentials: 'include', headers: { 'Content-Type': 'application/json' } })
 
-    return await Promise.resolve({ status: response.ok ? EnrollmentStatus.SUCCESS : EnrollmentStatus.FAILED })
+    return response.ok ? await Promise.resolve({ status: EnrollmentStatus.SUCCESS }) : await Promise.reject(new errors.FailedEnrollmentError())
   }
 }

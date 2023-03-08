@@ -1,7 +1,7 @@
 import { DefaultPreflightChecks, PreflightChecks } from '../preflight/preflight-checks'
 import { Initializer } from './configuration'
 import { WebAuthnOptions } from './webauthn.options'
-import { SdkInitializationError, UnsupportedBrowserError } from '../utils/errors'
+import { FailedAuthenticationError, SdkInitializationError, UnsupportedBrowserError } from '../utils/errors'
 import { Strings } from '../utils/strings'
 
 /**
@@ -12,14 +12,14 @@ import { Strings } from '../utils/strings'
  *
  * If the @param token is not available, the sign-in is not valid.
  */
+
 export interface AuthenticationResult {
   token?: string
   status: AuthenticationStatus
 }
 
 export enum AuthenticationStatus {
-  SUCCESS = 'SUCCESS',
-  FAILED = 'FAILED'
+  SUCCESS = 'SUCCESS'
 }
 
 export interface Authentication {
@@ -40,7 +40,7 @@ export class WebAuthnAuthentication implements Authentication {
    *
    * @returns @see AuthenticationResult
    */
-  async authenticate (abortSignal: AbortSignal, userIdentifier?: string): Promise<AuthenticationResult> {
+  async authenticate (abortSignal?: AbortSignal, userIdentifier?: string): Promise<AuthenticationResult> {
     if (Initializer.configuration?.clientId === undefined) {
       return await Promise.reject(new SdkInitializationError())
     }
@@ -52,7 +52,7 @@ export class WebAuthnAuthentication implements Authentication {
     const challenge = await this.challenge()
 
     if (challenge === undefined) {
-      return await Promise.reject(new Error('Failed to obtain challenge'))
+      return await Promise.reject(new Error('Failed to obtain challenge.'))
     }
 
     const blank: boolean = Strings.blank(userIdentifier ?? '')
@@ -78,10 +78,9 @@ export class WebAuthnAuthentication implements Authentication {
 
     const map = response.ok ? await response.json() : undefined
 
-    return await Promise.resolve({
-      status: map?.token !== undefined ? AuthenticationStatus.SUCCESS : AuthenticationStatus.FAILED,
-      token: map?.token
-    })
+    return map?.token !== undefined
+      ? await Promise.resolve({ status: AuthenticationStatus.SUCCESS, token: map.token })
+      : await Promise.reject(new FailedAuthenticationError())
   }
 
   protected async challenge (): Promise<string | undefined> {

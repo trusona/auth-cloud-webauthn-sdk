@@ -3,22 +3,23 @@ import { Initializer } from './configuration'
 import * as WebAuthn from '@github/webauthn-json'
 
 export class WebAuthnOptions {
-  async getCredential (abortSignal: AbortSignal, userIdentifier?: string): Promise<PublicKeyCredentialWithAssertionJSON | undefined> {
+  async getCredential (abortSignal?: AbortSignal, userIdentifier?: string): Promise<PublicKeyCredentialWithAssertionJSON | undefined> {
     const requestOptions: PublicKeyCredentialRequestOptionsJSON = await this.requestOptions(userIdentifier)
     requestOptions.rpId = window.location.hostname
 
-    return requestOptions !== undefined
-      ? await WebAuthn.get({ publicKey: requestOptions, signal: abortSignal })
-      : await Promise.resolve(undefined)
+    const params = abortSignal !== undefined ? { publicKey: requestOptions, signal: abortSignal } : { publicKey: requestOptions }
+    return requestOptions !== undefined ? await WebAuthn.get(params) : await Promise.resolve(undefined)
   }
 
-  async createCredential (abortSignal: AbortSignal): Promise<WebAuthn.PublicKeyCredentialWithAttestationJSON | undefined> {
+  async createCredential (abortSignal?: AbortSignal): Promise<WebAuthn.PublicKeyCredentialWithAttestationJSON | undefined> {
     return await this.attestationOptions()
       .then(async (options) => {
         options.rp.name = window.location.hostname
         options.rp.id = undefined
 
-        return await WebAuthn.create({ publicKey: options, signal: abortSignal })
+        return abortSignal !== undefined
+          ? await WebAuthn.create({ publicKey: options, signal: abortSignal })
+          : await WebAuthn.create({ publicKey: options })
       })
       .then(async (c) => await Promise.resolve(c))
   }
