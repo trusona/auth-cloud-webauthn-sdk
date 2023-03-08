@@ -80,7 +80,7 @@ var WebAuthnAuthentication = (function () {
         this.preflightChecks = preflightChecks;
         this.webAuthnOptions = webAuthnOptions;
     }
-    WebAuthnAuthentication.prototype.authenticate = function (userIdentifier, abortSignal) {
+    WebAuthnAuthentication.prototype.authenticate = function (abortSignal, userIdentifier) {
         var _a, _b;
         return __awaiter(this, void 0, void 0, function () {
             var challenge, blank, credential, credentialUserIdentifier, login, response, map, _c;
@@ -102,8 +102,8 @@ var WebAuthnAuthentication = (function () {
                         return [4, Promise.reject(new Error('Failed to obtain challenge'))];
                     case 7: return [2, _d.sent()];
                     case 8:
-                        blank = strings_1.Strings.blank(userIdentifier);
-                        return [4, this.webAuthnOptions.getCredential(abortSignal, blank ? undefined : userIdentifier.trim())];
+                        blank = strings_1.Strings.blank(userIdentifier !== null && userIdentifier !== void 0 ? userIdentifier : '');
+                        return [4, this.webAuthnOptions.getCredential(abortSignal, blank ? undefined : userIdentifier === null || userIdentifier === void 0 ? void 0 : userIdentifier.trim())];
                     case 9:
                         credential = _d.sent();
                         credentialUserIdentifier = window.atob((_b = credential === null || credential === void 0 ? void 0 : credential.response.userHandle) !== null && _b !== void 0 ? _b : '');
