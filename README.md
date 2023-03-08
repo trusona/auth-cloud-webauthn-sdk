@@ -64,7 +64,9 @@ if (supported) {
   //
 } else {
   //
-  // current user or browser is not supported. Let them know. Probably guide them to a better browser :)
+  // Current user or browser is not supported. Let them know. 
+  //
+  // Gently guide them to a better browser :)
   //
 }
 ```
