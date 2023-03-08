@@ -47,7 +47,7 @@ function actionToText(action) {
     return 'Enroll'
   }
   else if(action === 'sign_in') {
-    return 'Sign-In'
+    return 'Sign In'
   }
 }
 
@@ -68,7 +68,7 @@ function enroll(event) {
   enrollment
     .enroll(jwt)
     .then((_) => {
-      message('You have successfully enrolled. Click on "Sign-In".')
+      message('You have successfully enrolled. Click on "Sign In".')
       nextAction(event, 'sign_in')
     })
     .catch((e) => message(e.message));
@@ -87,8 +87,8 @@ function sign_in() {
     .then((result) => {
       message(`You have successfully signed in as <span class="font-semibold text-purple-500">
       ${subject(result.token)}</span>.
-      <br/>
-      You can <a href="#" class="underline" data-next="sign_in" onclick="next(event);">sign-in again</a>!`)
+      <br>&nbsp;</br>
+      You can <a href="#" class="underline" data-next="sign_in" onclick="next(event);">sign in again</a>!`)
     })
     .catch((e) => message(e.message));
 }
