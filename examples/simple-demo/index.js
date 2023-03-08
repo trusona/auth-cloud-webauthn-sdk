@@ -83,7 +83,7 @@ function sign_in() {
   const authentication = new trusona.WebAuthnAuthentication();
 
   authentication
-    .authenticate(username, new AbortController().signal)
+    .authenticate(new AbortController().signal, username)
     .then((result) => {
       message(`You have successfully signed in as <span class="font-semibold text-purple-500">
       ${subject(result.token)}</span>.
