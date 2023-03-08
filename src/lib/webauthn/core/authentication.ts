@@ -4,6 +4,14 @@ import { WebAuthnOptions } from './webauthn.options'
 import { SdkInitializationError, UnsupportedBrowserError } from '../utils/errors'
 import { Strings } from '../utils/strings'
 
+/**
+ * @description
+ * An authentication result available after a successful authentication.
+ *
+ * If set, the @param token can be verified with https://YOUR-TENANT-DOMAIN/.well-known/jwks
+ *
+ * If the @param token is not available, the sign-in is not valid.
+ */
 export interface AuthenticationResult {
   token?: string
   status: AuthenticationStatus
@@ -15,7 +23,7 @@ export enum AuthenticationStatus {
 }
 
 export interface Authentication {
-  authenticate: (userIdentifier: string, abortSignal: AbortSignal) => Promise<AuthenticationResult>
+  authenticate: (abortSignal: AbortSignal, userIdentifier?: string) => Promise<AuthenticationResult>
 }
 
 export class WebAuthnAuthentication implements Authentication {
@@ -24,7 +32,13 @@ export class WebAuthnAuthentication implements Authentication {
     private readonly webAuthnOptions: WebAuthnOptions = new WebAuthnOptions()
   ) { }
 
-  async authenticate (userIdentifier: string, abortSignal: AbortSignal): Promise<AuthenticationResult> {
+  /**
+   *
+   * @param userIdentifier
+   * @param abortSignal
+   * @returns
+   */
+  async authenticate (abortSignal: AbortSignal, userIdentifier?: string): Promise<AuthenticationResult> {
     if (Initializer.configuration?.clientId === undefined) {
       return await Promise.reject(new SdkInitializationError())
     }
@@ -39,8 +53,8 @@ export class WebAuthnAuthentication implements Authentication {
       return await Promise.reject(new Error('Failed to obtain challenge'))
     }
 
-    const blank: boolean = Strings.blank(userIdentifier)
-    const credential = await this.webAuthnOptions.getCredential(abortSignal, blank ? undefined : userIdentifier.trim())
+    const blank: boolean = Strings.blank(userIdentifier ?? '')
+    const credential = await this.webAuthnOptions.getCredential(abortSignal, blank ? undefined : userIdentifier?.trim())
     const credentialUserIdentifier = window.atob(credential?.response.userHandle ?? '')
 
     const login = {
@@ -68,7 +82,7 @@ export class WebAuthnAuthentication implements Authentication {
     })
   }
 
-  async challenge (): Promise<string | undefined> {
+  protected async challenge (): Promise<string | undefined> {
     const url: string = `${Initializer.configuration?.tenantUrl ?? ''}/api/login_challenges`
 
     const response = await fetch(url, { method: 'POST', body: '{}', headers: { 'Content-Type': 'application/json' } })

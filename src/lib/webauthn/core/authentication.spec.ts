@@ -23,7 +23,7 @@ describe('WebAuthnAuthentication', () => {
       })
 
       it('returns a rejection', async () => {
-        await expect(authentication.authenticate('test', abortSignal)).rejects.toThrowError('The SDK is not yet initialized')
+        await expect(authentication.authenticate(abortSignal)).rejects.toThrowError('The SDK is not yet initialized')
       })
     })
 
@@ -35,19 +35,7 @@ describe('WebAuthnAuthentication', () => {
       })
 
       it('returns a rejection', async () => {
-        await expect(authentication.authenticate('test', abortSignal)).rejects.toThrowError('This browser is not supported')
-      })
-    })
-
-    describe('when a blank user-identifier is provided', () => {
-      beforeEach(() => {
-        Initializer.config = { clientId: 'clientId', tenantUrl: 'tenantUrl' }
-        preflightChecks = { isSupported: jest.fn().mockReturnValue(Promise.resolve(true)) }
-        authentication = new WebAuthnAuthentication(preflightChecks)
-      })
-
-      it('returns a rejection', async () => {
-        await expect(authentication.authenticate('    ', abortSignal)).rejects.toThrowError('Blank user identifier was provided')
+        await expect(authentication.authenticate(abortSignal)).rejects.toThrowError('This browser is not supported')
       })
     })
 
@@ -67,7 +55,7 @@ describe('WebAuthnAuthentication', () => {
       })
 
       it('returns a rejection', async () => {
-        await expect(authentication.authenticate('user', abortSignal)).rejects.toThrowError('Failed to obtain challenge')
+        await expect(authentication.authenticate(abortSignal)).rejects.toThrowError('Failed to obtain challenge')
       })
     })
 
@@ -86,8 +74,16 @@ describe('WebAuthnAuthentication', () => {
           }))
       })
 
-      it('does not return a rejection', async () => {
-        await expect(authentication.authenticate('user', abortSignal)).rejects.not.toThrowError('Failed to obtain challenge')
+      describe('when a username is not provided', () => {
+        it('does not return a rejection', async () => {
+          await expect(authentication.authenticate(abortSignal)).rejects.not.toThrowError('Failed to obtain challenge')
+        })
+      })
+
+      describe('when a username is provided', () => {
+        it('does not return a rejection', async () => {
+          await expect(authentication.authenticate(abortSignal, 'username')).rejects.not.toThrowError('Failed to obtain challenge')
+        })
       })
     })
   })
