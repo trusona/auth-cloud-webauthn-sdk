@@ -354,12 +354,7 @@ var configuration_1 = require("./configuration");
 var webauthn_options_1 = require("./webauthn.options");
 var EnrollmentStatus;
 (function (EnrollmentStatus) {
-    EnrollmentStatus[EnrollmentStatus["SUCCESS"] = 0] = "SUCCESS";
-    EnrollmentStatus[EnrollmentStatus["CANCELLED"] = 1] = "CANCELLED";
-    EnrollmentStatus[EnrollmentStatus["FAILED"] = 2] = "FAILED";
-    EnrollmentStatus[EnrollmentStatus["INVALID_TOKEN"] = 3] = "INVALID_TOKEN";
-    EnrollmentStatus[EnrollmentStatus["SDK_NOT_INITIALIZED"] = 4] = "SDK_NOT_INITIALIZED";
-    EnrollmentStatus[EnrollmentStatus["UNSUPPORTED_BROWSER"] = 5] = "UNSUPPORTED_BROWSER";
+    EnrollmentStatus["SUCCESS"] = "SUCCESS";
 })(EnrollmentStatus = exports.EnrollmentStatus || (exports.EnrollmentStatus = {}));
 var WebAuthnEnrollment = (function () {
     function WebAuthnEnrollment(preflightChecks, webAuthnOptions) {
