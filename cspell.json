@@ -4,6 +4,7 @@
     "package.json"
   ],
   "words": [
+    "jwks",
     "trusona",
     "uuidv",
     "webauthn"

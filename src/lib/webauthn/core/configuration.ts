@@ -86,5 +86,9 @@ export const Initializer = {
    */
   get enrollmentsEndpoint (): string {
     return `${this.configuration?.tenantUrl ?? ''}/api/enrollments`
+  },
+
+  get jwksEndpoint (): string {
+    return `${this.configuration?.tenantUrl ?? ''}/.well-known/jwks`
   }
 }

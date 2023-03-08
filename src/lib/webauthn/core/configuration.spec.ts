@@ -37,6 +37,10 @@ describe('Configuration', () => {
         expect(Initializer.enrollmentsEndpoint).toBe('http://localhost/api/enrollments')
       })
 
+      it('resolves a valid JWKS endpoint', () => {
+        expect(Initializer.jwksEndpoint).toBe('http://localhost/.well-known/jwks')
+      })
+
       it('will initialize a valid configuration', () => {
         expect(Initializer.configuration).toBeTruthy()
       })
