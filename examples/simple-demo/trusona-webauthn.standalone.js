@@ -71,7 +71,6 @@ var strings_1 = require("../utils/strings");
 var AuthenticationStatus;
 (function (AuthenticationStatus) {
     AuthenticationStatus["SUCCESS"] = "SUCCESS";
-    AuthenticationStatus["FAILED"] = "FAILED";
 })(AuthenticationStatus = exports.AuthenticationStatus || (exports.AuthenticationStatus = {}));
 var WebAuthnAuthentication = (function () {
     function WebAuthnAuthentication(preflightChecks, webAuthnOptions) {
@@ -83,29 +82,29 @@ var WebAuthnAuthentication = (function () {
     WebAuthnAuthentication.prototype.authenticate = function (abortSignal, userIdentifier) {
         var _a, _b;
         return __awaiter(this, void 0, void 0, function () {
-            var challenge, blank, credential, credentialUserIdentifier, login, response, map, _c;
-            return __generator(this, function (_d) {
-                switch (_d.label) {
+            var challenge, blank, credential, credentialUserIdentifier, login, response, map, _c, _d;
+            return __generator(this, function (_e) {
+                switch (_e.label) {
                     case 0:
                         if (!(((_a = configuration_1.Initializer.configuration) === null || _a === void 0 ? void 0 : _a.clientId) === undefined)) return [3, 2];
                         return [4, Promise.reject(new errors_1.SdkInitializationError())];
-                    case 1: return [2, _d.sent()];
+                    case 1: return [2, _e.sent()];
                     case 2: return [4, this.preflightChecks.isSupported()];
                     case 3:
-                        if (!!(_d.sent())) return [3, 5];
+                        if (!!(_e.sent())) return [3, 5];
                         return [4, Promise.reject(new errors_1.UnsupportedBrowserError())];
-                    case 4: return [2, _d.sent()];
+                    case 4: return [2, _e.sent()];
                     case 5: return [4, this.challenge()];
                     case 6:
-                        challenge = _d.sent();
+                        challenge = _e.sent();
                         if (!(challenge === undefined)) return [3, 8];
-                        return [4, Promise.reject(new Error('Failed to obtain challenge'))];
-                    case 7: return [2, _d.sent()];
+                        return [4, Promise.reject(new Error('Failed to obtain challenge.'))];
+                    case 7: return [2, _e.sent()];
                     case 8:
                         blank = strings_1.Strings.blank(userIdentifier !== null && userIdentifier !== void 0 ? userIdentifier : '');
                         return [4, this.webAuthnOptions.getCredential(abortSignal, blank ? undefined : userIdentifier === null || userIdentifier === void 0 ? void 0 : userIdentifier.trim())];
                     case 9:
-                        credential = _d.sent();
+                        credential = _e.sent();
                         credentialUserIdentifier = window.atob((_b = credential === null || credential === void 0 ? void 0 : credential.response.userHandle) !== null && _b !== void 0 ? _b : '');
                         login = {
                             method: 'PUBLIC_KEY_CREDENTIAL',
@@ -122,22 +121,27 @@ var WebAuthnAuthentication = (function () {
                                 headers: { 'Content-Type': 'application/json' }
                             })];
                     case 10:
-                        response = _d.sent();
+                        response = _e.sent();
                         if (!response.ok) return [3, 12];
                         return [4, response.json()];
                     case 11:
-                        _c = _d.sent();
+                        _c = _e.sent();
                         return [3, 13];
                     case 12:
                         _c = undefined;
-                        _d.label = 13;
+                        _e.label = 13;
                     case 13:
                         map = _c;
-                        return [4, Promise.resolve({
-                                status: (map === null || map === void 0 ? void 0 : map.token) !== undefined ? AuthenticationStatus.SUCCESS : AuthenticationStatus.FAILED,
-                                token: map === null || map === void 0 ? void 0 : map.token
-                            })];
-                    case 14: return [2, _d.sent()];
+                        if (!((map === null || map === void 0 ? void 0 : map.token) !== undefined)) return [3, 15];
+                        return [4, Promise.resolve({ status: AuthenticationStatus.SUCCESS, token: map.token })];
+                    case 14:
+                        _d = _e.sent();
+                        return [3, 17];
+                    case 15: return [4, Promise.reject(new errors_1.FailedAuthenticationError())];
+                    case 16:
+                        _d = _e.sent();
+                        _e.label = 17;
+                    case 17: return [2, _d];
                 }
             });
         });
@@ -282,6 +286,29 @@ exports.Initializer = {
 
 },{}],4:[function(require,module,exports){
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -322,7 +349,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.WebAuthnEnrollment = exports.EnrollmentStatus = void 0;
 var preflight_checks_1 = require("../preflight/preflight-checks");
 var strings_1 = require("../utils/strings");
-var errors_1 = require("../utils/errors");
+var errors = __importStar(require("../utils/errors"));
 var configuration_1 = require("./configuration");
 var webauthn_options_1 = require("./webauthn.options");
 var EnrollmentStatus;
@@ -349,12 +376,12 @@ var WebAuthnEnrollment = (function () {
                 switch (_c.label) {
                     case 0:
                         if (!(((_a = configuration_1.Initializer.configuration) === null || _a === void 0 ? void 0 : _a.clientId) === undefined)) return [3, 2];
-                        return [4, Promise.reject(new errors_1.SdkInitializationError())];
+                        return [4, Promise.reject(new errors.SdkInitializationError())];
                     case 1: return [2, _c.sent()];
                     case 2: return [4, this.preflightChecks.isSupported()];
                     case 3:
                         if (!!(_c.sent())) return [3, 5];
-                        return [4, Promise.reject(new errors_1.UnsupportedBrowserError())];
+                        return [4, Promise.reject(new errors.UnsupportedBrowserError())];
                     case 4: return [2, _c.sent()];
                     case 5:
                         if (!strings_1.Strings.blank(token)) return [3, 7];
@@ -368,7 +395,7 @@ var WebAuthnEnrollment = (function () {
                     case 9:
                         _b = _c.sent();
                         return [3, 12];
-                    case 10: return [4, Promise.resolve({ status: EnrollmentStatus.INVALID_TOKEN })];
+                    case 10: return [4, Promise.reject(new errors.InvalidTokenEnrollmentError())];
                     case 11:
                         _b = _c.sent();
                         _c.label = 12;
@@ -379,20 +406,28 @@ var WebAuthnEnrollment = (function () {
     };
     WebAuthnEnrollment.prototype.finalizeEnrollment = function (abortSignal) {
         return __awaiter(this, void 0, void 0, function () {
-            var credential, response;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var credential, response, _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0: return [4, this.webAuthnOptions.createCredential(abortSignal)];
                     case 1:
-                        credential = _a.sent();
-                        if (!(credential === undefined || abortSignal.aborted)) return [3, 3];
-                        return [4, Promise.resolve({ status: EnrollmentStatus.CANCELLED })];
-                    case 2: return [2, _a.sent()];
+                        credential = _b.sent();
+                        if (!(credential === undefined)) return [3, 3];
+                        return [4, Promise.reject(new errors.CancelledEnrollmentError())];
+                    case 2: return [2, _b.sent()];
                     case 3: return [4, fetch(configuration_1.Initializer.credentialsEndpoint, { method: 'POST', body: JSON.stringify(credential), credentials: 'include', headers: { 'Content-Type': 'application/json' } })];
                     case 4:
-                        response = _a.sent();
-                        return [4, Promise.resolve({ status: response.ok ? EnrollmentStatus.SUCCESS : EnrollmentStatus.FAILED })];
-                    case 5: return [2, _a.sent()];
+                        response = _b.sent();
+                        if (!response.ok) return [3, 6];
+                        return [4, Promise.resolve({ status: EnrollmentStatus.SUCCESS })];
+                    case 5:
+                        _a = _b.sent();
+                        return [3, 8];
+                    case 6: return [4, Promise.reject(new errors.FailedEnrollmentError())];
+                    case 7:
+                        _a = _b.sent();
+                        _b.label = 8;
+                    case 8: return [2, _a];
                 }
             });
         });
@@ -471,15 +506,16 @@ var WebAuthnOptions = (function () {
     }
     WebAuthnOptions.prototype.getCredential = function (abortSignal, userIdentifier) {
         return __awaiter(this, void 0, void 0, function () {
-            var requestOptions, _a;
+            var requestOptions, params, _a;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0: return [4, this.requestOptions(userIdentifier)];
                     case 1:
                         requestOptions = _b.sent();
                         requestOptions.rpId = window.location.hostname;
+                        params = abortSignal !== undefined ? { publicKey: requestOptions, signal: abortSignal } : { publicKey: requestOptions };
                         if (!(requestOptions !== undefined)) return [3, 3];
-                        return [4, WebAuthn.get({ publicKey: requestOptions, signal: abortSignal })];
+                        return [4, WebAuthn.get(params)];
                     case 2:
                         _a = _b.sent();
                         return [3, 5];
@@ -499,13 +535,22 @@ var WebAuthnOptions = (function () {
                 switch (_a.label) {
                     case 0: return [4, this.attestationOptions()
                             .then(function (options) { return __awaiter(_this, void 0, void 0, function () {
-                            return __generator(this, function (_a) {
-                                switch (_a.label) {
+                            var _a;
+                            return __generator(this, function (_b) {
+                                switch (_b.label) {
                                     case 0:
                                         options.rp.name = window.location.hostname;
                                         options.rp.id = undefined;
+                                        if (!(abortSignal !== undefined)) return [3, 2];
                                         return [4, WebAuthn.create({ publicKey: options, signal: abortSignal })];
-                                    case 1: return [2, _a.sent()];
+                                    case 1:
+                                        _a = _b.sent();
+                                        return [3, 4];
+                                    case 2: return [4, WebAuthn.create({ publicKey: options })];
+                                    case 3:
+                                        _a = _b.sent();
+                                        _b.label = 4;
+                                    case 4: return [2, _a];
                                 }
                             });
                         }); })
@@ -685,7 +730,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SdkInitializationError = exports.UnsupportedBrowserError = void 0;
+exports.FailedAuthenticationError = exports.InvalidTokenEnrollmentError = exports.FailedEnrollmentError = exports.CancelledEnrollmentError = exports.SdkInitializationError = exports.UnsupportedBrowserError = void 0;
 var UnsupportedBrowserError = (function (_super) {
     __extends(UnsupportedBrowserError, _super);
     function UnsupportedBrowserError() {
@@ -702,6 +747,38 @@ var SdkInitializationError = (function (_super) {
     return SdkInitializationError;
 }(Error));
 exports.SdkInitializationError = SdkInitializationError;
+var CancelledEnrollmentError = (function (_super) {
+    __extends(CancelledEnrollmentError, _super);
+    function CancelledEnrollmentError() {
+        return _super.call(this, 'Enrollment was cancelled') || this;
+    }
+    return CancelledEnrollmentError;
+}(Error));
+exports.CancelledEnrollmentError = CancelledEnrollmentError;
+var FailedEnrollmentError = (function (_super) {
+    __extends(FailedEnrollmentError, _super);
+    function FailedEnrollmentError() {
+        return _super.call(this, 'Enrollment failed') || this;
+    }
+    return FailedEnrollmentError;
+}(Error));
+exports.FailedEnrollmentError = FailedEnrollmentError;
+var InvalidTokenEnrollmentError = (function (_super) {
+    __extends(InvalidTokenEnrollmentError, _super);
+    function InvalidTokenEnrollmentError() {
+        return _super.call(this, 'Provided token was not valid.') || this;
+    }
+    return InvalidTokenEnrollmentError;
+}(Error));
+exports.InvalidTokenEnrollmentError = InvalidTokenEnrollmentError;
+var FailedAuthenticationError = (function (_super) {
+    __extends(FailedAuthenticationError, _super);
+    function FailedAuthenticationError() {
+        return _super.call(this, 'Authentication did not succeed.') || this;
+    }
+    return FailedAuthenticationError;
+}(Error));
+exports.FailedAuthenticationError = FailedAuthenticationError;
 
 },{}],8:[function(require,module,exports){
 "use strict";
