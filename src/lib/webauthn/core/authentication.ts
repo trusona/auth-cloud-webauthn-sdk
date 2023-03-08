@@ -14,7 +14,7 @@ import { Strings } from '../utils/strings'
  */
 
 export interface AuthenticationResult {
-  token?: string
+  token: string
   status: AuthenticationStatus
 }
 
@@ -35,7 +35,7 @@ export class WebAuthnAuthentication implements Authentication {
   /**
    * Authenticate the user.
    *
-   * @param abortSignal
+   * @param abortSignal - Optional.
    * @param userIdentifier - Optional. If not provided, discoverable credentials with prompt the user.
    *
    * @returns @see AuthenticationResult

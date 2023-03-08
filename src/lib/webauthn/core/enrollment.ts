@@ -4,18 +4,9 @@ import * as errors from '../utils/errors'
 import { Initializer } from './configuration'
 import { WebAuthnOptions } from './webauthn.options'
 
-export enum EnrollmentStatus {
-  SUCCESS,
-  CANCELLED,
-  FAILED,
-  INVALID_TOKEN,
-  SDK_NOT_INITIALIZED,
-  UNSUPPORTED_BROWSER
-}
+export enum EnrollmentStatus { SUCCESS = 'SUCCESS' }
 
-export interface EnrollmentResult {
-  status: EnrollmentStatus
-}
+export interface EnrollmentResult { status: EnrollmentStatus }
 
 export interface Enrollment {
   enroll: (token: string, abortSignal: AbortSignal) => Promise<EnrollmentResult>
