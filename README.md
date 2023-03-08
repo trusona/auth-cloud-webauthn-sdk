@@ -27,13 +27,13 @@ Any failure of this check, will fail the corresponding SDK call.
 
 ## Installation
 
-Install the SDK into your application or library with [NPM](https://docs.npmjs.com/cli/v8/commands/npm-install).
+Install the SDK into your application or library with [npm](https://docs.npmjs.com/cli/v8/commands/npm-install).
 
 ```bash
 npm install @trusona/webauthn
 ```
 
-If you use yarn as your package manager, you may do so with [yarn](https://classic.yarnpkg.com/lang/en/docs/cli/install/)
+If you use [yarn](https://classic.yarnpkg.com/lang/en/docs/cli/install/) as your package manager, you can install it similarly:
 
 ```bash
 yarn install @trusona/webauthn
