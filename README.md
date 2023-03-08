@@ -10,7 +10,7 @@ To use this SDK, Trusona must create a `tenant` within our infrastructure for yo
 
 Contact us about that.
 
-You can verify that a tenant exist and is configured if you visit `https://<YOUR-TENANT-ORIGIN-DOMAIN>/configuration`
+You can verify that a tenant exists and is configured if you visit `https://<YOUR-TENANT-ORIGIN-DOMAIN>/configuration`
 
 ## JWKS Endpoint
 
@@ -18,22 +18,33 @@ Within your infrastructure, an endpoint must be implemented to provide public ke
 
 You will provide this endpoint to us as part of of tenant configuration.
 
-Our APIs expect this to be available and will verify all provided tokens against this endpoint.
+Our APIs expect this to be available and will verify the validity of provided tokens against this endpoint.
+
+Any failure of this check, will fail the corresponding SDK call.
 
 
 # SDK Usage
 
 ## Installation
 
-Install the SDK into your application or library with NPM.
+Install the SDK into your application or library with [NPM](https://docs.npmjs.com/cli/v8/commands/npm-install).
 
 ```bash
 npm install @trusona/webauthn
 ```
 
+If you use yarn as your package manager, you may do so with [yarn](https://classic.yarnpkg.com/lang/en/docs/cli/install/)
+
+```bash
+yarn install @trusona/webauthn
+```
+
 ## Initialization
 
-Add a reference to the `Initializer` in your class.
+Add a reference to the library within your implementation.
+
+> The provided snippets below are in [typescript](https://www.typescriptlang.org)
+
 
 ```typescript
 import * as trusona from '@trusona/webauthn'
@@ -66,14 +77,13 @@ const jwt:string = 'jwt.token-with-subject-claim.signature' // generated from yo
 
 new trusona.WebAuthnEnrollment().enroll(jwt)
   .then((status) => {
-    // your happy path code after enrollment
+    // your happy path code after enrollment .. the user is now enrolled
   })
   .catch((error) => {
     // your error handling code ... enrollment failed
     // examine the provided error for details
   })
 ```
-
 
 ## Authenticate Your Users
 
