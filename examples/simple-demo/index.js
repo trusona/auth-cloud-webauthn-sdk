@@ -66,7 +66,7 @@ function enroll(event) {
   const enrollment = new trusona.WebAuthnEnrollment();
   const jwt = document.getElementById("jwt").value;
   enrollment
-    .enroll(jwt, undefined)
+    .enroll(jwt)
     .then((_) => {
       message('You have successfully enrolled. Click on "Sign-In".')
       nextAction(event, 'sign_in')
@@ -83,7 +83,7 @@ function sign_in() {
   const authentication = new trusona.WebAuthnAuthentication();
 
   authentication
-    .authenticate(undefined, username)
+    .authenticate(username, undefined)
     .then((result) => {
       message(`You have successfully signed in as <span class="font-semibold text-purple-500">
       ${subject(result.token)}</span>.

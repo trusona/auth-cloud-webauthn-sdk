@@ -9,7 +9,7 @@ export enum EnrollmentStatus { SUCCESS = 'SUCCESS' }
 export interface EnrollmentResult { status: EnrollmentStatus }
 
 export interface Enrollment {
-  enroll: (token: string, abortSignal: AbortSignal) => Promise<EnrollmentResult>
+  enroll: (token: string, abortSignal?: AbortSignal) => Promise<EnrollmentResult>
 }
 
 export class WebAuthnEnrollment implements Enrollment {

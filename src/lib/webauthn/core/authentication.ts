@@ -23,7 +23,7 @@ export enum AuthenticationStatus {
 }
 
 export interface Authentication {
-  authenticate: (abortSignal: AbortSignal, userIdentifier?: string) => Promise<AuthenticationResult>
+  authenticate: (userIdentifier?: string, abortSignal?: AbortSignal) => Promise<AuthenticationResult>
 }
 
 export class WebAuthnAuthentication implements Authentication {
@@ -40,7 +40,7 @@ export class WebAuthnAuthentication implements Authentication {
    *
    * @returns @see AuthenticationResult
    */
-  async authenticate (abortSignal?: AbortSignal, userIdentifier?: string): Promise<AuthenticationResult> {
+  async authenticate (userIdentifier?: string, abortSignal?: AbortSignal): Promise<AuthenticationResult> {
     if (Initializer.configuration?.clientId === undefined) {
       return await Promise.reject(new SdkInitializationError())
     }
