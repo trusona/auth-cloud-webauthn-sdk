@@ -39,18 +39,39 @@ If you use [yarn](https://classic.yarnpkg.com/lang/en/docs/cli/install/) as your
 yarn install @trusona/webauthn
 ```
 
-## Initialization
+## Declaration
 
 Add a reference to the library within your implementation.
 
 > The provided snippets below are in [typescript](https://www.typescriptlang.org)
 
-
 ```typescript
 import * as trusona from '@trusona/webauthn'
 ```
 
-In a constructor or some early logic, initialize the SDK.
+## Preflight
+
+It is prudent to perform some preflight checks before you initialize the SDK to ensure your users have a compatible browser.
+
+This can be accomplished with a static method that returns `true` or `false` indicating whether the user can successfully complete enrollment and authentication on their current browser.
+
+```typescript
+
+const supported:boolean = await trusona.DefaultPreflightChecks.supported()
+
+if (supported) {
+  // this browser can complete all the implemented WebAuthn capabilities. Ok to proceed
+  //
+} else {
+  //
+  // current user or browser is not supported. Let them know. Probably guide them to a better browser :)
+  //
+}
+```
+
+## Initialization
+
+Next, in a constructor or other early first-run logic, initialize the SDK.
 
 This should only be done once.
 
