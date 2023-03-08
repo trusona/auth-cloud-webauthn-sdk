@@ -9,9 +9,21 @@
       referrerpolicy="no-referrer"
     />
   </head>
-  <body class="container">
-    <div class="flex h-screen flex-shrink-0">
-      <div class="mx-auto my-auto border border-purple-200 p-32 rounded flex-shrink-0">
+  <body>
+    <div class="relative">
+      <div class="absolute top-0 right-0">
+        <img class="" src="logos/logo.svg" alt="logo">
+      </div>
+    </div>
+    <div class="flex justify-evenly pt-4">
+      <div id="unsupported" class="hidden pt-48">
+        <div class="border border-red-200 py-6 px-12">
+          <div class="font-semibold	text-red-700">
+            Unfortunately, this browser does not support passkeys.
+          </div>
+        </div>
+      </div>
+      <div id="main" class="border hidden border-purple-200 px-32 py-32 rounded flex-shrink-0">
         <div class="pb-12 flex-shrink-0">
           <form method="post" onsubmit="getJwt(event);">
             <input type="hidden" id="jwt" />
@@ -52,8 +64,8 @@
         </div>
 
         <div class="text-xs font-light h-4 mt-16 text-gray-700 flex-shrink-0">
-          <div class="h-4 py-5 flex-shrink-0">
-            <div id="msg" class="align-middle py-5 flex-shrink-0">
+          <div class="h-4 py-5">
+            <div id="msg" class="align-middle py-5">
               If you've previously enrolled, you may <a href='#' class="underline" data-next='sign_in' onclick="next(event);">sign-in here</a>.
             </div>
           </div>
@@ -64,8 +76,14 @@
   <script src="./trusona-webauthn.standalone.js"></script>
   <script src="./index.js"></script>
   <script>
-    document.addEventListener("DOMContentLoaded", function (event) {
-      trusona.Initializer.initialize("https://passkeys-sdk.lab.trusona.net")
-      });
+    document.addEventListener("DOMContentLoaded", async function (event) {
+      if(await new trusona.DefaultPreflightChecks().isSupported()) {
+        document.getElementById('main').classList.remove('hidden')
+        trusona.Initializer.initialize("https://passkeys-sdk.lab.trusona.net")
+      }
+      else {
+        document.getElementById('unsupported').classList.remove('hidden')
+      }
+    });
 </script>
 </html>

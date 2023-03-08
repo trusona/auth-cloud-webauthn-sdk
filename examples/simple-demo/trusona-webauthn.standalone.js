@@ -657,13 +657,24 @@ exports.DefaultPreflightChecks = void 0;
 var DefaultPreflightChecks = (function () {
     function DefaultPreflightChecks() {
     }
+    DefaultPreflightChecks.supported = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, new DefaultPreflightChecks().isSupported()];
+                    case 1: return [2, _a.sent()];
+                }
+            });
+        });
+    };
     DefaultPreflightChecks.prototype.isSupported = function () {
         var _a, _b;
         return __awaiter(this, void 0, void 0, function () {
-            var value, _c, _d;
+            var value, _c, _d, e_1;
             return __generator(this, function (_e) {
                 switch (_e.label) {
                     case 0:
+                        _e.trys.push([0, 6, , 8]);
                         _d = typeof window.PublicKeyCredential !== 'undefined';
                         if (!_d) return [3, 2];
                         return [4, this.isUserVerifyingPlatformAuthenticatorAvailable()];
@@ -681,6 +692,11 @@ var DefaultPreflightChecks = (function () {
                         value = _c;
                         return [4, Promise.resolve(value)];
                     case 5: return [2, _e.sent()];
+                    case 6:
+                        e_1 = _e.sent();
+                        return [4, Promise.reject(new Error('PublicKeyCredential support not found'))];
+                    case 7: return [2, _e.sent()];
+                    case 8: return [2];
                 }
             });
         });

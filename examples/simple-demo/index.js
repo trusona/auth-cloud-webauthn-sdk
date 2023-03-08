@@ -71,14 +71,14 @@ function enroll(event) {
       message('You have successfully enrolled. Click on "Sign-In".')
       nextAction(event, 'sign_in')
     })
-    .catch((e) => message(`${e.message}<br/>Be sure you are accepting <span class="underline">all cookies</span>.`));
+    .catch((e) => message(e.message));
 }
 
 function subject(token) {
   return (JSON.parse(window.atob(token.split('.')[1]))).sub
 }
 
-function sign_in() {  
+function sign_in() {
   const username = document.getElementById("username").value;
   const authentication = new trusona.WebAuthnAuthentication();
 
