@@ -89,11 +89,11 @@ trusona.Initializer.initialize('https://<YOUR-TENANT-ORIGIN-DOMAIN>')
 
 ## Enroll Your Users
 
-To enroll a user, from within your backend, generate a JWT token with the `subject` claim as a user's identifier or username.
+To enroll a user, from within your backend, generate a `JWT` token with the `subject` claim as a user's identifier or username.
 
-This identifier does not need to be an email address, but it should uniquely identify the user and they should be able to recognize it.
+This identifier does not need to be an email address, but it should uniquely identify the user and they should be able to recognize it as their username.
 
-Once generated, invoke the `enroll(string)` method.
+Once generated, invoke the `enroll(string)` method with the `JWT` string.
 
 ```typescript
 const jwt:string = 'jwt.token-with-subject-claim.signature' // generated from your backend

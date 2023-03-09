@@ -12,10 +12,12 @@
   <body>
     <div class="relative">
       <div class="absolute top-0 right-0">
-        <img class="" src="logos/logo.svg" alt="logo">
+        <img class="hidden md:block" src="logos/logo.svg" alt="logo">
+        <!-- <img class="md:hidden" src="logos/logo-mark.svg" alt="logo"> -->
       </div>
     </div>
-    <div class="flex justify-evenly pt-4">
+
+    <div class="inline-flex md:flex justify-evenly pt-4">
       <div id="unsupported" class="hidden pt-48">
         <div class="border border-red-200 py-6 px-12">
           <div class="font-semibold	text-red-700">
@@ -23,7 +25,7 @@
           </div>
         </div>
       </div>
-      <div id="main" class="border hidden border-purple-200 px-32 py-32 rounded flex-shrink-0">
+      <div id="main" class="lg:border hidden lg:border-purple-200  pt-8 px-8 lg:px-32 lg:py-32 rounded flex-shrink-0">
         <div class="pb-12 flex-shrink-0">
           <form method="post" onsubmit="getJwt(event);">
             <input type="hidden" id="jwt" />
@@ -35,17 +37,18 @@
               onkeypress="keypress(event)"
               autofocus
               aria-autocomplete="none"
-              autocomplete="none"
+              autocomplete="username webauthn"
               autocapitalize="no"
               size="16"
               maxlength="32"
               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
+            <div class="pt-8 center">
             <button
               id="submitBtn"
               data-next="submit"
               onclick="next(event);"
-              class="bg-purple-500 my-8 w-32 text-white font-semibold py-2 px-6 rounded focus:outline-none focus:shadow-outline"
+              class="bg-purple-500 text-white font-normal lg:font-semibold rounded focus:outline-none focus:shadow-outline px-2 py-1 w-24"
               type="button"
             >
               Submit
@@ -55,18 +58,21 @@
               id="resetBtn"
               data-next="reset"
               onclick="next(event);"
-              class="bg-gray-500 my-8 w-32 text-white font-semibold py-2 px-6 ml-8 rounded focus:outline-none focus:shadow-outline"
+              class="bg-gray-500 text-white font-normal lg:font-semibold rounded focus:outline-none focus:shadow-outline px-2 py-1 ml-2 w-24"
               type="button"
             >
               Reset
             </button>
+          </div>
           </form>
         </div>
 
-        <div class="text-xs font-light h-4 mt-16 text-gray-700 flex-shrink-0">
+        <div class="text-xs font-light h-4 mt-16 text-gray-700">
           <div class="h-4 py-5">
-            <div id="msg" class="align-middle py-5">
-              If you've previously enrolled, you may <a href='#' class="underline" data-next='sign_in' onclick="next(event);">sign in</a>.
+            <div class="align-middle py-5">
+              <span id="msg">If you've previously enrolled, you may <a href='#' class="underline" data-next='sign_in' onclick="next(event);">sign in</a>.</span>
+              <br>&nbsp;</br>
+              <span id="authAgain" class="hidden">You can <a href="#" class="underline" data-next="sign_in" onclick="next(event);">sign in again</a>!</span>
             </div>
           </div>
         </div>
@@ -80,6 +86,7 @@
       if(await new trusona.DefaultPreflightChecks().isSupported()) {
         document.getElementById('main').classList.remove('hidden')
         trusona.Initializer.initialize("https://passkeys-sdk.lab.trusona.net")
+          .then((_) => authenticate(true)) // true CUI
       }
       else {
         document.getElementById('unsupported').classList.remove('hidden')

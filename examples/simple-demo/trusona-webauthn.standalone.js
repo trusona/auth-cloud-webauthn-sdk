@@ -79,33 +79,66 @@ var WebAuthnAuthentication = (function () {
         this.preflightChecks = preflightChecks;
         this.webAuthnOptions = webAuthnOptions;
     }
-    WebAuthnAuthentication.prototype.authenticate = function (userIdentifier, abortSignal) {
-        var _a, _b;
+    WebAuthnAuthentication.prototype.cui = function (abortSignal) {
+        var _a;
         return __awaiter(this, void 0, void 0, function () {
-            var challenge, blank, credential, credentialUserIdentifier, login, response, map, _c, _d;
-            return __generator(this, function (_e) {
-                switch (_e.label) {
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
                         if (!(((_a = configuration_1.Initializer.configuration) === null || _a === void 0 ? void 0 : _a.clientId) === undefined)) return [3, 2];
                         return [4, Promise.reject(new errors_1.SdkInitializationError())];
-                    case 1: return [2, _e.sent()];
+                    case 1: return [2, _b.sent()];
                     case 2: return [4, this.preflightChecks.isSupported()];
                     case 3:
-                        if (!!(_e.sent())) return [3, 5];
+                        if (!!(_b.sent())) return [3, 5];
                         return [4, Promise.reject(new errors_1.UnsupportedBrowserError())];
-                    case 4: return [2, _e.sent()];
+                    case 4: return [2, _b.sent()];
+                    case 5: return [4, this.authenticate(true, undefined, abortSignal)];
+                    case 6: return [2, _b.sent()];
+                }
+            });
+        });
+    };
+    WebAuthnAuthentication.prototype.authenticate = function (cui, userIdentifier, abortSignal) {
+        var _a;
+        if (cui === void 0) { cui = false; }
+        return __awaiter(this, void 0, void 0, function () {
+            var challenge, blank;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        if (!(((_a = configuration_1.Initializer.configuration) === null || _a === void 0 ? void 0 : _a.clientId) === undefined)) return [3, 2];
+                        return [4, Promise.reject(new errors_1.SdkInitializationError())];
+                    case 1: return [2, _b.sent()];
+                    case 2: return [4, this.preflightChecks.isSupported()];
+                    case 3:
+                        if (!!(_b.sent())) return [3, 5];
+                        return [4, Promise.reject(new errors_1.UnsupportedBrowserError())];
+                    case 4: return [2, _b.sent()];
                     case 5: return [4, this.challenge()];
                     case 6:
-                        challenge = _e.sent();
+                        challenge = _b.sent();
                         if (!(challenge === undefined)) return [3, 8];
                         return [4, Promise.reject(new Error('Failed to obtain challenge.'))];
-                    case 7: return [2, _e.sent()];
+                    case 7: return [2, _b.sent()];
                     case 8:
                         blank = strings_1.Strings.blank(userIdentifier !== null && userIdentifier !== void 0 ? userIdentifier : '');
-                        return [4, this.webAuthnOptions.getCredential(abortSignal, blank ? undefined : userIdentifier === null || userIdentifier === void 0 ? void 0 : userIdentifier.trim())];
-                    case 9:
-                        credential = _e.sent();
-                        credentialUserIdentifier = window.atob((_b = credential === null || credential === void 0 ? void 0 : credential.response.userHandle) !== null && _b !== void 0 ? _b : '');
+                        return [4, this.finalize(cui, challenge, abortSignal, blank ? undefined : userIdentifier === null || userIdentifier === void 0 ? void 0 : userIdentifier.trim())];
+                    case 9: return [2, _b.sent()];
+                }
+            });
+        });
+    };
+    WebAuthnAuthentication.prototype.finalize = function (cui, challenge, abortSignal, userIdentifier) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function () {
+            var credential, credentialUserIdentifier, login, response, map, _b, _c;
+            return __generator(this, function (_d) {
+                switch (_d.label) {
+                    case 0: return [4, this.webAuthnOptions.getCredential(cui, abortSignal, userIdentifier)];
+                    case 1:
+                        credential = _d.sent();
+                        credentialUserIdentifier = window.atob((_a = credential === null || credential === void 0 ? void 0 : credential.response.userHandle) !== null && _a !== void 0 ? _a : '');
                         login = {
                             method: 'PUBLIC_KEY_CREDENTIAL',
                             nextStep: 'VERIFY_PUBLIC_KEY_CREDENTIAL',
@@ -120,28 +153,28 @@ var WebAuthnAuthentication = (function () {
                                 body: JSON.stringify(login),
                                 headers: { 'Content-Type': 'application/json' }
                             })];
-                    case 10:
-                        response = _e.sent();
-                        if (!response.ok) return [3, 12];
+                    case 2:
+                        response = _d.sent();
+                        if (!response.ok) return [3, 4];
                         return [4, response.json()];
-                    case 11:
-                        _c = _e.sent();
-                        return [3, 13];
-                    case 12:
-                        _c = undefined;
-                        _e.label = 13;
-                    case 13:
-                        map = _c;
-                        if (!((map === null || map === void 0 ? void 0 : map.token) !== undefined)) return [3, 15];
+                    case 3:
+                        _b = _d.sent();
+                        return [3, 5];
+                    case 4:
+                        _b = undefined;
+                        _d.label = 5;
+                    case 5:
+                        map = _b;
+                        if (!((map === null || map === void 0 ? void 0 : map.token) !== undefined)) return [3, 7];
                         return [4, Promise.resolve({ status: AuthenticationStatus.SUCCESS, token: map.token })];
-                    case 14:
-                        _d = _e.sent();
-                        return [3, 17];
-                    case 15: return [4, Promise.reject(new errors_1.FailedAuthenticationError())];
-                    case 16:
-                        _d = _e.sent();
-                        _e.label = 17;
-                    case 17: return [2, _d];
+                    case 6:
+                        _c = _d.sent();
+                        return [3, 9];
+                    case 7: return [4, Promise.reject(new errors_1.FailedAuthenticationError())];
+                    case 8:
+                        _c = _d.sent();
+                        _d.label = 9;
+                    case 9: return [2, _c];
                 }
             });
         });
@@ -503,7 +536,8 @@ var WebAuthn = __importStar(require("@github/webauthn-json"));
 var WebAuthnOptions = (function () {
     function WebAuthnOptions() {
     }
-    WebAuthnOptions.prototype.getCredential = function (abortSignal, userIdentifier) {
+    WebAuthnOptions.prototype.getCredential = function (cui, abortSignal, userIdentifier) {
+        if (cui === void 0) { cui = false; }
         return __awaiter(this, void 0, void 0, function () {
             var requestOptions, params, _a;
             return __generator(this, function (_b) {
@@ -512,7 +546,11 @@ var WebAuthnOptions = (function () {
                     case 1:
                         requestOptions = _b.sent();
                         requestOptions.rpId = window.location.hostname;
+                        requestOptions.userVerification = 'preferred';
                         params = abortSignal !== undefined ? { publicKey: requestOptions, signal: abortSignal } : { publicKey: requestOptions };
+                        if (cui && abortSignal !== undefined && userIdentifier === undefined) {
+                            params = { publicKey: requestOptions, signal: abortSignal, mediation: 'conditional' };
+                        }
                         if (!(requestOptions !== undefined)) return [3, 3];
                         return [4, WebAuthn.get(params)];
                     case 2:
@@ -540,6 +578,7 @@ var WebAuthnOptions = (function () {
                                     case 0:
                                         options.rp.name = window.location.hostname;
                                         options.rp.id = undefined;
+                                        options.attestation = 'direct';
                                         if (!(abortSignal !== undefined)) return [3, 2];
                                         return [4, WebAuthn.create({ publicKey: options, signal: abortSignal })];
                                     case 1:

@@ -22,16 +22,23 @@ function next (event) {
       message('Was a username specified?')
     }
   } else if (action(event) === 'reset') {
-    window.location.reload()
+    window.location.href = './index.html?z=' + Math.random()
     return true
   } else if (action(event) === 'enroll') {
     enroll(event)
   } else if (action(event) === 'sign_in') {
+    addClass(document.getElementById('authAgain'), 'hidden')
     authenticate()
   }
 
   event.preventDefault()
   return false
+}
+
+function addClass(element, className) {
+  if(element && !element.classList.contains(className)) {
+    element.classList.add('hidden')
+  }
 }
 
 function action (event) {
@@ -61,7 +68,7 @@ function enroll (event) {
   const enrollment = new trusona.WebAuthnEnrollment()
   const jwt = document.getElementById('jwt').value
   enrollment
-    .enroll(jwt)
+    .enroll(jwt, new AbortController().signal)
     .then((_) => {
       message('You have successfully enrolled. Click on "Sign In".')
       nextAction(event, 'sign_in')
@@ -73,17 +80,15 @@ function subject (token) {
   return (JSON.parse(window.atob(token.split('.')[1]))).sub
 }
 
-function authenticate () {
+function authenticate (cui = false) {
   const username = document.getElementById('username').value
   const authentication = new trusona.WebAuthnAuthentication()
 
   authentication
-    .authenticate(username, undefined)
+    .authenticate(cui, username, new AbortController().signal)
     .then((result) => {
-      message(`You have successfully signed in as <span class="font-semibold text-purple-500">
-      ${subject(result.token)}</span>.
-      <br>&nbsp;</br>
-      You can <a href="#" class="underline" data-next="sign_in" onclick="next(event);">sign in again</a>!`)
+      message(`You have successfully signed in as <span class="font-semibold text-purple-500">${subject(result.token)}</span>.`)
+      document.getElementById('authAgain').classList.remove('hidden')
     })
     .catch((e) => message(e.message))
 }
