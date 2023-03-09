@@ -23,7 +23,8 @@ export enum AuthenticationStatus {
 }
 
 export interface Authentication {
-  authenticate: (userIdentifier?: string, abortSignal?: AbortSignal) => Promise<AuthenticationResult>
+  authenticate: (cui?: boolean, userIdentifier?: string, abortSignal?: AbortSignal) => Promise<AuthenticationResult>
+  cui: (abortSignal: AbortSignal) => Promise<AuthenticationResult>
 }
 
 export class WebAuthnAuthentication implements Authentication {
@@ -31,6 +32,18 @@ export class WebAuthnAuthentication implements Authentication {
     private readonly preflightChecks: PreflightChecks = new DefaultPreflightChecks(),
     private readonly webAuthnOptions: WebAuthnOptions = new WebAuthnOptions()
   ) { }
+
+  async cui (abortSignal: AbortSignal): Promise<AuthenticationResult> {
+    if (Initializer.configuration?.clientId === undefined) {
+      return await Promise.reject(new SdkInitializationError())
+    }
+
+    if (!(await this.preflightChecks.isSupported())) {
+      return await Promise.reject(new UnsupportedBrowserError())
+    }
+
+    return await this.authenticate(true, undefined, abortSignal)
+  }
 
   /**
    * Authenticate the user.
@@ -40,7 +53,7 @@ export class WebAuthnAuthentication implements Authentication {
    *
    * @returns @see AuthenticationResult
    */
-  async authenticate (userIdentifier?: string, abortSignal?: AbortSignal): Promise<AuthenticationResult> {
+  async authenticate (cui: boolean = false, userIdentifier?: string, abortSignal?: AbortSignal): Promise<AuthenticationResult> {
     if (Initializer.configuration?.clientId === undefined) {
       return await Promise.reject(new SdkInitializationError())
     }
@@ -56,7 +69,11 @@ export class WebAuthnAuthentication implements Authentication {
     }
 
     const blank: boolean = Strings.blank(userIdentifier ?? '')
-    const credential = await this.webAuthnOptions.getCredential(abortSignal, blank ? undefined : userIdentifier?.trim())
+    return await this.finalize(cui, challenge, abortSignal, blank ? undefined : userIdentifier?.trim())
+  }
+
+  private async finalize (cui: boolean, challenge: string, abortSignal?: AbortSignal, userIdentifier?: string): Promise<AuthenticationResult> {
+    const credential = await this.webAuthnOptions.getCredential(cui, abortSignal, userIdentifier)
     const credentialUserIdentifier = window.atob(credential?.response.userHandle ?? '')
 
     const login = {

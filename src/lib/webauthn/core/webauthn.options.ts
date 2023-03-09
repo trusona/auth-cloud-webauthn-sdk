@@ -3,11 +3,18 @@ import { Initializer } from './configuration'
 import * as WebAuthn from '@github/webauthn-json'
 
 export class WebAuthnOptions {
-  async getCredential (abortSignal?: AbortSignal, userIdentifier?: string): Promise<PublicKeyCredentialWithAssertionJSON | undefined> {
+  async getCredential (cui: boolean = false, abortSignal?: AbortSignal, userIdentifier?: string): Promise<PublicKeyCredentialWithAssertionJSON | undefined> {
     const requestOptions: PublicKeyCredentialRequestOptionsJSON = await this.requestOptions(userIdentifier)
     requestOptions.rpId = window.location.hostname
+    requestOptions.userVerification = 'preferred'
 
-    const params = abortSignal !== undefined ? { publicKey: requestOptions, signal: abortSignal } : { publicKey: requestOptions }
+    let params = abortSignal !== undefined ? { publicKey: requestOptions, signal: abortSignal } : { publicKey: requestOptions }
+
+    if (cui && abortSignal !== undefined && userIdentifier === undefined) {
+      // @ts-expect-error
+      params = { publicKey: requestOptions, signal: abortSignal, mediation: ('conditional' as CredentialMediationRequirement) }
+    }
+
     return requestOptions !== undefined ? await WebAuthn.get(params) : await Promise.resolve(undefined)
   }
 
@@ -16,6 +23,7 @@ export class WebAuthnOptions {
       .then(async (options) => {
         options.rp.name = window.location.hostname
         options.rp.id = undefined
+        options.attestation = 'direct'
 
         return abortSignal !== undefined
           ? await WebAuthn.create({ publicKey: options, signal: abortSignal })

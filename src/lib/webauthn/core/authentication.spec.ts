@@ -82,7 +82,7 @@ describe('WebAuthnAuthentication', () => {
 
       describe('when a username is provided', () => {
         it('does not return a rejection', async () => {
-          await expect(authentication.authenticate('username', abortSignal)).rejects.not.toThrowError('Failed to obtain challenge')
+          await expect(authentication.authenticate(false, 'username', abortSignal)).rejects.not.toThrowError('Failed to obtain challenge')
         })
       })
     })
