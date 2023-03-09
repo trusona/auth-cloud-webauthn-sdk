@@ -8,11 +8,12 @@ export class WebAuthnOptions {
     requestOptions.rpId = window.location.hostname
     requestOptions.userVerification = 'preferred'
 
-    let params = abortSignal !== undefined ? { publicKey: requestOptions, signal: abortSignal } : { publicKey: requestOptions }
+    let params
 
     if (cui && abortSignal !== undefined && userIdentifier === undefined) {
-      // @ts-expect-error
       params = { publicKey: requestOptions, signal: abortSignal, mediation: ('conditional' as CredentialMediationRequirement) }
+    } else {
+      params = abortSignal !== undefined ? { publicKey: requestOptions, signal: abortSignal } : { publicKey: requestOptions }
     }
 
     return requestOptions !== undefined ? await WebAuthn.get(params) : await Promise.resolve(undefined)
