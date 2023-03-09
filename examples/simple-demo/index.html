@@ -86,7 +86,12 @@
       if(await new trusona.DefaultPreflightChecks().isSupported()) {
         document.getElementById('main').classList.remove('hidden')
         trusona.Initializer.initialize("https://passkeys-sdk.lab.trusona.net")
-          .then((_) => authenticate(true)) // true CUI
+          .then((_) => {
+             // true CUI .. anything but ios
+            if((window.navigator.userAgent.match(/iPhone/i) ?? []).length === 0) {
+              authenticate(true)
+            }
+          })
       }
       else {
         document.getElementById('unsupported').classList.remove('hidden')
