@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <title>Simple Passkey Demo from Trusona</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css"
@@ -31,13 +32,14 @@
                 <input type="hidden" id="jwt" />
                 <input
                   id="username"
+                  name="username"
                   type="text"
                   value=""
                   placeholder="Enter your username"
                   onkeypress="keypress(event)"
                   autofocus
                   aria-autocomplete="none"
-                  autocomplete="username webauthn"
+                  autocomplete="webauthn"
                   autocapitalize="no"
                   size="32"
                   maxlength="32"
@@ -75,7 +77,7 @@
               <div class="align-middle c">
                 <span id="msg">If you've previously enrolled, you may <a href='#' class="underline" data-next='sign_in' onclick="next(event);">sign in</a>.</span>
                 <br>&nbsp;</br>
-                <span id="authAgain" class="hidden">You can <a href="#" class="underline" data-next="sign_in" onclick="next(event);">sign in again</a>!</span>
+                <span id="authAgain" class="hidden">You can sign in <a href="#" class="underline" data-next="sign_in" onclick="next(event);">again</a>!</span>
               </div>
             </div>
           </div>

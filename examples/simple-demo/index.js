@@ -1,5 +1,6 @@
+let controller = new AbortController()
 
-function enroll (event) {
+async function enroll (event) {
   const enrollment = new trusona.WebAuthnEnrollment()
   const jwt = document.getElementById('jwt').value
 
@@ -17,7 +18,7 @@ function enroll (event) {
     })
 }
 
-function authenticate (cui = false) {
+async function authenticate (cui = false) {
   const username = document.getElementById('username').value
   const authentication = new trusona.WebAuthnAuthentication()
 
@@ -48,7 +49,6 @@ async function jwtApi (username) {
     return await Promise.reject(e)
   }
 }
-let controller = new AbortController()
 
 function message (msg) {
   document.getElementById('msg').innerHTML = msg
@@ -66,7 +66,7 @@ function keypress (event) {
   }
 }
 
-function next (event) {
+async function next (event) {
   const username = document.getElementById('username').value.trim()
   document.getElementById('msg').innerHTML = ''
 
@@ -89,7 +89,6 @@ function next (event) {
   }
 
   event.preventDefault()
-  return false
 }
 
 function addClass (element, className) {
