@@ -117,12 +117,13 @@ On success, a JWT is going to be provided in the SDK response that you can exami
 > The `subject` claim in the provided JWT will match `subject` that was provided during enrollment. 
 
 ```typescript
-const usernameHint: string|undefined = 'hint .. not required' // optional parameter, maybe undefined
+const usernameHint:string|undefined = 'hint .. not required' // optional parameter, may be undefined
 
 new trusona.WebAuthnAuthentication().authenticate(usernameHint)
   .then((map) => {
     const authToken:string = map.token // JWT from Trusona
     const jwksEndpoint:string = trusona.Initializer.jwksEndpoint()
+
     //
     // Verify the JWT against the Trusona's JWKS implementation endpoint.
     //
