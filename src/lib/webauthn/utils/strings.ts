@@ -1,7 +1,7 @@
 
 export const Strings = {
 
-  blank (value: string): boolean {
-    return !(value?.trim().length > 0)
+  blank (value: string | undefined): boolean {
+    return value === undefined || !(value?.trim()?.length > 0)
   }
 }
