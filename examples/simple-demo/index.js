@@ -11,7 +11,10 @@ function enroll (event) {
       message('You have successfully enrolled. Click on "Sign In".')
       nextAction(event, 'sign_in')
     })
-    .catch((e) => message(e.message))
+    .catch((e) => {
+      addClass(document.getElementById('authAgain'), 'hidden')
+      message(e.message)
+    })
 }
 
 function authenticate (cui = false) {
@@ -28,6 +31,8 @@ function authenticate (cui = false) {
     .then((token) => { message(`You have successfully signed in as <span class="font-semibold text-purple-500">${token}</span>.`) })
     .then((_) => { document.getElementById('authAgain').classList.remove('hidden') })
     .catch((e) => {
+      addClass(document.getElementById('authAgain'), 'hidden')
+
       if (!cui) {
         message(e.message)
       }
