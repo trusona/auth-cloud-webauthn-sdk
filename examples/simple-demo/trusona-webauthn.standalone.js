@@ -547,9 +547,11 @@ var WebAuthnOptions = (function () {
                         requestOptions = _b.sent();
                         requestOptions.rpId = window.location.hostname;
                         requestOptions.userVerification = 'preferred';
-                        params = abortSignal !== undefined ? { publicKey: requestOptions, signal: abortSignal } : { publicKey: requestOptions };
                         if (cui && abortSignal !== undefined && userIdentifier === undefined) {
                             params = { publicKey: requestOptions, signal: abortSignal, mediation: 'conditional' };
+                        }
+                        else {
+                            params = abortSignal !== undefined ? { publicKey: requestOptions, signal: abortSignal } : { publicKey: requestOptions };
                         }
                         if (!(requestOptions !== undefined)) return [3, 3];
                         return [4, WebAuthn.get(params)];

@@ -1,4 +1,59 @@
 
+function enroll (event) {
+  const enrollment = new trusona.WebAuthnEnrollment()
+  const jwt = document.getElementById('jwt').value
+
+  resetSignals()
+
+  enrollment
+    .enroll(jwt, controller.signal)
+    .then((_) => {
+      message('You have successfully enrolled. Click on "Sign In".')
+      nextAction(event, 'sign_in')
+    })
+    .catch((e) => message(e.message))
+}
+
+function authenticate (cui = false) {
+  const username = document.getElementById('username').value
+  const authentication = new trusona.WebAuthnAuthentication()
+
+  if (!cui) {
+    resetSignals()
+  }
+
+  authentication
+    .authenticate(cui, username, controller.signal)
+    .then((result) => JSON.parse(window.atob(result.token.split('.')[1])).sub)
+    .then((token) => { message(`You have successfully signed in as <span class="font-semibold text-purple-500">${token}</span>.`) })
+    .then((_) => { document.getElementById('authAgain').classList.remove('hidden') })
+    .catch((e) => {
+      if (!cui) {
+        message(e.message)
+      }
+    })
+}
+
+async function jwtApi (username) {
+  try {
+    const r = await fetch(`https://shopify-demo-connector.herokuapp.com/jwt?sub=${username}`)
+    const data = await r.json()
+    return await Promise.resolve(data.jwt)
+  } catch (e) {
+    return await Promise.reject(e)
+  }
+}
+let controller = new AbortController()
+
+function message (msg) {
+  document.getElementById('msg').innerHTML = msg
+}
+
+function resetSignals () {
+  controller.abort()
+  controller = new AbortController()
+}
+
 function keypress (event) {
   if (event.keyCode === 13) {
     event.preventDefault()
@@ -12,31 +67,28 @@ function next (event) {
 
   if (action(event) === 'submit') {
     if (username) {
-      getJwt(username)
-
-      document.getElementById('username').setAttribute('disabled', 'true')
-
-      message('Next, click on "Enroll", and follow the prompts.')
-      nextAction(event, 'enroll')
+      jwtApi(username)
+        .then((jwt) => { document.getElementById('jwt').value = jwt })
+        .then(() => { uxOnSubmit(username, event) })
+        .catch((e) => { message(e.message) })
     } else {
       message('Was a username specified?')
     }
   } else if (action(event) === 'reset') {
-    window.location.href = './index.html?z=' + Math.random()
-    return true
+    window.location.href = './index.html'
   } else if (action(event) === 'enroll') {
     enroll(event)
   } else if (action(event) === 'sign_in') {
     addClass(document.getElementById('authAgain'), 'hidden')
-    authenticate()
+    authenticate(false)
   }
 
   event.preventDefault()
   return false
 }
 
-function addClass(element, className) {
-  if(element && !element.classList.contains(className)) {
+function addClass (element, className) {
+  if (element && !element.classList.contains(className)) {
     element.classList.add('hidden')
   }
 }
@@ -53,53 +105,16 @@ function actionToText (action) {
   }
 }
 
+function uxOnSubmit (username, event) {
+  document.getElementById('username').value = username
+  document.getElementById('username').setAttribute('disabled', 'true')
+  message('Next, click on "Enroll", and follow the prompts.')
+  nextAction(event, 'enroll')
+}
+
 function nextAction (event, action) {
   event.target.setAttribute('data-next', action)
   event.target.innerHTML = actionToText(action)
   event.target.textContext = actionToText(action)
   event.target.innerText = actionToText(action)
-}
-
-function message (msg) {
-  document.getElementById('msg').innerHTML = msg
-}
-
-function enroll (event) {
-  const enrollment = new trusona.WebAuthnEnrollment()
-  const jwt = document.getElementById('jwt').value
-  enrollment
-    .enroll(jwt, new AbortController().signal)
-    .then((_) => {
-      message('You have successfully enrolled. Click on "Sign In".')
-      nextAction(event, 'sign_in')
-    })
-    .catch((e) => message(e.message))
-}
-
-function subject (token) {
-  return (JSON.parse(window.atob(token.split('.')[1]))).sub
-}
-
-function authenticate (cui = false) {
-  const username = document.getElementById('username').value
-  const authentication = new trusona.WebAuthnAuthentication()
-
-  authentication
-    .authenticate(cui, username, new AbortController().signal)
-    .then((result) => {
-      message(`You have successfully signed in as <span class="font-semibold text-purple-500">${subject(result.token)}</span>.`)
-      document.getElementById('authAgain').classList.remove('hidden')
-    })
-    .catch((e) => message(e.message))
-}
-
-function getJwt (username) {
-  fetch(`https://shopify-demo-connector.herokuapp.com/jwt?sub=${username}`)
-    .then((r) => r.json())
-    .then((data) => {
-      document.getElementById('username').value = username
-      document.getElementById('username').setAttribute('disabled', 'true')
-      document.getElementById('jwt').value = data.jwt
-    })
-    .catch((e) => message(e.message))
 }
