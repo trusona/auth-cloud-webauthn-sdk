@@ -1,8 +1,8 @@
-import { DefaultPreflightChecks, PreflightChecks } from '../preflight/preflight-checks'
 import { Strings } from '../utils/strings'
 import * as errors from '../utils/errors'
 import { Initializer } from './configuration'
 import { WebAuthnOptions } from './webauthn.options'
+import { Base } from './base'
 
 export enum EnrollmentStatus { SUCCESS = 'SUCCESS' }
 
@@ -12,11 +12,12 @@ export interface Enrollment {
   enroll: (token: string, abortSignal?: AbortSignal) => Promise<EnrollmentResult>
 }
 
-export class WebAuthnEnrollment implements Enrollment {
+export class WebAuthnEnrollment extends Base implements Enrollment {
   constructor (
-    private readonly preflightChecks: PreflightChecks = new DefaultPreflightChecks(),
     private readonly webAuthnOptions: WebAuthnOptions = new WebAuthnOptions()
-  ) { }
+  ) {
+    super()
+  }
 
   /**
    * Enrolls the user. This is typically the next method called after initialization if a user
@@ -28,13 +29,7 @@ export class WebAuthnEnrollment implements Enrollment {
    * @returns @see EnrollmentStatus - indicating the status of the enrollment
    */
   async enroll (token: string, abortSignal?: AbortSignal): Promise<EnrollmentResult> {
-    if (Initializer.configuration?.clientId === undefined) {
-      return await Promise.reject(new errors.SdkInitializationError())
-    }
-
-    if (!(await this.preflightChecks.isSupported())) {
-      return await Promise.reject(new errors.UnsupportedBrowserError())
-    }
+    await this.validate()
 
     if (Strings.blank(token)) {
       return await Promise.reject(new Error('Blank token was provided'))

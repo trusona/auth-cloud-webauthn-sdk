@@ -1,8 +1,8 @@
-import { DefaultPreflightChecks, PreflightChecks } from '../preflight/preflight-checks'
 import { Initializer } from './configuration'
 import { WebAuthnOptions } from './webauthn.options'
-import { FailedAuthenticationError, SdkInitializationError, UnsupportedBrowserError } from '../utils/errors'
+import { FailedAuthenticationError } from '../utils/errors'
 import { Strings } from '../utils/strings'
+import { Base } from './base'
 
 /**
  * @description
@@ -27,21 +27,14 @@ export interface Authentication {
   cui: (abortSignal: AbortSignal) => Promise<AuthenticationResult>
 }
 
-export class WebAuthnAuthentication implements Authentication {
+export class WebAuthnAuthentication extends Base implements Authentication {
   constructor (
-    private readonly preflightChecks: PreflightChecks = new DefaultPreflightChecks(),
     private readonly webAuthnOptions: WebAuthnOptions = new WebAuthnOptions()
-  ) { }
+  ) {
+    super()
+  }
 
   async cui (abortSignal: AbortSignal): Promise<AuthenticationResult> {
-    if (Initializer.configuration?.clientId === undefined) {
-      return await Promise.reject(new SdkInitializationError())
-    }
-
-    if (!(await this.preflightChecks.isSupported())) {
-      return await Promise.reject(new UnsupportedBrowserError())
-    }
-
     return await this.authenticate(true, undefined, abortSignal)
   }
 
@@ -54,14 +47,7 @@ export class WebAuthnAuthentication implements Authentication {
    * @returns @see AuthenticationResult
    */
   async authenticate (cui: boolean = false, userIdentifier?: string, abortSignal?: AbortSignal): Promise<AuthenticationResult> {
-    if (Initializer.configuration?.clientId === undefined) {
-      return await Promise.reject(new SdkInitializationError())
-    }
-
-    if (!(await this.preflightChecks.isSupported())) {
-      return await Promise.reject(new UnsupportedBrowserError())
-    }
-
+    await this.validate()
     const challenge = await this.challenge()
 
     if (challenge === undefined) {

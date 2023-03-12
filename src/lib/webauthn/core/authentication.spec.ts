@@ -1,21 +1,15 @@
 /**
  * @jest-environment jsdom
  */
-import { PreflightChecks } from '../preflight/preflight-checks'
-import { WebAuthnAuthentication } from './authentication'
+import { DefaultPreflightChecks } from '../preflight/preflight-checks'
+import { Authentication, WebAuthnAuthentication } from './authentication'
 import { Initializer } from './configuration'
 
 describe('WebAuthnAuthentication', () => {
-  let authentication: WebAuthnAuthentication
-  let preflightChecks: PreflightChecks
+  let authentication: Authentication
   let abortSignal: AbortSignal
 
   describe('#authenticate', () => {
-    afterAll(() => {
-      jest.clearAllMocks()
-      jest.resetAllMocks()
-    })
-
     describe('when initialization has not yet occurred', () => {
       beforeEach(() => {
         authentication = new WebAuthnAuthentication()
@@ -30,8 +24,8 @@ describe('WebAuthnAuthentication', () => {
     describe('when the browser is not supported', () => {
       beforeEach(() => {
         Initializer.config = { clientId: 'clientId', tenantUrl: 'tenantUrl' }
-        preflightChecks = { isSupported: jest.fn().mockReturnValue(Promise.resolve(false)) }
-        authentication = new WebAuthnAuthentication(preflightChecks)
+        DefaultPreflightChecks.supported = jest.fn().mockReturnValue(Promise.resolve(false))
+        authentication = new WebAuthnAuthentication()
       })
 
       it('returns a rejection', async () => {
@@ -42,8 +36,8 @@ describe('WebAuthnAuthentication', () => {
     describe('when fetching the challenge fails', () => {
       beforeEach(() => {
         Initializer.config = { clientId: 'clientId', tenantUrl: 'tenantUrl' }
-        preflightChecks = { isSupported: jest.fn().mockReturnValue(Promise.resolve(true)) }
-        authentication = new WebAuthnAuthentication(preflightChecks)
+        DefaultPreflightChecks.supported = jest.fn().mockReturnValue(Promise.resolve(true))
+        authentication = new WebAuthnAuthentication()
 
         // @ts-expect-error
         global.fetch = jest.fn(async () =>
@@ -62,8 +56,8 @@ describe('WebAuthnAuthentication', () => {
     describe('when fetching the challenge succeeds', () => {
       beforeEach(() => {
         Initializer.config = { clientId: 'clientId', tenantUrl: 'tenantUrl' }
-        preflightChecks = { isSupported: jest.fn().mockReturnValue(Promise.resolve(true)) }
-        authentication = new WebAuthnAuthentication(preflightChecks)
+        DefaultPreflightChecks.supported = jest.fn().mockReturnValue(Promise.resolve(true))
+        authentication = new WebAuthnAuthentication()
 
         // @ts-expect-error
         global.fetch = jest.fn(async () =>
