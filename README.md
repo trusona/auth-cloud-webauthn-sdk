@@ -142,10 +142,10 @@ new trusona.WebAuthnAuthentication().authenticate(controller.signal, usernameHin
 # API Summary
 
 ```typescript
-// 
+
 static async DefaultPreflightChecks.supported () => Promise<boolean>
 
-static async Initializer.initialize(originUrl:string)
+static async Initializer.initialize(originUrl:string) => Promise<void>
 
 // instance method of WebAuthnEnrollment
 //
@@ -154,5 +154,6 @@ async enroll: (token: string, abortSignal?: AbortSignal) => Promise<EnrollmentRe
 // instance methods of WebAuthnAuthentication
 //
 async authenticate: (abortSignal: AbortSignal, userIdentifier?: string) => Promise<AuthenticationResult>
+
 async cui: (abortSignal: AbortSignal) => Promise<AuthenticationResult>
 ```
