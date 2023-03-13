@@ -278,29 +278,34 @@ var Base = (function () {
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        if (((_a = configuration_1.Initializer.configuration) === null || _a === void 0 ? void 0 : _a.clientId) === undefined) {
-                            throw new errors.SdkInitializationError();
-                        }
-                        return [4, preflight_checks_1.DefaultPreflightChecks.supported()
-                                .then(function (v) { return __awaiter(_this, void 0, void 0, function () {
-                                return __generator(this, function (_a) {
-                                    switch (_a.label) {
-                                        case 0:
-                                            if (!!v) return [3, 2];
-                                            return [4, Promise.reject(new errors.UnsupportedBrowserError())];
-                                        case 1:
-                                            _a.sent();
-                                            _a.label = 2;
-                                        case 2: return [2];
-                                    }
-                                });
-                            }); }).catch(function (_) { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
-                                switch (_a.label) {
-                                    case 0: return [4, Promise.reject(new errors.UnsupportedBrowserError())];
-                                    case 1: return [2, _a.sent()];
+                        if (!(((_a = configuration_1.Initializer.configuration) === null || _a === void 0 ? void 0 : _a.clientId) === undefined)) return [3, 2];
+                        return [4, Promise.reject(new errors.SdkInitializationError())];
+                    case 1: return [2, _b.sent()];
+                    case 2: return [4, preflight_checks_1.DefaultPreflightChecks.supported()
+                            .then(function (v) { return __awaiter(_this, void 0, void 0, function () {
+                            var _a;
+                            return __generator(this, function (_b) {
+                                switch (_b.label) {
+                                    case 0:
+                                        if (!v) return [3, 2];
+                                        return [4, Promise.resolve(true)];
+                                    case 1:
+                                        _a = _b.sent();
+                                        return [3, 4];
+                                    case 2: return [4, Promise.reject(new errors.UnsupportedBrowserError())];
+                                    case 3:
+                                        _a = _b.sent();
+                                        _b.label = 4;
+                                    case 4: return [2, _a];
                                 }
-                            }); }); })];
-                    case 1:
+                            });
+                        }); }).catch(function (_) { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4, Promise.reject(new errors.UnsupportedBrowserError())];
+                                case 1: return [2, _a.sent()];
+                            }
+                        }); }); })];
+                    case 3:
                         _b.sent();
                         return [2];
                 }
