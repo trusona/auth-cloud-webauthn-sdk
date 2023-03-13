@@ -288,7 +288,7 @@ var Base = (function () {
                                 switch (_b.label) {
                                     case 0:
                                         if (!v) return [3, 2];
-                                        return [4, Promise.resolve(true)];
+                                        return [4, Promise.resolve()];
                                     case 1:
                                         _a = _b.sent();
                                         return [3, 4];
