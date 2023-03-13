@@ -31,6 +31,8 @@ async function authenticate (cui = false) {
     .then((result) => JSON.parse(window.atob(result.token.split('.')[1])).sub)
     .then((token) => { message(`You have successfully signed in as <span class="font-semibold text-purple-500">${token}</span>.`) })
     .then((_) => { document.getElementById('authAgain').classList.remove('hidden') })
+    .then((_) => resetSignals())
+    .then((_) => authenticate(true))
     .catch((e) => {
       addClass(document.getElementById('authAgain'), 'hidden')
 
@@ -42,8 +44,8 @@ async function authenticate (cui = false) {
 
 async function jwtApi (username) {
   try {
-    const r = await fetch(`https://shopify-demo-connector.herokuapp.com/jwt?sub=${username}`)
-    const data = await r.json()
+    const response = await fetch(`https://shopify-demo-connector.herokuapp.com/jwt?sub=${username}`)
+    const data = await response.json()
     return await Promise.resolve(data.jwt)
   } catch (e) {
     return await Promise.reject(e)
