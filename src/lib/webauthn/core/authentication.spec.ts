@@ -17,7 +17,7 @@ describe('WebAuthnAuthentication', () => {
       })
 
       it('returns a rejection', async () => {
-        await expect(authentication.authenticate()).rejects.toThrowError('The SDK is not yet initialized')
+        await expect(authentication.authenticate(abortSignal)).rejects.toThrowError('The SDK is not yet initialized')
       })
     })
 
@@ -29,7 +29,7 @@ describe('WebAuthnAuthentication', () => {
       })
 
       it('returns a rejection', async () => {
-        await expect(authentication.authenticate()).rejects.toThrowError('This browser is not supported')
+        await expect(authentication.authenticate(abortSignal)).rejects.toThrowError('This browser is not supported')
       })
     })
 
@@ -49,7 +49,7 @@ describe('WebAuthnAuthentication', () => {
       })
 
       it('returns a rejection', async () => {
-        await expect(authentication.authenticate()).rejects.toThrowError('Failed to obtain challenge')
+        await expect(authentication.authenticate(abortSignal)).rejects.toThrowError('Failed to obtain challenge')
       })
     })
 
@@ -70,13 +70,13 @@ describe('WebAuthnAuthentication', () => {
 
       describe('when a username is not provided', () => {
         it('does not return a rejection', async () => {
-          await expect(authentication.authenticate()).rejects.not.toThrowError('Failed to obtain challenge')
+          await expect(authentication.authenticate(abortSignal)).rejects.not.toThrowError('Failed to obtain challenge')
         })
       })
 
       describe('when a username is provided', () => {
         it('does not return a rejection', async () => {
-          await expect(authentication.authenticate(false, 'username', abortSignal)).rejects.not.toThrowError('Failed to obtain challenge')
+          await expect(authentication.authenticate(abortSignal, 'username', false)).rejects.not.toThrowError('Failed to obtain challenge')
         })
       })
     })

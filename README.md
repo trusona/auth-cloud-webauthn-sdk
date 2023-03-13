@@ -96,9 +96,10 @@ This identifier does not need to be an email address, but it should uniquely ide
 Once generated, invoke the `enroll(string)` method with the `JWT` string.
 
 ```typescript
-const jwt:string = 'jwt.token-with-subject-claim.signature' // generated from your backend
+const jwt: string = 'jwt.token-with-subject-claim.signature' // generated from your backend
+const controller: AbortController = new AbortController()
 
-new trusona.WebAuthnEnrollment().enroll(jwt)
+new trusona.WebAuthnEnrollment().enroll(jwt, controller.signal)
   .then((status) => {
     // your happy path code after enrollment .. the user is now enrolled
   })
@@ -117,9 +118,10 @@ On success, a JWT is going to be provided in the SDK response that you can exami
 > The `subject` claim in the provided JWT will match `subject` that was provided during enrollment. 
 
 ```typescript
-const usernameHint:string|undefined = 'hint .. not required' // optional parameter, may be undefined
+const controller: AbortController = new AbortController()
+const usernameHint: string|undefined = 'hint .. not required' // optional parameter, may be undefined
 
-new trusona.WebAuthnAuthentication().authenticate(usernameHint)
+new trusona.WebAuthnAuthentication().authenticate(controller.signal, usernameHint)
   .then((map) => {
     const authToken:string = map.token // JWT from Trusona
     const jwksEndpoint:string = trusona.Initializer.jwksEndpoint()
@@ -134,4 +136,23 @@ new trusona.WebAuthnAuthentication().authenticate(usernameHint)
     // your error handling code ... authentication failed
     // examine the provided error for details
   })
+```
+
+
+# API Summary
+
+```typescript
+// 
+static async DefaultPreflightChecks.supported () => Promise<boolean>
+
+static async Initializer.initialize(originUrl:string)
+
+// instance method of WebAuthnEnrollment
+//
+async enroll: (token: string, abortSignal?: AbortSignal) => Promise<EnrollmentResult>
+
+// instance methods of WebAuthnAuthentication
+//
+async authenticate: (abortSignal: AbortSignal, userIdentifier?: string) => Promise<AuthenticationResult>
+async cui: (abortSignal: AbortSignal) => Promise<AuthenticationResult>
 ```

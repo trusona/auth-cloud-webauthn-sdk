@@ -23,7 +23,7 @@ export enum AuthenticationStatus {
 }
 
 export interface Authentication {
-  authenticate: (cui?: boolean, userIdentifier?: string, abortSignal?: AbortSignal) => Promise<AuthenticationResult>
+  authenticate: (abortSignal: AbortSignal, userIdentifier?: string, cui?: boolean) => Promise<AuthenticationResult>
   cui: (abortSignal: AbortSignal) => Promise<AuthenticationResult>
 }
 
@@ -35,7 +35,7 @@ export class WebAuthnAuthentication extends Base implements Authentication {
   }
 
   async cui (abortSignal: AbortSignal): Promise<AuthenticationResult> {
-    return await this.authenticate(true, undefined, abortSignal)
+    return await this.authenticate(abortSignal, undefined, true)
   }
 
   /**
@@ -46,7 +46,7 @@ export class WebAuthnAuthentication extends Base implements Authentication {
    *
    * @returns @see AuthenticationResult
    */
-  async authenticate (cui: boolean = false, userIdentifier?: string, abortSignal?: AbortSignal): Promise<AuthenticationResult> {
+  async authenticate (abortSignal: AbortSignal, userIdentifier?: string, cui = false): Promise<AuthenticationResult> {
     await this.validate()
     const challenge = await this.challenge()
 

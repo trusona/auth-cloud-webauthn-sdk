@@ -99,13 +99,13 @@ var WebAuthnAuthentication = (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.authenticate(true, undefined, abortSignal)];
+                    case 0: return [4, this.authenticate(abortSignal, undefined, true)];
                     case 1: return [2, _a.sent()];
                 }
             });
         });
     };
-    WebAuthnAuthentication.prototype.authenticate = function (cui, userIdentifier, abortSignal) {
+    WebAuthnAuthentication.prototype.authenticate = function (abortSignal, userIdentifier, cui) {
         if (cui === void 0) { cui = false; }
         return __awaiter(this, void 0, void 0, function () {
             var challenge, blank;

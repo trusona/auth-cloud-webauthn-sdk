@@ -27,7 +27,7 @@ async function authenticate (cui = false) {
   }
 
   authentication
-    .authenticate(cui, username, controller.signal)
+    .authenticate(controller.signal, username, cui)
     .then((result) => JSON.parse(window.atob(result.token.split('.')[1])).sub)
     .then((token) => { message(`You have successfully signed in as <span class="font-semibold text-purple-500">${token}</span>.`) })
     .then((_) => { document.getElementById('authAgain').classList.remove('hidden') })
