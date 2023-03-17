@@ -119,7 +119,7 @@ On success, a JWT is going to be provided in the SDK response that you can exami
 
 ```typescript
 const controller: AbortController = new AbortController()
-const usernameHint: string|undefined = 'hint .. not required' // optional parameter, may be undefined
+const usernameHint: string|undefined = 'username-hint' // optional, may be undefined
 
 new trusona.WebAuthnAuthentication().authenticate(controller.signal, usernameHint)
   .then((map) => {
@@ -147,13 +147,18 @@ static async DefaultPreflightChecks.supported () => Promise<boolean>
 
 static async Initializer.initialize(originUrl:string) => Promise<void>
 
-// instance method of WebAuthnEnrollment
+// Instance method of WebAuthnEnrollment
 //
 async enroll: (token: string, abortSignal?: AbortSignal) => Promise<EnrollmentResult>
 
-// instance methods of WebAuthnAuthentication
+
+// Instance methods of WebAuthnAuthentication
 //
 async authenticate: (abortSignal: AbortSignal, userIdentifier?: string) => Promise<AuthenticationResult>
 
+// if you have a "webauthn" annotated input field you can use CUI
+//
+// See https://github.com/w3c/webauthn/wiki/Explainer:-WebAuthn-Conditional-UI
+//
 async cui: (abortSignal: AbortSignal) => Promise<AuthenticationResult>
 ```
