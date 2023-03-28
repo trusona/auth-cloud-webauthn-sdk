@@ -1,6 +1,6 @@
 {
   "name": "@trusona/webauthn",
-  "version": "0.0.3-0",
+  "version": "0.0.4-0",
   "description": "Trusona WebAuthn SDK",
   "main": "build/main/index.js",
   "typings": "build/main/index.d.ts",
@@ -12,7 +12,7 @@
     "build": "rm -rf build && run-p build:*",
     "build:main": "tsc -p tsconfig.json",
     "build:module": "tsc -p tsconfig.module.json",
-    "standalone": "npm run build && npx browserify build/main/index.js -p esmify -s trusona > examples/simple-demo/trusona-webauthn.standalone.js",
+    "standalone": "npm run build && npx browserify build/main/index.js -p esmify -s trusona | npx uglify-js > examples/simple-demo/trusona-webauthn.standalone.js",
     "fix": "run-s fix:*",
     "fix:lint": "npx ts-standard src --fix",
     "test": "run-s build jest test:*",
@@ -59,7 +59,8 @@
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
     "typedoc": "^0.23.26",
-    "typescript": "^4.9"
+    "typescript": "^4.9",
+    "uglify-js": "^3.17.4"
   },
   "files": [
     "build/main",
