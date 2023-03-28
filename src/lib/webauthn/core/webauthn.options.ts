@@ -26,6 +26,8 @@ export class WebAuthnOptions {
         options.rp.id = undefined
         options.attestation = 'direct'
 
+        localStorage.setItem(Initializer._kid, options.user.name)
+
         return abortSignal !== undefined
           ? await WebAuthn.create({ publicKey: options, signal: abortSignal })
           : await WebAuthn.create({ publicKey: options })

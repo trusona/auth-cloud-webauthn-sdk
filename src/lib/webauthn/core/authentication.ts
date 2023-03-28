@@ -81,9 +81,12 @@ export class WebAuthnAuthentication extends Base implements Authentication {
 
     const map = response.ok ? await response.json() : undefined
 
-    return map?.token !== undefined
-      ? await Promise.resolve({ status: AuthenticationStatus.SUCCESS, token: map.token })
-      : await Promise.reject(new FailedAuthenticationError())
+    if (map.token !== undefined) {
+      await this.recordEvent('SIGNIN_SUCCESS')
+      return await Promise.resolve({ status: AuthenticationStatus.SUCCESS, token: map.token })
+    } else {
+      return await Promise.reject(new FailedAuthenticationError())
+    }
   }
 
   protected async challenge (): Promise<string | undefined> {
@@ -91,6 +94,9 @@ export class WebAuthnAuthentication extends Base implements Authentication {
 
     const response = await fetch(url, { method: 'POST', body: '{}', headers: { 'Content-Type': 'application/json' } })
     const map = await response.json()
+
+    localStorage.setItem(Initializer._chl, map?.login_challenge)
+    await this.recordEvent('BIOMETRIC_START')
 
     return await Promise.resolve(map?.login_challenge)
   }

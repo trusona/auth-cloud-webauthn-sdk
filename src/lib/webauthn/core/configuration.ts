@@ -90,5 +90,19 @@ export const Initializer = {
 
   get jwksEndpoint (): string {
     return `${this.configuration?.tenantUrl ?? ''}/.well-known/jwks`
+  },
+
+  get analyticsEndpoint (): string {
+    return `${this.configuration?.tenantUrl ?? ''}/api/analytics`
+  },
+
+  // internal use
+  get _chl (): string {
+    return '_chl'
+  },
+
+  // internal use
+  get _kid (): string {
+    return '_kid'
   }
 }

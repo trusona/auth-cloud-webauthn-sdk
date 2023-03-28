@@ -51,6 +51,12 @@ export class WebAuthnEnrollment extends Base implements Enrollment {
     const response = await fetch(Initializer.credentialsEndpoint,
       { method: 'POST', body: JSON.stringify(credential), credentials: 'include', headers: { 'Content-Type': 'application/json' } })
 
-    return response.ok ? await Promise.resolve({ status: EnrollmentStatus.SUCCESS }) : await Promise.reject(new errors.FailedEnrollmentError())
+    if (response.ok) {
+      await this.recordEvent('REGISTRATION')
+
+      return await Promise.resolve({ status: EnrollmentStatus.SUCCESS })
+    } else {
+      return await Promise.reject(new errors.FailedEnrollmentError())
+    }
   }
 }
