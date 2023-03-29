@@ -14,4 +14,21 @@ export class Base {
       }
       ).catch(async (_) => await Promise.reject(new errors.UnsupportedBrowserError()))
   }
+
+  protected async recordEvent (eventType: string): Promise<void> {
+    const sessionId = localStorage.getItem(Initializer._chl) ?? undefined
+    const userIdentifier = localStorage.getItem(Initializer._kid) ?? undefined
+    const event = { type: eventType, user_identifier: userIdentifier, session_id: sessionId }
+
+    fetch(Initializer.analyticsEndpoint,
+      {
+        method: 'POST',
+        body: JSON.stringify(event),
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' }
+      })
+      .catch((_) => {
+        // ok to ignore if it fails
+      })
+  }
 }

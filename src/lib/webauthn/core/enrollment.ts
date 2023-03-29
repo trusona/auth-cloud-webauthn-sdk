@@ -38,7 +38,9 @@ export class WebAuthnEnrollment extends Base implements Enrollment {
     const response = await fetch(Initializer.enrollmentsEndpoint,
       { method: 'POST', body: JSON.stringify({ token }), credentials: 'include', headers: { 'Content-Type': 'application/json' } })
 
-    return response.ok ? await this.finalizeEnrollment(abortSignal) : await Promise.reject(new errors.InvalidTokenEnrollmentError())
+    return response.ok
+      ? await this.finalizeEnrollment(abortSignal)
+      : await Promise.reject(new errors.InvalidTokenEnrollmentError())
   }
 
   private async finalizeEnrollment (abortSignal?: AbortSignal): Promise<EnrollmentResult> {
@@ -51,6 +53,10 @@ export class WebAuthnEnrollment extends Base implements Enrollment {
     const response = await fetch(Initializer.credentialsEndpoint,
       { method: 'POST', body: JSON.stringify(credential), credentials: 'include', headers: { 'Content-Type': 'application/json' } })
 
-    return response.ok ? await Promise.resolve({ status: EnrollmentStatus.SUCCESS }) : await Promise.reject(new errors.FailedEnrollmentError())
+    await this.recordEvent(response.ok ? 'REGISTRATION' : 'REGISTRATION_FAILED')
+
+    return response.ok
+      ? await Promise.resolve({ status: EnrollmentStatus.SUCCESS })
+      : await Promise.reject(new errors.FailedEnrollmentError())
   }
 }
