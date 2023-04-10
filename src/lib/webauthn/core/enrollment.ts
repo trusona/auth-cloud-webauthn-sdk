@@ -36,7 +36,7 @@ export class WebAuthnEnrollment extends Base implements Enrollment {
     }
 
     const response = await fetch(Initializer.enrollmentsEndpoint,
-      { method: 'POST', body: JSON.stringify({ token }), credentials: 'include', headers: { 'Content-Type': 'application/json' } })
+      { method: 'POST', body: JSON.stringify({ token }), credentials: 'include', headers: Initializer.headers })
 
     return response.ok
       ? await this.finalizeEnrollment(abortSignal)
@@ -51,7 +51,7 @@ export class WebAuthnEnrollment extends Base implements Enrollment {
     }
 
     const response = await fetch(Initializer.credentialsEndpoint,
-      { method: 'POST', body: JSON.stringify(credential), credentials: 'include', headers: { 'Content-Type': 'application/json' } })
+      { method: 'POST', body: JSON.stringify(credential), credentials: 'include', headers: Initializer.headers })
 
     await this.recordEvent(response.ok ? 'REGISTRATION' : 'REGISTRATION_FAILED')
 
