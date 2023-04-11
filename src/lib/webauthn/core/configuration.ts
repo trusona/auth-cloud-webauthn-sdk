@@ -6,8 +6,10 @@ export interface Configuration {
 }
 
 export enum Environment {
-  UAT = 'https://authcloud.staging.trusona.net',
-  PRODUCTION = 'https://authcloud.trusona.net'
+  // default environment
+  PRODUCTION = 'https://authcloud.trusona.net',
+  // internal usage only - not for public use
+  STAGING = 'https://authcloud.staging.trusona.net'
 }
 
 /**
@@ -24,7 +26,7 @@ export const Initializer = {
    * @remarks
    * This is the entry point to the SDK, called once, and as early as possible.
    *
-   * @param tenantUrl - Your tenant origin URL that Trusona shall provide to you.
+   * @param tenantId - Your unique tenant ID that Trusona shall provide to you. This identifier is not a secret.
    */
   async initialize (tenantId: string, environment: Environment = Environment.PRODUCTION): Promise<void> {
     this.config = await this.loadConfiguration(tenantId, environment)
@@ -41,6 +43,9 @@ export const Initializer = {
     return this.config
   },
 
+  /**
+   * This method is not part of the public SDK.
+   */
   get headers () {
     return {
       Authorization: `SDK-Bearer ${this.config?.tenantId ?? ''}`,
@@ -109,10 +114,16 @@ export const Initializer = {
     return `${this.configuration?.tenantUrl ?? ''}/api/enrollments`
   },
 
+  /**
+   * This method is not part of the public SDK.
+   */
   get jwksEndpoint (): string {
     return `${this.configuration?.tenantUrl ?? ''}/.well-known/jwks`
   },
 
+  /**
+   * This method is not part of the public SDK.
+   */
   get analyticsEndpoint (): string {
     return `${this.configuration?.tenantUrl ?? ''}/api/analytics`
   },

@@ -23,7 +23,7 @@ describe('Configuration', () => {
 
       describe('when UAT is initialized', () => {
         beforeEach(async () => {
-          await Initializer.initialize('a6749d56-5d88-43ef-8d6c-bb96df1021a9', Environment.UAT)
+          await Initializer.initialize('a6749d56-5d88-43ef-8d6c-bb96df1021a9', Environment.STAGING)
         })
 
         it('resolves a valid UAT login endpoint', () => {
