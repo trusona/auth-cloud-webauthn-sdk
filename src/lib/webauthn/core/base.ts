@@ -24,7 +24,6 @@ export class Base {
       {
         method: 'POST',
         body: JSON.stringify(event),
-        credentials: 'include',
         headers: Initializer.headers
       })
       .catch((_) => {
