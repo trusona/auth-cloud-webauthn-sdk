@@ -165,3 +165,7 @@ async authenticate: (abortSignal: AbortSignal, userIdentifier?: string) => Promi
 //
 async cui: (abortSignal: AbortSignal) => Promise<AuthenticationResult>
 ```
+
+# Troubleshooting
+
+If initialization of the SDK fails, verify that you have specified the correct `tenantId`.

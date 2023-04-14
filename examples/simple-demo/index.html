@@ -90,8 +90,11 @@
   <script>
     document.addEventListener("DOMContentLoaded", async function (event) {
       if(await new trusona.DefaultPreflightChecks().isSupported()) {
+        // not a secret; but is unique to this page; contact Trusona for your own value.
+        const tenantId = 'fd999a47-4e20-4a19-9de4-304a968124e5' 
+
         document.getElementById('main').classList.remove('hidden')
-        trusona.Initializer.initialize("https://passkeys-sdk.lab.trusona.net")
+        trusona.Initializer.initialize(tenantId, trusona.Environment.STAGING)
           .then((_) => {
              // true CUI .. anything but ios
             if((window.navigator.userAgent.match(/iPhone/i) ?? []).length === 0) {
