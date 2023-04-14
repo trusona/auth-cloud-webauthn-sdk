@@ -10,7 +10,7 @@ To use this SDK, Trusona must create a `tenant` within our infrastructure for yo
 
 Contact us about that.
 
-You can verify that a tenant exists and is configured if you visit `https://<YOUR-TENANT-ORIGIN-DOMAIN>/configuration`
+As part of this step, Trusona shall provide you with a `tenantId` that shall be used to initialize the SDK.
 
 ## JWKS Endpoint
 
@@ -78,12 +78,16 @@ Next, in a constructor or other early first-run logic, initialize the SDK.
 This should only be done once.
 
 ```typescript
-trusona.Initializer.initialize('https://<YOUR-TENANT-ORIGIN-DOMAIN>')
+
+// not a secret; but is unique to this page; contact Trusona for your own value.
+const tenantId = '00000000-0000-0000-4000-000000000000'
+
+trusona.Initializer.initialize(tenantId)
   .then((_) => {
-    // your happy path code
+    // successfully initialized; your happy path code
   })
   .catch((error) => {
-    // your error handling code
+    // failed initialization! Is the tenant ID correct? Your error handling code
   })
 ```  
 
@@ -145,7 +149,7 @@ new trusona.WebAuthnAuthentication().authenticate(controller.signal, usernameHin
 
 static async DefaultPreflightChecks.supported () => Promise<boolean>
 
-static async Initializer.initialize(originUrl:string) => Promise<void>
+static async Initializer.initialize(tenantId: string) => Promise<void>
 
 // Instance method of WebAuthnEnrollment
 //
@@ -162,3 +166,7 @@ async authenticate: (abortSignal: AbortSignal, userIdentifier?: string) => Promi
 //
 async cui: (abortSignal: AbortSignal) => Promise<AuthenticationResult>
 ```
+
+# Troubleshooting
+
+If initialization of the SDK fails, verify that you have specified the correct `tenantId`.
