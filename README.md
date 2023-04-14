@@ -79,6 +79,7 @@ This should only be done once.
 
 ```typescript
 
+// not a secret; but is unique to this page; contact Trusona for your own value.
 const tenantId = '00000000-0000-0000-4000-000000000000'
 
 trusona.Initializer.initialize(tenantId)
