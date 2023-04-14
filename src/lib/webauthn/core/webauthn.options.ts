@@ -22,9 +22,7 @@ export class WebAuthnOptions {
   async createCredential (abortSignal?: AbortSignal): Promise<WebAuthn.PublicKeyCredentialWithAttestationJSON | undefined> {
     return await this.attestationOptions()
       .then(async (options) => {
-        options.rp.name = window.location.hostname
-        options.rp.id = undefined
-        options.attestation = 'direct'
+        // console.log(JSON.stringify(options))
 
         localStorage.setItem(Initializer._kid, options?.user?.name ?? 'unknown')
 
