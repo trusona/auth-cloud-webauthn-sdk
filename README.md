@@ -8,7 +8,7 @@
 
 To use this SDK, Trusona must create a `tenant` within our infrastructure for your domain.
 
-Contact us about that.
+Contact us about that at [support@trusona.com](mailto:support@trusona.com)
 
 As part of this step, Trusona shall provide you with a `tenantId` that shall be used to initialize the SDK.
 
