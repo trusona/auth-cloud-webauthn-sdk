@@ -45,7 +45,7 @@ async function authenticate (cui = false) {
 
 async function jwtApi (username) {
   try {
-    const response = await fetch(`https://shopify-demo-connector.herokuapp.com/jwt?sub=${username}`)
+    const response = await fetch(`https://jwks-delegate.lab.trusona.net/jwt?sub=${username}`)
     const data = await response.json()
     return await Promise.resolve(data.jwt)
   } catch (e) {
