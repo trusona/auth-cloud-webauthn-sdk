@@ -5,7 +5,10 @@
   "main": "build/main/index.js",
   "typings": "build/main/index.d.ts",
   "module": "build/module/index.js",
-  "repository": "https://github.com/trusona/auth-cloud-webauthn-sdk",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/trusona/auth-cloud-webauthn-sdk.git"
+  },
   "license": "MIT",
   "keywords": [],
   "scripts": {
@@ -74,5 +77,13 @@
     "commitizen": {
       "path": "cz-conventional-changelog"
     }
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/trusona/auth-cloud-webauthn-sdk/issues"
+  },
+  "homepage": "https://github.com/trusona/auth-cloud-webauthn-sdk#readme",
+  "directories": {
+    "example": "examples"
+  },
+  "author": "Trusona"
 }
