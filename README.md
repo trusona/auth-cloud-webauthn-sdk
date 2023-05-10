@@ -1,6 +1,6 @@
-# Auth Cloud WebAuthn SDK
+# Trusona AuthCloud WebAuthn SDK
 
-[![CI](https://github.com/lighthauz/auth-cloud-webauthn-sdk/actions/workflows/ci-tester.yml/badge.svg)](https://github.com/lighthauz/auth-cloud-webauthn-sdk/actions/workflows/ci-tester.yml)
+[![.github/workflows/ci-tester.yml](https://github.com/trusona/auth-cloud-webauthn-sdk/actions/workflows/ci-tester.yml/badge.svg)](https://github.com/trusona/auth-cloud-webauthn-sdk/actions/workflows/ci-tester.yml)
 
 # Introduction
 
