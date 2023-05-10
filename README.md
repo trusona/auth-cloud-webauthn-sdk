@@ -10,13 +10,13 @@ To use this SDK, Trusona must create a `tenant` within our infrastructure for yo
 
 Contact us about that at [support@trusona.com](mailto:support@trusona.com)
 
-As part of this step, Trusona shall provide you with a `tenantId` that shall be used to initialize the SDK.
+As part of this step, Trusona shall provide you with access to a portal where you can find your unique `tenantId` that would be used to initialize the SDK.
 
 ## JWKS Endpoint
 
-Within your infrastructure, an endpoint must be implemented to provide public keys' information in a [JWKS format](https://www.rfc-editor.org/rfc/rfc7517).
+Within your infrastructure, an URL endpoint must be implemented to provide public keys' information in a [JWKS format](https://www.rfc-editor.org/rfc/rfc7517).
 
-You will provide this endpoint to us as part of of tenant configuration.
+You will provide this endpoint to us as part of of tenant configuration via the portal.
 
 Our APIs expect this to be available and will verify the validity of provided tokens against this endpoint.
 
