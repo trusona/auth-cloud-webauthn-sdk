@@ -8,13 +8,17 @@ import { Base } from './base'
  * @description
  * An authentication result available after a successful authentication.
  *
- * If set, the @param token can be verified with https://YOUR-TENANT-DOMAIN/.well-known/jwks
+ * If set, both the @param idToken and @param accessToken can be verified with https://YOUR-TENANT-DOMAIN/.well-known/jwks
  *
- * If the @param token is not available, the sign-in is not valid.
+ * If either of these JWTs are not available, the sign-in event is not valid.
+ *
+ * When returned, the @param idToken is only valid for a brief period of time, currently 3 minutes.
+ *
+ * The @param accessToken is valid for a longer period of time, currently 24 hours.
  */
-
 export interface AuthenticationResult {
-  token: string
+  idToken: string
+  accessToken: string
   status: AuthenticationStatus
 }
 
@@ -80,10 +84,13 @@ export class WebAuthnAuthentication extends Base implements Authentication {
       })
 
     const map = response.ok ? await response.json() : undefined
-    await this.recordEvent(map.token !== undefined ? 'SIGNIN_SUCCESS' : 'SIGNIN_FAILED')
+    const idToken = map.token ?? map.idToken
+    const accessToken = map.accessToken
 
-    return map?.token !== undefined
-      ? await Promise.resolve({ status: AuthenticationStatus.SUCCESS, token: map.token })
+    await this.recordEvent(idToken !== undefined ? 'SIGNIN_SUCCESS' : 'SIGNIN_FAILED')
+
+    return idToken !== undefined
+      ? await Promise.resolve({ status: AuthenticationStatus.SUCCESS, idToken, accessToken })
       : await Promise.reject(new FailedAuthenticationError())
   }
 
