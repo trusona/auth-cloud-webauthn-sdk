@@ -5,7 +5,7 @@
   "main": "build/main/index.js",
   "typings": "build/main/index.d.ts",
   "module": "build/module/index.js",
-  "repository": "https://github.com/lighthauz/auth-cloud-webauthn-sdk",
+  "repository": "https://github.com/trusona/auth-cloud-webauthn-sdk",
   "license": "MIT",
   "keywords": [],
   "scripts": {
