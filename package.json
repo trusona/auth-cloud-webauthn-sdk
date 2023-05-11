@@ -10,7 +10,7 @@
     "url": "git+https://github.com/trusona/auth-cloud-webauthn-sdk.git"
   },
   "license": "MIT",
-  "keywords": [],
+  "keywords": ["webauthn", "trusona", "passkeys", "passkey"],
   "scripts": {
     "build": "rm -rf build && run-p build:*",
     "build:main": "tsc -p tsconfig.json",
