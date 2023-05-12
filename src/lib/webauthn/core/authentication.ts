@@ -84,7 +84,7 @@ export class WebAuthnAuthentication extends Base implements Authentication {
       })
 
     const map = response.ok ? await response.json() : undefined
-    const idToken = map.token ?? map.idToken
+    const idToken = map.idToken
     const accessToken = map.accessToken
 
     await this.recordEvent(idToken !== undefined ? 'SIGNIN_SUCCESS' : 'SIGNIN_FAILED')
