@@ -6,7 +6,7 @@ export interface Configuration {
 }
 
 export enum Environment {
-  // default environment
+  // default (public) environment
   PRODUCTION = 'https://authcloud.trusona.net',
   // internal usage only - not for public use
   STAGING = 'https://authcloud.staging.trusona.net'
