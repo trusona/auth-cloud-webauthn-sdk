@@ -61,7 +61,7 @@ export const Initializer = {
     const response = await fetch(`${tenantUrl}/configuration`,
       {
         headers: {
-          Authorization: `SDK-Bearer ${tenantId}`,
+          'X-Tenant': tenantId,
           'Content-Type': 'application/json'
         }
       })
