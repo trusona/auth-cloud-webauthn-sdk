@@ -180,8 +180,7 @@ async cui: (abortSignal: AbortSignal) => Promise<AuthenticationResult>
 
 // Instance methods of PasskeyManagement
 //
-const jwt = authenticationResult.accessToken
-const passkeyManagement = new DefaultPasskeyManagement(jwt) 
+const passkeyManagement = new DefaultPasskeyManagement(authenticationResult.accessToken) 
 
 // Returns an array of all active and unexpired passkeys for the currently authenticated user.
 //
@@ -189,11 +188,11 @@ asnyc get() => Promise<PassKey[]>
 
 // Returns a Promise of true indicating that the specified passkey was successfully deleted.
 //
-deletePasskey: (id: string) => Promise<boolean>
+async deletePasskey: (id: string) => Promise<boolean>
 
 // If found, returns the specified passkey. Inactive, or expired passkeys cannot be retrieved.
 //
-getPasskey: (id: string) => Promise<PassKey>
+async getPasskey: (id: string) => Promise<PassKey>
 
 ```
 
