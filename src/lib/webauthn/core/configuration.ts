@@ -48,7 +48,7 @@ export const Initializer = {
    */
   get headers () {
     return {
-      Authorization: `SDK-Bearer ${this.config?.tenantId ?? ''}`,
+      'X-Tenant': this.config?.tenantId ?? '',
       'Content-Type': 'application/json'
     }
   },

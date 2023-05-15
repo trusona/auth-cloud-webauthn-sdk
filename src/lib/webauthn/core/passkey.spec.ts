@@ -40,7 +40,8 @@ describe('PassKeyManagement', () => {
         method: 'GET',
         headers:
             {
-              Authorization: 'SDK-Bearer jwt, SDK-Bearer tenant-id'
+              'X-Tenant': 'tenant-id',
+              Authorization: 'SDK-Bearer jwt'
             }
       }
 
@@ -60,7 +61,8 @@ describe('PassKeyManagement', () => {
         method: 'DELETE',
         headers:
             {
-              Authorization: 'SDK-Bearer jwt, SDK-Bearer tenant-id'
+              'X-Tenant': 'tenant-id',
+              Authorization: 'SDK-Bearer jwt'
             }
       }
 
@@ -80,7 +82,8 @@ describe('PassKeyManagement', () => {
         method: 'GET',
         headers:
             {
-              Authorization: 'SDK-Bearer jwt, SDK-Bearer tenant-id'
+              'X-Tenant': 'tenant-id',
+              Authorization: 'SDK-Bearer jwt'
             }
       }
 
