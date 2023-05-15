@@ -20,7 +20,7 @@
     "fix:lint": "npx ts-standard src/lib --fix",
     "test": "run-s build jest test:*",
     "jest": "jest --coverage src",
-    "test:lint": "npx ts-standard src",
+    "test:lint": "npx ts-standard src/lib",
     "unused:spelling": "cspell \"{README.md,.github/*.md,src/**/*.ts}\"",
     "check-cli": "run-s test diff-integration-tests check-integration-tests",
     "check-integration-tests": "run-s check-integration-test:*",
