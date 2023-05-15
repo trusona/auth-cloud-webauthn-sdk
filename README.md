@@ -180,7 +180,8 @@ async cui: (abortSignal: AbortSignal) => Promise<AuthenticationResult>
 
 // Instance methods of PasskeyManagement
 //
-const passkeyManagement = new DefaultPasskeyManagement(jwt) // on authentication, map.token will have a JWT valid for 24 hours.
+const jwt = authenticationResult.accessToken
+const passkeyManagement = new DefaultPasskeyManagement(jwt) 
 
 // Returns an array of all active and unexpired passkeys for the currently authenticated user.
 //
