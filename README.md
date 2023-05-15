@@ -142,6 +142,17 @@ new trusona.WebAuthnAuthentication().authenticate(controller.signal, usernameHin
   })
 ```
 
+## Manage A Users' Passkeys
+
+You can manage a user's passkeys with implemented the `PasskeyManagement` interface.
+
+An instance of a `PasskeyManagement` is created using the provided `JWT` access token available from `AuthenticationResult`
+
+All active credentials can be returned, and they can be individually deleted.
+
+See the summary below.
+
+
 
 # API Summary
 
@@ -165,6 +176,24 @@ async authenticate: (abortSignal: AbortSignal, userIdentifier?: string) => Promi
 // See https://github.com/w3c/webauthn/wiki/Explainer:-WebAuthn-Conditional-UI
 //
 async cui: (abortSignal: AbortSignal) => Promise<AuthenticationResult>
+
+
+// Instance methods of PasskeyManagement
+//
+const passkeyManagement = new DefaultPasskeyManagement(jwt) // on authentication, map.token will have a JWT valid for 24 hours.
+
+// Returns an array of all active and unexpired passkeys for the currently authenticated user.
+//
+asnyc get() => Promise<PassKey[]>
+
+// Returns a Promise of true indicating that the specified passkey was successfully deleted.
+//
+deletePasskey: (id: string) => Promise<boolean>
+
+// If found, returns the specified passkey. Inactive, or expired passkeys cannot be retrieved.
+//
+getPasskey: (id: string) => Promise<PassKey>
+
 ```
 
 # Troubleshooting
