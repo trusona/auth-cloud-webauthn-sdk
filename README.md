@@ -184,7 +184,7 @@ const passkeyManagement = new DefaultPasskeyManagement(authenticationResult.acce
 
 // Returns an array of all active and unexpired passkeys for the currently authenticated user.
 //
-asnyc get() => Promise<PassKey[]>
+asnyc get: () => Promise<PassKey[]>
 
 // Returns a Promise of true indicating that the specified passkey was successfully deleted.
 //
