@@ -17,7 +17,7 @@
     "build:module": "tsc -p tsconfig.module.json",
     "standalone": "npm run build && npx browserify build/main/index.js -p esmify -s trusona | npx uglify-js > examples/simple-demo/trusona-webauthn.standalone.js",
     "fix": "run-s fix:*",
-    "fix:lint": "npx ts-standard src --fix",
+    "fix:lint": "npx ts-standard src/lib --fix",
     "test": "run-s build jest test:*",
     "jest": "jest --coverage src",
     "test:lint": "npx ts-standard src",

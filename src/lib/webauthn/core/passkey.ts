@@ -68,7 +68,6 @@ export class DefaultPassKeyManagement implements PassKeyManagement {
       method,
       headers:
       {
-        'Content-Type': 'application/json',
         Authorization: `SDK-Bearer ${this.accessToken}, SDK-Bearer ${Initializer.configuration?.tenantId ?? ''}`
       }
     }

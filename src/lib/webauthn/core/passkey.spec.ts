@@ -40,7 +40,6 @@ describe('PassKeyManagement', () => {
         method: 'GET',
         headers:
             {
-              'Content-Type': 'application/json',
               Authorization: 'SDK-Bearer jwt, SDK-Bearer tenant-id'
             }
       }
@@ -61,7 +60,6 @@ describe('PassKeyManagement', () => {
         method: 'DELETE',
         headers:
             {
-              'Content-Type': 'application/json',
               Authorization: 'SDK-Bearer jwt, SDK-Bearer tenant-id'
             }
       }
@@ -82,7 +80,6 @@ describe('PassKeyManagement', () => {
         method: 'GET',
         headers:
             {
-              'Content-Type': 'application/json',
               Authorization: 'SDK-Bearer jwt, SDK-Bearer tenant-id'
             }
       }
