@@ -3,6 +3,7 @@ import { Initializer } from './configuration'
 export interface PassKey {
   id: string
   expires?: string
+  created: string
   userIdentifier: string
 }
 
