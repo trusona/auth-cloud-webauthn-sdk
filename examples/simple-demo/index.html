@@ -2,6 +2,8 @@
 <html>
   <head>
     <title>Simple Passkey Demo from Trusona</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css"
@@ -74,13 +76,21 @@
   
           <div class="text-base font-light mt-8 text-gray-700 max-w-max ">
             <div class="flex place-content-center">
-              <div class="align-middle c">
-                <span id="msg">If you've previously enrolled, you may <a href='#' class="underline" data-next='sign_in' onclick="next(event);">sign in</a>.</span>
+              <div class="align-middle">
+                <span id="msg">If you've previously enrolled, you may <a href='#' class="underline" data-next='sign_in' onclick="next(event);">sign in</a>.                   
+                </span>
                 <br>&nbsp;</br>
                 <span id="authAgain" class="hidden">You can sign in <a href="#" class="underline" data-next="sign_in" onclick="next(event);">again</a>!</span>
               </div>
             </div>
           </div>
+
+          
+
+          <div id="credentials" class="p-4"></div>
+
+
+
         </div>
       </div>
     </div>
