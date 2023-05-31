@@ -106,10 +106,7 @@
         document.getElementById('main').classList.remove('hidden')
         trusona.Initializer.initialize(tenantId, trusona.Environment.STAGING)
           .then((_) => {
-             // true CUI .. anything but ios
-            if((window.navigator.userAgent.match(/iPhone/i) ?? []).length === 0) {
-              authenticate(true)
-            }
+            authenticate(true)
           })
       }
       else {
