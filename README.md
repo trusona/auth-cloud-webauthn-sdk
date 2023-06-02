@@ -127,8 +127,8 @@ const usernameHint: string|undefined = 'username-hint' // optional, may be undef
 
 new trusona.WebAuthnAuthentication().authenticate(controller.signal, usernameHint)
   .then((map) => {
-    const authToken:string = map.token // JWT from Trusona
-    const jwksEndpoint:string = trusona.Initializer.jwksEndpoint()
+    const idToken:string = map.idToken // JWT from Trusona identifying the authenticated user
+    const jwksEndpoint:string = trusona.Initializer.jwksEndpoint
 
     //
     // Verify the JWT against the Trusona's JWKS implementation endpoint.
