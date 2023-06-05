@@ -127,7 +127,8 @@ const usernameHint: string|undefined = 'username-hint' // optional, may be undef
 
 new trusona.WebAuthnAuthentication().authenticate(controller.signal, usernameHint)
   .then((map) => {
-    const idToken:string = map.idToken // JWT from Trusona identifying the authenticated user
+     // JWT from Trusona identifying the authenticated user
+    const idToken:string = map.idToken
     const jwksEndpoint:string = trusona.Initializer.jwksEndpoint
 
     //
@@ -137,8 +138,9 @@ new trusona.WebAuthnAuthentication().authenticate(controller.signal, usernameHin
     //
   })
   .catch((error) => {
-    // your error handling code ... authentication failed
-    // examine the provided error for details
+    // your error handling code ... authentication failed examine the provided error for details
+
+    // Importantly, if the JWT cannot be verified, your users should end up here.
   })
 ```
 
