@@ -11,7 +11,7 @@ describe('Configuration', () => {
             headers: {},
             status: 200,
             ok: true,
-            json: async () => await Promise.resolve({ clientId: 'clientId' })
+            json: async () => await Promise.resolve({ clientId: 'clientId', jwks: 'https://localhost.example.com/.well-known/jwks' })
           }))
 
         await Initializer.initialize('a6749d56-5d88-43ef-8d6c-bb96df1021a9')
@@ -47,8 +47,8 @@ describe('Configuration', () => {
         expect(Initializer.enrollmentsEndpoint).toBe('https://authcloud.trusona.net/api/enrollments')
       })
 
-      it('resolves a valid JWKS endpoint', () => {
-        expect(Initializer.jwksEndpoint).toBe('https://authcloud.trusona.net/.well-known/jwks')
+      it('echos back the provided JWKS endpoint', () => {
+        expect(Initializer.jwksEndpoint).toBe('https://localhost.example.com/.well-known/jwks')
       })
 
       it('will initialize a valid configuration', () => {

@@ -3,13 +3,16 @@ export interface Configuration {
   tenantUrl: string
   tenantId: string
   clientId: string
+  jwks: string
 }
 
 export enum Environment {
   // default (public) environment
   PRODUCTION = 'https://authcloud.trusona.net',
   // internal usage only - not for public use
-  STAGING = 'https://authcloud.staging.trusona.net'
+  STAGING = 'https://authcloud.staging.trusona.net',
+  // internal usage only - not for public use
+  LOCALHOST = 'http://localhost:8080'
 }
 
 /**
@@ -72,6 +75,7 @@ export const Initializer = {
       return await Promise.resolve({
         tenantId,
         tenantUrl,
+        jwks: map.jwks,
         clientId: map.clientId
       })
     } else {
@@ -115,10 +119,10 @@ export const Initializer = {
   },
 
   /**
-   * This method is not part of the public SDK.
+   * This method is part of the public SDK.
    */
   get jwksEndpoint (): string {
-    return `${this.configuration?.tenantUrl ?? ''}/.well-known/jwks`
+    return this.configuration?.jwks ?? ''
   },
 
   /**

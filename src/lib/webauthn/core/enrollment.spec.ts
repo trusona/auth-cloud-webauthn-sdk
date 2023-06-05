@@ -11,7 +11,7 @@ describe('WebAuthnAuthentication', () => {
   describe('when the browser is not supported', () => {
     beforeEach(() => {
       DefaultPreflightChecks.supported = jest.fn().mockImplementation(async () => await Promise.resolve(false))
-      Initializer.config = { clientId: 'clientId', tenantUrl: 'tenantUrl', tenantId: 'tenantId' }
+      Initializer.config = { clientId: 'clientId', tenantUrl: 'tenantUrl', tenantId: 'tenantId', jwks: 'jwks-url' }
       enrollment = new WebAuthnEnrollment()
     })
 
