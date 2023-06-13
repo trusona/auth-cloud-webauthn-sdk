@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.1.0] - June 13, 2023
+- Expand preflight check support.
+
 ## [1.0.4] - June 6, 2023
 
 - Bug fix relating the the JWKS URL provided by the `Initializer.jwksEndpoint` property.

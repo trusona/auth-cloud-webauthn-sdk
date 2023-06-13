@@ -49,19 +49,30 @@ Add a reference to the library within your implementation.
 import * as trusona from '@trusona/webauthn'
 ```
 
-## Preflight
+## Preflight Checks
 
 It is prudent to perform some preflight checks before you initialize the SDK to ensure your users have a compatible browser.
 
-This can be accomplished with a static method that returns `true` or `false` indicating whether the user can successfully complete enrollment and authentication on their current browser.
+This can be accomplished with a static `check()` method that returns an object with various properties indicating the available WebAuthn capabilities that would allow the user to successfully complete enrollment and authentication on their current browser.
 
 ```typescript
 
-const supported:boolean = await trusona.DefaultPreflightChecks.supported()
+const deviceSupport:Preflight = await trusona.DefaultPreflightChecks.check()
 
-if (supported) {
-  // this browser can complete all the implemented WebAuthn capabilities. Ok to proceed
-  //
+if (deviceSupport.webauthn) {
+  if(deviceSupport.platformAuthenticator && deviceSupport.conditionalMediation) {
+    // browser has a hardware platform authenticator and can complete CUI
+    // notes on CUI - https://github.com/w3c/webauthn/wiki/Explainer:-WebAuthn-Conditional-UI
+    //
+  }
+  if(deviceSupport.platformAuthenticator && !deviceSupport.conditionalMediation) {
+    // browser has a hardware platform authenticator but does not have CUI support
+    //
+  }
+  if(!deviceSupport.platformAuthenticator && !deviceSupport.conditionalMediation) {
+    // browser does *not* have a hardware platform authenticator and does not have CUI support
+    //
+  }
 } else {
   //
   // Current user or browser is not supported. Let them know. 
