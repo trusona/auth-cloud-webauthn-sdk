@@ -1,6 +1,17 @@
 export interface Preflight {
+  /**
+   * `true` if the device supports a platform authenticator
+   */
   platformAuthenticator: boolean
+
+  /**
+   * `true` if the device supports conditional mediation - https://github.com/w3c/webauthn/wiki/Explainer:-WebAuthn-Conditional-UI
+   */
   conditionalMediation: boolean
+
+  /**
+   * `true` if the device supports some form of WebAuthn
+   */
   webauthn: boolean
 }
 
