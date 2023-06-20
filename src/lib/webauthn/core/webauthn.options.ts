@@ -22,8 +22,6 @@ export class WebAuthnOptions {
   async createCredential (abortSignal?: AbortSignal): Promise<WebAuthn.PublicKeyCredentialWithAttestationJSON | undefined> {
     return await this.attestationOptions()
       .then(async (options) => {
-        // console.log(JSON.stringify(options))
-
         localStorage.setItem(Initializer._kid, options?.user?.name ?? 'unknown')
 
         return abortSignal !== undefined

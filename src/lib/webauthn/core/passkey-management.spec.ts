@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import { Initializer } from './configuration'
-import { DefaultPassKeyManagement, PassKeyManagement } from './passkey'
+import { DefaultPassKeyManagement, PassKeyManagement } from './passkey-management'
 
 describe('PassKeyManagement', () => {
   let passKeyManagement: PassKeyManagement
@@ -40,7 +40,6 @@ describe('PassKeyManagement', () => {
         method: 'GET',
         headers:
             {
-              'X-Tenant': 'tenant-id',
               Authorization: 'SDK-Bearer jwt'
             }
       }
@@ -61,7 +60,6 @@ describe('PassKeyManagement', () => {
         method: 'DELETE',
         headers:
             {
-              'X-Tenant': 'tenant-id',
               Authorization: 'SDK-Bearer jwt'
             }
       }
@@ -82,7 +80,6 @@ describe('PassKeyManagement', () => {
         method: 'GET',
         headers:
             {
-              'X-Tenant': 'tenant-id',
               Authorization: 'SDK-Bearer jwt'
             }
       }

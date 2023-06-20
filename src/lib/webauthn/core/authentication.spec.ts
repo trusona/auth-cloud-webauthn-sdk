@@ -23,7 +23,7 @@ describe('WebAuthnAuthentication', () => {
 
     describe('when the browser is not supported', () => {
       beforeEach(() => {
-        Initializer.config = { clientId: 'clientId', tenantUrl: 'tenantUrl', tenantId: 'tenantId', jwks: 'jwks-url' }
+        Initializer.config = { clientId: 'clientId', tenantUrl: 'tenantUrl' }
         DefaultPreflightChecks.supported = jest.fn().mockReturnValue(Promise.resolve(false))
         authentication = new WebAuthnAuthentication()
       })
@@ -35,7 +35,7 @@ describe('WebAuthnAuthentication', () => {
 
     describe('when fetching the challenge fails', () => {
       beforeEach(() => {
-        Initializer.config = { clientId: 'clientId', tenantUrl: 'tenantUrl', tenantId: 'tenantId', jwks: 'jwks-url' }
+        Initializer.config = { clientId: 'clientId', tenantUrl: 'tenantUrl' }
         DefaultPreflightChecks.supported = jest.fn().mockReturnValue(Promise.resolve(true))
         authentication = new WebAuthnAuthentication()
 
@@ -55,7 +55,7 @@ describe('WebAuthnAuthentication', () => {
 
     describe('when fetching the challenge succeeds', () => {
       beforeEach(() => {
-        Initializer.config = { clientId: 'clientId', tenantUrl: 'tenantUrl', tenantId: 'tenantId', jwks: 'jwks-url' }
+        Initializer.config = { clientId: 'clientId', tenantUrl: 'tenantUrl' }
         DefaultPreflightChecks.supported = jest.fn().mockReturnValue(Promise.resolve(true))
         authentication = new WebAuthnAuthentication()
 
