@@ -91,9 +91,9 @@ This should only be done once.
 ```typescript
 
 // not a secret; but is unique to the tenant; contact Trusona for your own value.
-const tenantId = '00000000-0000-0000-4000-000000000000'
+const origin:string = 'auth.your-domain.com'
 
-trusona.Initializer.initialize(tenantId)
+trusona.Initializer.initialize(origin)
   .then((_) => {
     // successfully initialized; your happy path code
   })
@@ -211,4 +211,4 @@ async getPasskey: (id: string) => Promise<PassKey>
 
 # Troubleshooting
 
-If initialization of the SDK fails, verify that you have specified the correct `tenantId`.
+If initialization of the SDK fails, verify that you have specified the correct `origin` value.
