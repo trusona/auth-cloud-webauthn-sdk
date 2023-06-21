@@ -1,5 +1,5 @@
 
-import { Environment, Initializer } from './configuration'
+import { Initializer } from './configuration'
 
 describe('Configuration', () => {
   describe('#initialize', () => {
@@ -11,44 +11,44 @@ describe('Configuration', () => {
             headers: {},
             status: 200,
             ok: true,
-            json: async () => await Promise.resolve({ clientId: 'clientId', jwks: 'https://localhost.example.com/.well-known/jwks' })
+            json: async () => await Promise.resolve({ clientId: 'clientId' })
           }))
 
-        await Initializer.initialize('a6749d56-5d88-43ef-8d6c-bb96df1021a9')
+        await Initializer.initialize('sdk.example.com')
       })
 
       it('resolves a valid login endpoint', () => {
-        expect(Initializer.loginsEndpoint).toBe('https://authcloud.trusona.net/api/logins')
+        expect(Initializer.loginsEndpoint).toBe('https://sdk.example.com/api/logins')
       })
 
-      describe('when UAT is initialized', () => {
+      describe('when localhost is initialized', () => {
         beforeEach(async () => {
-          await Initializer.initialize('a6749d56-5d88-43ef-8d6c-bb96df1021a9', Environment.STAGING)
+          await Initializer.initialize('localhost')
         })
 
         it('resolves a valid UAT login endpoint', () => {
-          expect(Initializer.loginsEndpoint).toBe('https://authcloud.staging.trusona.net/api/logins')
+          expect(Initializer.loginsEndpoint).toBe('http://localhost:8080/api/logins')
         })
       })
 
       it('resolves a valid assertion options endpoint', () => {
-        expect(Initializer.assertionOptionsEndpoint).toBe('https://authcloud.trusona.net/fido2/assertion/options')
+        expect(Initializer.assertionOptionsEndpoint).toBe('https://sdk.example.com/fido2/assertion/options')
       })
 
       it('resolves a valid attestation options endpoint', () => {
-        expect(Initializer.attestationOptionsEndpoint).toBe('https://authcloud.trusona.net/fido2/attestation/options')
+        expect(Initializer.attestationOptionsEndpoint).toBe('https://sdk.example.com/fido2/attestation/options')
       })
 
       it('resolves a valid credentials endpoint', () => {
-        expect(Initializer.credentialsEndpoint).toBe('https://authcloud.trusona.net/api/credentials')
+        expect(Initializer.credentialsEndpoint).toBe('https://sdk.example.com/api/credentials')
       })
 
       it('resolves a valid enrollments endpoint', () => {
-        expect(Initializer.enrollmentsEndpoint).toBe('https://authcloud.trusona.net/api/enrollments')
+        expect(Initializer.enrollmentsEndpoint).toBe('https://sdk.example.com/api/enrollments')
       })
 
-      it('echos back the provided JWKS endpoint', () => {
-        expect(Initializer.jwksEndpoint).toBe('https://localhost.example.com/.well-known/jwks')
+      it('resolves a valid jwks endpoint', () => {
+        expect(Initializer.jwksEndpoint).toBe('https://sdk.example.com/.well-known/jwks')
       })
 
       it('will initialize a valid configuration', () => {
