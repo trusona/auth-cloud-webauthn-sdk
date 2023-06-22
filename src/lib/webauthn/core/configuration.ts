@@ -1,18 +1,8 @@
 
 export interface Configuration {
   tenantUrl: string
-  tenantId: string
+  origin: string
   clientId: string
-  jwks: string
-}
-
-export enum Environment {
-  // default (public) environment
-  PRODUCTION = 'https://authcloud.trusona.net',
-  // internal usage only - not for public use
-  STAGING = 'https://authcloud.staging.trusona.net',
-  // internal usage only - not for public use
-  LOCALHOST = 'http://localhost:8080'
 }
 
 /**
@@ -29,10 +19,10 @@ export const Initializer = {
    * @remarks
    * This is the entry point to the SDK, called once, and as early as possible.
    *
-   * @param tenantId - Your unique tenant ID that Trusona shall provide to you. This identifier is not a secret.
+   * @param origin - Your unique origin that Trusona shall provide to you. This identifier is not a secret.
    */
-  async initialize (tenantId: string, environment: Environment = Environment.PRODUCTION): Promise<void> {
-    this.config = await this.loadConfiguration(tenantId, environment)
+  async initialize (origin: string): Promise<void> {
+    this.config = await this.loadConfiguration(origin)
 
     return this.configuration !== undefined
       ? await Promise.resolve()
@@ -51,7 +41,7 @@ export const Initializer = {
    */
   get headers () {
     return {
-      'X-Tenant': this.config?.tenantId ?? '',
+      'X-Tenant': this.config?.origin ?? '',
       'Content-Type': 'application/json'
     }
   },
@@ -59,12 +49,12 @@ export const Initializer = {
   /**
    * This method is not part of the public SDK.
    */
-  async loadConfiguration (tenantId: string, environment: Environment): Promise<Configuration | undefined> {
-    const tenantUrl = environment
+  async loadConfiguration (origin: string): Promise<Configuration | undefined> {
+    const tenantUrl = origin === 'localhost' ? 'http://localhost:8080' : `https://${origin}`
     const response = await fetch(`${tenantUrl}/configuration`,
       {
         headers: {
-          'X-Tenant': tenantId,
+          'X-Tenant': origin,
           'Content-Type': 'application/json'
         }
       })
@@ -73,9 +63,8 @@ export const Initializer = {
       const map = await response.json()
 
       return await Promise.resolve({
-        tenantId,
+        origin,
         tenantUrl,
-        jwks: map.jwks,
         clientId: map.clientId
       })
     } else {
@@ -122,7 +111,7 @@ export const Initializer = {
    * This method is part of the public SDK.
    */
   get jwksEndpoint (): string {
-    return this.configuration?.jwks ?? ''
+    return `${this.configuration?.tenantUrl ?? ''}/.well-known/jwks`
   },
 
   /**
