@@ -38,20 +38,30 @@ export class WebAuthnEnrollment extends Base implements Enrollment {
     const response = await fetch(Initializer.enrollmentsEndpoint,
       { method: 'POST', body: JSON.stringify({ token }), credentials: 'include', headers: Initializer.headers })
 
+    const map: any = response.ok ? await response.json() : {}
+
     return response.ok
-      ? await this.finalizeEnrollment(abortSignal)
+      ? await this.finalizeEnrollment(map, abortSignal)
       : await Promise.reject(new errors.InvalidTokenEnrollmentError())
   }
 
-  private async finalizeEnrollment (abortSignal?: AbortSignal): Promise<EnrollmentResult> {
-    const credential = await this.webAuthnOptions.createCredential(abortSignal)
+  private async finalizeEnrollment (map: any, abortSignal?: AbortSignal): Promise<EnrollmentResult> {
+    const credential = await this.webAuthnOptions.createCredential(map, abortSignal)
 
     if (credential === undefined) {
       return await Promise.reject(new errors.CancelledEnrollmentError())
     }
 
+    const headers = Initializer.headers
+    headers.Authorization = `Bearer ${String(map.accessToken)}`
+
     const response = await fetch(Initializer.credentialsEndpoint,
-      { method: 'POST', body: JSON.stringify(credential), credentials: 'include', headers: Initializer.headers })
+      {
+        method: 'POST',
+        body: JSON.stringify(credential),
+        credentials: 'include',
+        headers
+      })
 
     await this.recordEvent(response.ok ? 'REGISTRATION' : 'REGISTRATION_FAILED')
 

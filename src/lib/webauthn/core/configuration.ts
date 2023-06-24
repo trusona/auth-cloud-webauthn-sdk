@@ -42,7 +42,8 @@ export const Initializer = {
   get headers () {
     return {
       'X-Tenant': this.config?.origin ?? '',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      Authorization: ''
     }
   },
 

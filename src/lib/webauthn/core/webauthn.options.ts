@@ -19,11 +19,9 @@ export class WebAuthnOptions {
     return requestOptions !== undefined ? await WebAuthn.get(params) : await Promise.resolve(undefined)
   }
 
-  async createCredential (abortSignal?: AbortSignal): Promise<WebAuthn.PublicKeyCredentialWithAttestationJSON | undefined> {
-    return await this.attestationOptions()
+  async createCredential (map: any, abortSignal?: AbortSignal): Promise<WebAuthn.PublicKeyCredentialWithAttestationJSON | undefined> {
+    return await this.attestationOptions(map)
       .then(async (options) => {
-        // console.log(JSON.stringify(options))
-
         localStorage.setItem(Initializer._kid, options?.user?.name ?? 'unknown')
 
         return abortSignal !== undefined
@@ -33,9 +31,16 @@ export class WebAuthnOptions {
       .then(async (c) => await Promise.resolve(c))
   }
 
-  private async attestationOptions (): Promise<PublicKeyCredentialCreationOptionsJSON> {
-    const response = await fetch(Initializer.attestationOptionsEndpoint, { credentials: 'include', headers: Initializer.headers })
-    return response.ok ? await response.json() : await Promise.reject(new Error('Failed to obtain attestation options.'))
+  private async attestationOptions (map: any): Promise<PublicKeyCredentialCreationOptionsJSON> {
+    const headers = Initializer.headers
+    headers.Authorization = `Bearer ${String(map.accessToken)}`
+
+    const response = await fetch(`${Initializer.attestationOptionsEndpoint}?jwt=${String(map.idToken)}`,
+      { credentials: 'include', headers })
+
+    return response.ok
+      ? await response.json()
+      : await Promise.reject(new Error('Failed to obtain attestation options.'))
   }
 
   private async requestOptions (userIdentifier?: string): Promise<PublicKeyCredentialRequestOptionsJSON> {
