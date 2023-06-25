@@ -5,7 +5,7 @@ import { WebAuthnOptions } from './webauthn.options'
 import { Base } from './base'
 
 export interface VerifiedEnrollment {
-  idToken: string
+  id: string
   accessToken: string
   userIdentifier: string
 }

@@ -36,7 +36,7 @@ export class WebAuthnOptions {
     const headers = Initializer.headers
     headers.Authorization = `Bearer ${String(enrollment.accessToken)}`
 
-    const url = `${Initializer.attestationOptionsEndpoint}?jwt=${enrollment.idToken}`
+    const url = `${Initializer.attestationOptionsEndpoint}?id=${enrollment.id}`
     const response = await fetch(url, { credentials: 'include', headers })
 
     return response.ok
