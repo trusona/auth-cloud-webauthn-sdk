@@ -1,6 +1,7 @@
 import { PublicKeyCredentialCreationOptionsJSON, PublicKeyCredentialRequestOptionsJSON, PublicKeyCredentialWithAssertionJSON } from '@github/webauthn-json/dist/types/basic/json'
 import { Initializer } from './configuration'
 import * as WebAuthn from '@github/webauthn-json'
+import { VerifiedEnrollment } from './enrollment'
 
 export class WebAuthnOptions {
   async getCredential (cui: boolean = false, abortSignal?: AbortSignal, userIdentifier?: string): Promise<PublicKeyCredentialWithAssertionJSON | undefined> {
@@ -19,10 +20,10 @@ export class WebAuthnOptions {
     return requestOptions !== undefined ? await WebAuthn.get(params) : await Promise.resolve(undefined)
   }
 
-  async createCredential (map: any, abortSignal?: AbortSignal): Promise<WebAuthn.PublicKeyCredentialWithAttestationJSON | undefined> {
-    return await this.attestationOptions(map)
+  async createCredential (enrollment: VerifiedEnrollment, abortSignal?: AbortSignal): Promise<WebAuthn.PublicKeyCredentialWithAttestationJSON | undefined> {
+    return await this.attestationOptions(enrollment)
       .then(async (options) => {
-        localStorage.setItem(Initializer._kid, options?.user?.name ?? 'unknown')
+        localStorage.setItem(Initializer._kid, enrollment.userIdentifier)
 
         return abortSignal !== undefined
           ? await WebAuthn.create({ publicKey: options, signal: abortSignal })
@@ -31,12 +32,12 @@ export class WebAuthnOptions {
       .then(async (c) => await Promise.resolve(c))
   }
 
-  private async attestationOptions (map: any): Promise<PublicKeyCredentialCreationOptionsJSON> {
+  private async attestationOptions (enrollment: VerifiedEnrollment): Promise<PublicKeyCredentialCreationOptionsJSON> {
     const headers = Initializer.headers
-    headers.Authorization = `Bearer ${String(map.accessToken)}`
+    headers.Authorization = `Bearer ${String(enrollment.accessToken)}`
 
-    const response = await fetch(`${Initializer.attestationOptionsEndpoint}?jwt=${String(map.idToken)}`,
-      { credentials: 'include', headers })
+    const url = `${Initializer.attestationOptionsEndpoint}?jwt=${enrollment.idToken}`
+    const response = await fetch(url, { credentials: 'include', headers })
 
     return response.ok
       ? await response.json()

@@ -4,6 +4,12 @@ import { Initializer } from './configuration'
 import { WebAuthnOptions } from './webauthn.options'
 import { Base } from './base'
 
+export interface VerifiedEnrollment {
+  idToken: string
+  accessToken: string
+  userIdentifier: string
+}
+
 export enum EnrollmentStatus { SUCCESS = 'SUCCESS' }
 
 export interface EnrollmentResult { status: EnrollmentStatus }
@@ -38,22 +44,22 @@ export class WebAuthnEnrollment extends Base implements Enrollment {
     const response = await fetch(Initializer.enrollmentsEndpoint,
       { method: 'POST', body: JSON.stringify({ token }), credentials: 'include', headers: Initializer.headers })
 
-    const map: any = response.ok ? await response.json() : {}
+    const enrollment: VerifiedEnrollment = response.ok ? await response.json() : {}
 
     return response.ok
-      ? await this.finalizeEnrollment(map, abortSignal)
+      ? await this.finalizeEnrollment(enrollment, abortSignal)
       : await Promise.reject(new errors.InvalidTokenEnrollmentError())
   }
 
-  private async finalizeEnrollment (map: any, abortSignal?: AbortSignal): Promise<EnrollmentResult> {
-    const credential = await this.webAuthnOptions.createCredential(map, abortSignal)
+  private async finalizeEnrollment (enrollment: VerifiedEnrollment, abortSignal?: AbortSignal): Promise<EnrollmentResult> {
+    const credential = await this.webAuthnOptions.createCredential(enrollment, abortSignal)
 
     if (credential === undefined) {
       return await Promise.reject(new errors.CancelledEnrollmentError())
     }
 
     const headers = Initializer.headers
-    headers.Authorization = `Bearer ${String(map.accessToken)}`
+    headers.Authorization = `Bearer ${enrollment.accessToken}`
 
     const response = await fetch(Initializer.credentialsEndpoint,
       {
