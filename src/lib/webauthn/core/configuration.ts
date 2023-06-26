@@ -39,11 +39,11 @@ export const Initializer = {
   /**
    * This method is not part of the public SDK.
    */
-  get headers () {
+  headers (authorization: string = '') {
     return {
       'X-Tenant': this.config?.origin ?? '',
       'Content-Type': 'application/json',
-      Authorization: ''
+      Authorization: authorization
     }
   },
 

@@ -24,7 +24,7 @@ export class Base {
       {
         method: 'POST',
         body: JSON.stringify(event),
-        headers: Initializer.headers
+        headers: Initializer.headers()
       })
       .catch((_) => {
         // ok to ignore if it fails

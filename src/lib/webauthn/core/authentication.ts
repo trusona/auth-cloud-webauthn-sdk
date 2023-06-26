@@ -80,7 +80,7 @@ export class WebAuthnAuthentication extends Base implements Authentication {
         method: 'POST',
         credentials: 'include',
         body: JSON.stringify(login),
-        headers: Initializer.headers
+        headers: Initializer.headers()
       })
 
     const map = response.ok ? await response.json() : undefined
@@ -97,7 +97,7 @@ export class WebAuthnAuthentication extends Base implements Authentication {
   protected async challenge (): Promise<string | undefined> {
     const url: string = `${Initializer.configuration?.tenantUrl ?? ''}/api/login_challenges`
 
-    const response = await fetch(url, { method: 'POST', body: '{}', headers: Initializer.headers })
+    const response = await fetch(url, { method: 'POST', body: '{}', headers: Initializer.headers() })
     const map = await response.json()
 
     localStorage.setItem(Initializer._chl, map?.login_challenge)

@@ -33,9 +33,7 @@ export class WebAuthnOptions {
   }
 
   private async attestationOptions (enrollment: VerifiedEnrollment): Promise<PublicKeyCredentialCreationOptionsJSON> {
-    const headers = Initializer.headers
-    headers.Authorization = `Bearer ${enrollment.accessToken}`
-
+    const headers = Initializer.headers(`Bearer ${enrollment.accessToken}`)
     const url = `${Initializer.attestationOptionsEndpoint}?id=${enrollment.id}`
     const response = await fetch(url, { credentials: 'include', headers })
 
@@ -46,7 +44,7 @@ export class WebAuthnOptions {
 
   private async requestOptions (userIdentifier?: string): Promise<PublicKeyCredentialRequestOptionsJSON> {
     const url = `${Initializer.assertionOptionsEndpoint}?userIdentifier=${userIdentifier ?? ''}`
-    const response = await fetch(url, { credentials: 'include', headers: Initializer.headers })
+    const response = await fetch(url, { credentials: 'include', headers: Initializer.headers() })
     return response.ok ? await response.json() : await Promise.reject(new Error('Failed to get assertion options.'))
   }
 }
