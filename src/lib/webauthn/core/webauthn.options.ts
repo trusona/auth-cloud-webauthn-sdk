@@ -34,7 +34,7 @@ export class WebAuthnOptions {
 
   private async attestationOptions (enrollment: VerifiedEnrollment): Promise<PublicKeyCredentialCreationOptionsJSON> {
     const headers = Initializer.headers
-    headers.Authorization = `Bearer ${String(enrollment.accessToken)}`
+    headers.Authorization = `Bearer ${enrollment.accessToken}`
 
     const url = `${Initializer.attestationOptionsEndpoint}?id=${enrollment.id}`
     const response = await fetch(url, { credentials: 'include', headers })
