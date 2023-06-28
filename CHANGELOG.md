@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+# [1.2.2] - June 28, 2023
+- Improving support for Safari on iOS by removing unnecessary async calls.
+
 ## [1.1.0] - June 13, 2023
 - Expand preflight check support.
 
