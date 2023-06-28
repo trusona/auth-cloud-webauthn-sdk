@@ -29,8 +29,6 @@ export class WebAuthnEnrollment extends Base implements Enrollment {
    * @returns @see EnrollmentStatus - indicating the status of the enrollment
    */
   async enroll (token: string, abortSignal?: AbortSignal): Promise<EnrollmentResult> {
-    await this.validate()
-
     if (Strings.blank(token)) {
       return await Promise.reject(new Error('Blank token was provided'))
     }

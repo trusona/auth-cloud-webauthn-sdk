@@ -10,29 +10,6 @@ describe('WebAuthnAuthentication', () => {
   let abortSignal: AbortSignal
 
   describe('#authenticate', () => {
-    describe('when initialization has not yet occurred', () => {
-      beforeEach(() => {
-        authentication = new WebAuthnAuthentication()
-        abortSignal = new AbortController().signal
-      })
-
-      it('returns a rejection', async () => {
-        await expect(authentication.authenticate(abortSignal)).rejects.toThrowError('The SDK is not yet initialized')
-      })
-    })
-
-    describe('when the browser is not supported', () => {
-      beforeEach(() => {
-        Initializer.config = { clientId: 'clientId', tenantUrl: 'tenantUrl', origin: 'sdk.example.com' }
-        DefaultPreflightChecks.supported = jest.fn().mockReturnValue(Promise.resolve(false))
-        authentication = new WebAuthnAuthentication()
-      })
-
-      it('returns a rejection', async () => {
-        await expect(authentication.authenticate(abortSignal)).rejects.toThrowError('This browser is not supported')
-      })
-    })
-
     describe('when fetching the challenge fails', () => {
       beforeEach(() => {
         Initializer.config = { clientId: 'clientId', tenantUrl: 'tenantUrl', origin: 'sdk.example.com' }

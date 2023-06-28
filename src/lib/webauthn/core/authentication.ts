@@ -51,7 +51,6 @@ export class WebAuthnAuthentication extends Base implements Authentication {
    * @returns @see AuthenticationResult
    */
   async authenticate (abortSignal: AbortSignal, userIdentifier?: string, cui = false): Promise<AuthenticationResult> {
-    await this.validate()
     const challenge = await this.challenge()
 
     if (challenge === undefined) {
