@@ -97,14 +97,14 @@ export const Initializer = {
    * This method is not part of the public SDK.
    */
   get credentialsEndpoint (): string {
-    return `${this.configuration?.tenantUrl ?? ''}/api/credentials`
+    return `${this.configuration?.tenantUrl ?? ''}/api/v1/attestation/registrations`
   },
 
   /**
    * This method is not part of the public SDK.
    */
   get enrollmentsEndpoint (): string {
-    return `${this.configuration?.tenantUrl ?? ''}/api/enrollments`
+    return `${this.configuration?.tenantUrl ?? ''}/api/v1/attestation/options`
   },
 
   /**

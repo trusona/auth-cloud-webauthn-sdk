@@ -19,23 +19,10 @@ export class WebAuthnOptions {
     return requestOptions !== undefined ? await WebAuthn.get(params) : await Promise.resolve(undefined)
   }
 
-  async createCredential (abortSignal?: AbortSignal): Promise<WebAuthn.PublicKeyCredentialWithAttestationJSON | undefined> {
-    return await this.attestationOptions()
-      .then(async (options) => {
-        // console.log(JSON.stringify(options))
-
-        localStorage.setItem(Initializer._kid, options?.user?.name ?? 'unknown')
-
-        return abortSignal !== undefined
-          ? await WebAuthn.create({ publicKey: options, signal: abortSignal })
-          : await WebAuthn.create({ publicKey: options })
-      })
-      .then(async (c) => await Promise.resolve(c))
-  }
-
-  private async attestationOptions (): Promise<PublicKeyCredentialCreationOptionsJSON> {
-    const response = await fetch(Initializer.attestationOptionsEndpoint, { credentials: 'include', headers: Initializer.headers })
-    return response.ok ? await response.json() : await Promise.reject(new Error('Failed to obtain attestation options.'))
+  async createCredential (options: PublicKeyCredentialCreationOptionsJSON, abortSignal?: AbortSignal): Promise<WebAuthn.PublicKeyCredentialWithAttestationJSON> {
+    return abortSignal !== undefined
+      ? await WebAuthn.create({ publicKey: options, signal: abortSignal })
+      : await WebAuthn.create({ publicKey: options })
   }
 
   private async requestOptions (userIdentifier?: string): Promise<PublicKeyCredentialRequestOptionsJSON> {

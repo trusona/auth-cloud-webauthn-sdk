@@ -3,10 +3,28 @@ import * as errors from '../utils/errors'
 import { Initializer } from './configuration'
 import { WebAuthnOptions } from './webauthn.options'
 import { Base } from './base'
+import { PublicKeyCredentialCreationOptionsJSON, PublicKeyCredentialWithAttestationJSON } from '@github/webauthn-json/dist/types/basic/json'
 
 export enum EnrollmentStatus { SUCCESS = 'SUCCESS' }
 
 export interface EnrollmentResult { status: EnrollmentStatus }
+
+export interface EnrollmentTransaction {
+  transactionId: string
+  credential: PublicKeyCredentialWithAttestationJSON
+}
+
+export interface VerifiedEnrollment {
+  id: string
+  userIdentifier: string
+  displayName: string
+  redirectTo: string
+}
+
+export interface EnrollmentOptions {
+  options: PublicKeyCredentialCreationOptionsJSON
+  enrollment: VerifiedEnrollment
+}
 
 export interface Enrollment {
   enroll: (token: string, abortSignal?: AbortSignal) => Promise<EnrollmentResult>
@@ -36,20 +54,25 @@ export class WebAuthnEnrollment extends Base implements Enrollment {
     const response = await fetch(Initializer.enrollmentsEndpoint,
       { method: 'POST', body: JSON.stringify({ token }), credentials: 'include', headers: Initializer.headers })
 
+    const enrollmentOptions: EnrollmentOptions = await response.json()
+    const transactionId = enrollmentOptions.enrollment.id
+
+    localStorage.setItem(Initializer._kid, enrollmentOptions.enrollment.userIdentifier)
+
+    const credential: PublicKeyCredentialWithAttestationJSON = await this.webAuthnOptions.createCredential(enrollmentOptions.options, abortSignal)
+
     return response.ok
-      ? await this.finalizeEnrollment(abortSignal)
+      ? await this.finalizeEnrollment({ credential, transactionId })
       : await Promise.reject(new errors.InvalidTokenEnrollmentError())
   }
 
-  private async finalizeEnrollment (abortSignal?: AbortSignal): Promise<EnrollmentResult> {
-    const credential = await this.webAuthnOptions.createCredential(abortSignal)
-
-    if (credential === undefined) {
+  private async finalizeEnrollment (enrollmentTransaction: EnrollmentTransaction): Promise<EnrollmentResult> {
+    if (enrollmentTransaction.credential === undefined) {
       return await Promise.reject(new errors.CancelledEnrollmentError())
     }
 
-    const response = await fetch(Initializer.credentialsEndpoint,
-      { method: 'POST', body: JSON.stringify(credential), credentials: 'include', headers: Initializer.headers })
+    const json = JSON.stringify({ credential: enrollmentTransaction.credential, transactionId: enrollmentTransaction.transactionId })
+    const response = await fetch(Initializer.credentialsEndpoint, { method: 'POST', body: json, credentials: 'include', headers: Initializer.headers })
 
     await this.recordEvent(response.ok ? 'REGISTRATION' : 'REGISTRATION_FAILED')
 
