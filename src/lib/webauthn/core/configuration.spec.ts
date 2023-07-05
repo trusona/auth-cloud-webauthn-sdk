@@ -40,11 +40,11 @@ describe('Configuration', () => {
       })
 
       it('resolves a valid credentials endpoint', () => {
-        expect(Initializer.credentialsEndpoint).toBe('https://sdk.example.com/api/credentials')
+        expect(Initializer.credentialsEndpoint).toBe('https://sdk.example.com/api/v1/attestation/registrations')
       })
 
       it('resolves a valid enrollments endpoint', () => {
-        expect(Initializer.enrollmentsEndpoint).toBe('https://sdk.example.com/api/enrollments')
+        expect(Initializer.enrollmentsEndpoint).toBe('https://sdk.example.com/api/v1/attestation/options')
       })
 
       it('resolves a valid jwks endpoint', () => {
