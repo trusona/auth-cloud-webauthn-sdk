@@ -82,22 +82,19 @@ export const Initializer = {
   /**
    * This method is not part of the public SDK.
    */
-  get attestationOptionsEndpoint (): string {
-    return `${this.configuration?.tenantUrl ?? ''}/fido2/attestation/options`
-  },
-
-  /**
-   * This method is not part of the public SDK.
-   */
   get assertionOptionsEndpoint (): string {
-    return `${this.configuration?.tenantUrl ?? ''}/fido2/assertion/options`
+    return `${this.configuration?.tenantUrl ?? ''}/api/v1/assertion/options`
   },
 
   /**
    * This method is not part of the public SDK.
    */
-  get credentialsEndpoint (): string {
+  get registrationsEndpoint (): string {
     return `${this.configuration?.tenantUrl ?? ''}/api/v1/attestation/registrations`
+  },
+
+  get credentialsEndpoint (): string {
+    return `${this.configuration?.tenantUrl ?? ''}/api/credentials`
   },
 
   /**

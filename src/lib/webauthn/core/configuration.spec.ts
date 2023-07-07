@@ -35,10 +35,6 @@ describe('Configuration', () => {
         expect(Initializer.assertionOptionsEndpoint).toBe('https://sdk.example.com/fido2/assertion/options')
       })
 
-      it('resolves a valid attestation options endpoint', () => {
-        expect(Initializer.attestationOptionsEndpoint).toBe('https://sdk.example.com/fido2/attestation/options')
-      })
-
       it('resolves a valid credentials endpoint', () => {
         expect(Initializer.credentialsEndpoint).toBe('https://sdk.example.com/api/v1/attestation/registrations')
       })

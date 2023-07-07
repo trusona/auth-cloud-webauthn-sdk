@@ -99,12 +99,11 @@
   <script src="./index.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", async function (event) {
-      if(await new trusona.DefaultPreflightChecks().isSupported()) {
-        // not a secret; but is unique to this page; contact Trusona for your own value.
-        const tenantId = 'fd999a47-4e20-4a19-9de4-304a968124e5' 
+      if(await new trusona.DefaultPreflightChecks().isSupported()) {        
+        const tenant = 'uat-sdk-demo.trusona.com' 
 
         document.getElementById('main').classList.remove('hidden')
-        trusona.Initializer.initialize(tenantId, trusona.Environment.STAGING)
+        trusona.Initializer.initialize(tenant)
           .then((_) => {
             authenticate(true)
           })

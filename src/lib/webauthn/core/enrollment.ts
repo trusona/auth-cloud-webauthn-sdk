@@ -72,7 +72,7 @@ export class WebAuthnEnrollment extends Base implements Enrollment {
     }
 
     const json = JSON.stringify({ credential: enrollmentTransaction.credential, transactionId: enrollmentTransaction.transactionId })
-    const response = await fetch(Initializer.credentialsEndpoint, { method: 'POST', body: json, credentials: 'include', headers: Initializer.headers })
+    const response = await fetch(Initializer.registrationsEndpoint, { method: 'POST', body: json, credentials: 'include', headers: Initializer.headers })
 
     await this.recordEvent(response.ok ? 'REGISTRATION' : 'REGISTRATION_FAILED')
 
