@@ -21,15 +21,16 @@ async function enroll (event) {
 async function authenticate (cui = false) {
   const username = document.getElementById('username').value
   const authentication = new trusona.WebAuthnAuthentication()
+  document.getElementById('credentials').replaceChildren([])
 
-  if (!cui) {
+  if (!cui) {    
     resetSignals()
   }
 
   authentication
     .authenticate(controller.signal, username, cui)
     .then((result) => {
-      const jwt = result.accessToken
+      const jwt = result.accessToken      
       showCredentials(jwt)
 
       return JSON.parse(window.atob(result.idToken.split('.')[1])).sub
