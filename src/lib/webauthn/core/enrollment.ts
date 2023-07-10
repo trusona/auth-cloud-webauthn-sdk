@@ -1,9 +1,10 @@
-import { Strings } from '../utils/strings'
+import * as WebAuthn from '@github/webauthn-json/dist/types/basic/json'
 import * as errors from '../utils/errors'
-import { Initializer } from './configuration'
+
 import { WebAuthnOptions } from './webauthn.options'
+import { Initializer } from './configuration'
+import { Strings } from '../utils/strings'
 import { Base } from './base'
-import { PublicKeyCredentialCreationOptionsJSON, PublicKeyCredentialWithAttestationJSON } from '@github/webauthn-json/dist/types/basic/json'
 
 export enum EnrollmentStatus { SUCCESS = 'SUCCESS' }
 
@@ -11,7 +12,7 @@ export interface EnrollmentResult { status: EnrollmentStatus }
 
 export interface EnrollmentTransaction {
   transactionId: string
-  credential: PublicKeyCredentialWithAttestationJSON
+  credential: WebAuthn.PublicKeyCredentialWithAttestationJSON
 }
 
 export interface VerifiedEnrollment {
@@ -22,7 +23,7 @@ export interface VerifiedEnrollment {
 }
 
 export interface EnrollmentOptions {
-  options: PublicKeyCredentialCreationOptionsJSON
+  options: WebAuthn.PublicKeyCredentialCreationOptionsJSON
   enrollment: VerifiedEnrollment
 }
 
@@ -59,7 +60,7 @@ export class WebAuthnEnrollment extends Base implements Enrollment {
 
     localStorage.setItem(Initializer._kid, enrollmentOptions.enrollment.userIdentifier)
 
-    const credential: PublicKeyCredentialWithAttestationJSON = await this.webAuthnOptions.createCredential(enrollmentOptions.options, abortSignal)
+    const credential = await this.webAuthnOptions.createCredential(enrollmentOptions.options, abortSignal)
 
     return response.ok
       ? await this.finalizeEnrollment({ credential, transactionId })
