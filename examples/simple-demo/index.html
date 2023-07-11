@@ -96,7 +96,7 @@
   <script>
     document.addEventListener("DOMContentLoaded", async function (event) {
       if(await new trusona.DefaultPreflightChecks().isSupported()) {        
-        const tenant = 'uat-sdk-demo.trusona.com' 
+        const tenant = 'authcloud.nmcode.com'
 
         document.getElementById('main').classList.remove('hidden')
         trusona.Initializer.initialize(tenant)
