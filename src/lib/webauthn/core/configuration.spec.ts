@@ -32,11 +32,7 @@ describe('Configuration', () => {
       })
 
       it('resolves a valid assertion options endpoint', () => {
-        expect(Initializer.assertionOptionsEndpoint).toBe('https://sdk.example.com/fido2/assertion/options')
-      })
-
-      it('resolves a valid attestation options endpoint', () => {
-        expect(Initializer.attestationOptionsEndpoint).toBe('https://sdk.example.com/fido2/attestation/options')
+        expect(Initializer.assertionOptionsEndpoint).toBe('https://sdk.example.com/api/v1/assertion/options')
       })
 
       it('resolves a valid credentials endpoint', () => {
@@ -44,7 +40,11 @@ describe('Configuration', () => {
       })
 
       it('resolves a valid enrollments endpoint', () => {
-        expect(Initializer.enrollmentsEndpoint).toBe('https://sdk.example.com/api/enrollments')
+        expect(Initializer.enrollmentsEndpoint).toBe('https://sdk.example.com/api/v1/attestation/options')
+      })
+
+      it('resolves a valid registrations endpoint', () => {
+        expect(Initializer.registrationsEndpoint).toBe('https://sdk.example.com/api/v1/attestation/registrations')
       })
 
       it('resolves a valid jwks endpoint', () => {

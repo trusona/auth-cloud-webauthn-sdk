@@ -3,6 +3,7 @@ import { WebAuthnOptions } from './webauthn.options'
 import { FailedAuthenticationError } from '../utils/errors'
 import { Strings } from '../utils/strings'
 import { Base } from './base'
+import { PublicKeyCredentialRequestOptionsJSON, PublicKeyCredentialWithAssertionJSON } from '@github/webauthn-json/dist/types/basic/json'
 
 /**
  * @description
@@ -20,6 +21,16 @@ export interface AuthenticationResult {
   idToken: string
   accessToken: string
   status: AuthenticationStatus
+}
+
+export interface AssertionTransaction {
+  options: PublicKeyCredentialRequestOptionsJSON
+  transactionId: string
+}
+
+export interface CredentialTransaction {
+  credential: PublicKeyCredentialWithAssertionJSON
+  transactionId: string
 }
 
 export enum AuthenticationStatus {
@@ -62,16 +73,18 @@ export class WebAuthnAuthentication extends Base implements Authentication {
   }
 
   private async finalize (cui: boolean, challenge: string, abortSignal?: AbortSignal, userIdentifier?: string): Promise<AuthenticationResult> {
-    const credential = await this.webAuthnOptions.getCredential(cui, abortSignal, userIdentifier)
-    const credentialUserIdentifier = window.atob(credential?.response.userHandle ?? '')
+    const credentialTransaction = await this.webAuthnOptions.getCredential(cui, abortSignal, userIdentifier)
+    const credentialUserIdentifier = window.atob(credentialTransaction?.credential?.response.userHandle ?? '')
 
     const login = {
       method: 'PUBLIC_KEY_CREDENTIAL',
       nextStep: 'VERIFY_PUBLIC_KEY_CREDENTIAL',
+      credentialTransaction,
       challenge,
       userIdentifier: credentialUserIdentifier,
       displayName: credentialUserIdentifier,
-      response: credential
+      transactionId: credentialTransaction?.transactionId,
+      response: credentialTransaction?.credential
     }
 
     const response = await fetch(Initializer.loginsEndpoint,
