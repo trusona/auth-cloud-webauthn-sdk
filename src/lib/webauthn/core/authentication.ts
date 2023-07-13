@@ -66,7 +66,7 @@ export class WebAuthnAuthentication extends Base implements Authentication {
    */
   async authenticate (abortSignal: AbortSignal, userIdentifier?: string, cui = false): Promise<AuthenticationResult> {
     if (!Initializer.webauthnStatus.platformAuthenticator) {
-      return await Promise.reject(new Error('Platform authenticator was not found'))
+      return await Promise.reject(new Error('Platform authenticator was not detected'))
     }
 
     const challenge = await this.challenge()
