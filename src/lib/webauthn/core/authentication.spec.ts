@@ -12,7 +12,7 @@ describe('WebAuthnAuthentication', () => {
     describe('when the browser is not supported', () => {
       beforeEach(() => {
         Initializer.config = { clientId: 'clientId', tenantUrl: 'tenantUrl', origin: 'sdk.example.com' }
-        Initializer.webauthnStatus = { platformAuthenticator: false, conditionalMediation: false, webauthn: false }
+        Initializer.webauthnFeatures = { platformAuthenticator: false, conditionalMediation: false, webauthn: false }
         authentication = new WebAuthnAuthentication()
       })
 
@@ -24,7 +24,7 @@ describe('WebAuthnAuthentication', () => {
     describe('when fetching the challenge fails', () => {
       beforeEach(() => {
         Initializer.config = { clientId: 'clientId', tenantUrl: 'tenantUrl', origin: 'sdk.example.com' }
-        Initializer.webauthnStatus = { platformAuthenticator: true, conditionalMediation: true, webauthn: true }
+        Initializer.webauthnFeatures = { platformAuthenticator: true, conditionalMediation: true, webauthn: true }
         authentication = new WebAuthnAuthentication()
 
         // @ts-expect-error
@@ -44,7 +44,7 @@ describe('WebAuthnAuthentication', () => {
     describe('when fetching the challenge succeeds', () => {
       beforeEach(() => {
         Initializer.config = { clientId: 'clientId', tenantUrl: 'tenantUrl', origin: 'sdk.example.com' }
-        Initializer.webauthnStatus = { platformAuthenticator: true, conditionalMediation: true, webauthn: true }
+        Initializer.webauthnFeatures = { platformAuthenticator: true, conditionalMediation: true, webauthn: true }
         authentication = new WebAuthnAuthentication()
 
         // @ts-expect-error

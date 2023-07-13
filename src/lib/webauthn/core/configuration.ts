@@ -16,7 +16,7 @@ export const Initializer = {
   config: {} as Configuration | undefined,
 
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-  webauthnStatus: {} as Preflight,
+  webauthnFeatures: {} as Preflight,
 
   /**
    * Initializes this SDK.
@@ -27,7 +27,7 @@ export const Initializer = {
    * @param origin - Your unique origin that Trusona shall provide to you. This identifier is not a secret.
    */
   async initialize (origin: string): Promise<void> {
-    this.webauthnStatus = await DefaultPreflightChecks.check()
+    this.webauthnFeatures = await DefaultPreflightChecks.check()
     this.config = await this.loadConfiguration(origin)
 
     return this.configuration !== undefined

@@ -12,7 +12,7 @@ describe('WebAuthnEnrollment', () => {
     describe('when the browser is not supported', () => {
       beforeEach(() => {
         Initializer.config = { clientId: 'clientId', tenantUrl: 'tenantUrl', origin: 'sdk.example.com' }
-        Initializer.webauthnStatus = { platformAuthenticator: false, conditionalMediation: false, webauthn: false }
+        Initializer.webauthnFeatures = { platformAuthenticator: false, conditionalMediation: false, webauthn: false }
         enrollment = new WebAuthnEnrollment()
       })
 
