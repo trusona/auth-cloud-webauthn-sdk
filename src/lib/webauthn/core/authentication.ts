@@ -51,7 +51,7 @@ export class WebAuthnAuthentication extends Base implements Authentication {
 
   async cui (abortSignal: AbortSignal): Promise<AuthenticationResult> {
     if (!Initializer.webauthnStatus.conditionalMediation) {
-      return await Promise.reject(new Error('CUI is not supported'))
+      return await Promise.reject(new Error('This browser is not supported (due to CUI support)'))
     }
     return await this.authenticate(abortSignal, undefined, true)
   }
@@ -66,7 +66,7 @@ export class WebAuthnAuthentication extends Base implements Authentication {
    */
   async authenticate (abortSignal: AbortSignal, userIdentifier?: string, cui = false): Promise<AuthenticationResult> {
     if (!Initializer.webauthnStatus.platformAuthenticator) {
-      return await Promise.reject(new Error('Platform authenticator was not detected'))
+      return await Promise.reject(new Error('This browser is not supported (due to missing platform authenticator)'))
     }
 
     const challenge = await this.challenge()
