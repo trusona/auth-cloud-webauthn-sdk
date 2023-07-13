@@ -33,6 +33,9 @@ export class DefaultPreflightChecks implements PreflightChecks {
     return await Promise.resolve({ platformAuthenticator: v2, conditionalMediation: v1, webauthn: v0 })
   }
 
+  /**
+   * @deprecated The method should not be used and will be removed in a future version - use #check() instead
+   */
   async isSupported (): Promise<boolean> {
     const value: boolean = typeof window.PublicKeyCredential !== 'undefined' &&
     (await this.isUserVerifyingPlatformAuthenticatorAvailable())?.valueOf() &&
