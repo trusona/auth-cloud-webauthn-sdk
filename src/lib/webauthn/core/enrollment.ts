@@ -49,7 +49,7 @@ export class WebAuthnEnrollment extends Base implements Enrollment {
    */
   async enroll (token: string, abortSignal?: AbortSignal): Promise<EnrollmentResult> {
     if (!Initializer.webauthnStatus.platformAuthenticator) {
-      return await Promise.reject(new Error('Platform authenticator was not detected'))
+      return await Promise.reject(new Error('This browser is not supported (due to missing platform authenticator)'))
     }
 
     if (Strings.blank(token)) {
