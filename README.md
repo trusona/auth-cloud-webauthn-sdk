@@ -1,6 +1,8 @@
 # Trusona AuthCloud WebAuthn SDK
 
 [![.github/workflows/ci-tester.yml](https://github.com/trusona/auth-cloud-webauthn-sdk/actions/workflows/ci-tester.yml/badge.svg)](https://github.com/trusona/auth-cloud-webauthn-sdk/actions/workflows/ci-tester.yml)
+[![latest]
+(https://raw.githubusercontent.com/trusona/auth-cloud-webauthn-sdk/master/version.svg)](https://www.npmjs.com/package/@trusona/webauthn)
 
 # Introduction
 
