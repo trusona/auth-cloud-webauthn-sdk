@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+# [1.3.1] - July 13, 2023
+- Clean code.
+
 # [1.3.0] - July 13, 2023
 - Using `transaction` IDs when communicating with the backend.
 - Using expanded preflight checks internally.
