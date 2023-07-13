@@ -1,7 +1,6 @@
 /**
  * @jest-environment jsdom
  */
-import { DefaultPreflightChecks } from '../preflight/preflight-checks'
 import { Authentication, WebAuthnAuthentication } from './authentication'
 import { Initializer } from './configuration'
 
@@ -10,10 +9,22 @@ describe('WebAuthnAuthentication', () => {
   let abortSignal: AbortSignal
 
   describe('#authenticate', () => {
+    describe('when the browser is not supported', () => {
+      beforeEach(() => {
+        Initializer.config = { clientId: 'clientId', tenantUrl: 'tenantUrl', origin: 'sdk.example.com' }
+        Initializer.webauthnStatus = { platformAuthenticator: false, conditionalMediation: false, webauthn: false }
+        authentication = new WebAuthnAuthentication()
+      })
+
+      it('returns a rejection', async () => {
+        await expect(authentication.authenticate(abortSignal)).rejects.toThrowError('This browser is not supported')
+      })
+    })
+
     describe('when fetching the challenge fails', () => {
       beforeEach(() => {
         Initializer.config = { clientId: 'clientId', tenantUrl: 'tenantUrl', origin: 'sdk.example.com' }
-        DefaultPreflightChecks.supported = jest.fn().mockReturnValue(Promise.resolve(true))
+        Initializer.webauthnStatus = { platformAuthenticator: true, conditionalMediation: true, webauthn: true }
         authentication = new WebAuthnAuthentication()
 
         // @ts-expect-error
@@ -33,7 +44,7 @@ describe('WebAuthnAuthentication', () => {
     describe('when fetching the challenge succeeds', () => {
       beforeEach(() => {
         Initializer.config = { clientId: 'clientId', tenantUrl: 'tenantUrl', origin: 'sdk.example.com' }
-        DefaultPreflightChecks.supported = jest.fn().mockReturnValue(Promise.resolve(true))
+        Initializer.webauthnStatus = { platformAuthenticator: true, conditionalMediation: true, webauthn: true }
         authentication = new WebAuthnAuthentication()
 
         // @ts-expect-error

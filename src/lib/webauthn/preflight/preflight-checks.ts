@@ -20,8 +20,12 @@ export interface PreflightChecks {
 }
 
 export class DefaultPreflightChecks implements PreflightChecks {
+  /**
+   * @deprecated The method should not be used and will be removed in a future version - use #check() instead
+   */
   static async supported (): Promise<boolean> {
-    return await new DefaultPreflightChecks().isSupported()
+    const webauthnStatus = await DefaultPreflightChecks.check()
+    return webauthnStatus.webauthn && webauthnStatus.conditionalMediation && webauthnStatus.platformAuthenticator
   }
 
   static async check (): Promise<Preflight> {
@@ -33,6 +37,9 @@ export class DefaultPreflightChecks implements PreflightChecks {
     return await Promise.resolve({ platformAuthenticator: v2, conditionalMediation: v1, webauthn: v0 })
   }
 
+  /**
+   * @deprecated The method should not be used and will be removed in a future version - use #check() instead
+   */
   async isSupported (): Promise<boolean> {
     const value: boolean = typeof window.PublicKeyCredential !== 'undefined' &&
     (await this.isUserVerifyingPlatformAuthenticatorAvailable())?.valueOf() &&

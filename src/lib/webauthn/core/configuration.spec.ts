@@ -1,10 +1,13 @@
 
+import { DefaultPreflightChecks } from '../preflight/preflight-checks'
 import { Initializer } from './configuration'
 
 describe('Configuration', () => {
   describe('#initialize', () => {
     describe('when a valid URL is provided', () => {
       beforeEach(async () => {
+        DefaultPreflightChecks.check = jest.fn().mockReturnValue(Promise.resolve({ platformAuthenticator: true, conditionalMediation: true, webauthn: true }))
+
         // @ts-expect-error
         global.fetch = jest.fn(async () =>
           await Promise.resolve({
