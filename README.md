@@ -127,17 +127,18 @@ new trusona.WebAuthnEnrollment().enroll(jwt, controller.signal)
 
 ## Authenticate Your Users
 
-To authenticate a user, you can provide a username hint to the SDK or not.
+To authenticate a user, you can provide a username hint to the SDK or not - `lastUserHint()` is an function for this purpose.
 
 On success, a JWT is going to be provided in the SDK response that you can examine and verify the identity of the user.
 
 > The `subject` claim in the provided JWT will match `subject` that was provided during enrollment. 
 
 ```typescript
+const webAuthnAuthentication = new trusona.WebAuthnAuthentication()
 const controller: AbortController = new AbortController()
-const usernameHint: string|undefined = 'username-hint' // optional, may be undefined
+const usernameHint: string = webAuthnAuthentication.lastUserHint() // optional
 
-new trusona.WebAuthnAuthentication().authenticate(controller.signal, usernameHint)
+webAuthnAuthentication.authenticate(controller.signal, usernameHint)
   .then((map) => {
      // JWT from Trusona identifying the authenticated user
     const idToken:string = map.idToken
