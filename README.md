@@ -127,7 +127,7 @@ new trusona.WebAuthnEnrollment().enroll(jwt, controller.signal)
 
 ## Authenticate Your Users
 
-To authenticate a user, you can provide a username hint to the SDK or not - `lastUserHint()` is an function for this purpose.
+To authenticate a user, you can provide a username hint to the SDK or not - `lastUserHint()` is available to provide such a hint.
 
 On success, a JWT is going to be provided in the SDK response that you can examine and verify the identity of the user.
 
