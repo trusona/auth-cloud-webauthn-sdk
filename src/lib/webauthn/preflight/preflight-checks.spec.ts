@@ -12,6 +12,10 @@ describe('DefaultPreflightChecks', () => {
     spy = jest.spyOn(window, 'window', 'get')
   })
 
+  afterEach(() => {
+    spy.mockRestore()
+  })
+
   it('should be created', () => {
     expect(preflightChecks).toBeTruthy()
   })
