@@ -5,6 +5,7 @@ export interface Configuration {
   tenantUrl: string
   origin: string
   clientId: string
+  useLocalStorage: boolean
 }
 
 /**
@@ -71,6 +72,7 @@ export const Initializer = {
       return await Promise.resolve({
         origin,
         tenantUrl,
+        useLocalStorage: map.useLocalStorage,
         clientId: map.clientId
       })
     } else {
