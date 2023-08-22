@@ -11,7 +11,7 @@ describe('WebAuthnAuthentication', () => {
   describe('#authenticate', () => {
     describe('when the browser is not supported', () => {
       beforeEach(() => {
-        Initializer.config = { clientId: 'clientId', tenantUrl: 'tenantUrl', origin: 'sdk.example.com' }
+        Initializer.config = { clientId: 'clientId', tenantUrl: 'tenantUrl', origin: 'sdk.example.com', useLocalStorage: true }
         Initializer.webauthnFeatures = { platformAuthenticator: false, conditionalMediation: false, webauthn: false }
         authentication = new WebAuthnAuthentication()
       })
@@ -23,7 +23,7 @@ describe('WebAuthnAuthentication', () => {
 
     describe('when fetching the challenge fails', () => {
       beforeEach(() => {
-        Initializer.config = { clientId: 'clientId', tenantUrl: 'tenantUrl', origin: 'sdk.example.com' }
+        Initializer.config = { clientId: 'clientId', tenantUrl: 'tenantUrl', origin: 'sdk.example.com', useLocalStorage: true }
         Initializer.webauthnFeatures = { platformAuthenticator: true, conditionalMediation: true, webauthn: true }
         authentication = new WebAuthnAuthentication()
 
@@ -43,7 +43,7 @@ describe('WebAuthnAuthentication', () => {
 
     describe('when fetching the challenge succeeds', () => {
       beforeEach(() => {
-        Initializer.config = { clientId: 'clientId', tenantUrl: 'tenantUrl', origin: 'sdk.example.com' }
+        Initializer.config = { clientId: 'clientId', tenantUrl: 'tenantUrl', origin: 'sdk.example.com', useLocalStorage: true }
         Initializer.webauthnFeatures = { platformAuthenticator: true, conditionalMediation: true, webauthn: true }
         authentication = new WebAuthnAuthentication()
 

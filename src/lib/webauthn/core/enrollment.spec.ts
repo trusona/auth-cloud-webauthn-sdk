@@ -11,7 +11,7 @@ describe('WebAuthnEnrollment', () => {
   describe('#enroll', () => {
     describe('when the browser is not supported', () => {
       beforeEach(() => {
-        Initializer.config = { clientId: 'clientId', tenantUrl: 'tenantUrl', origin: 'sdk.example.com' }
+        Initializer.config = { clientId: 'clientId', tenantUrl: 'tenantUrl', origin: 'sdk.example.com', useLocalStorage: true }
         Initializer.webauthnFeatures = { platformAuthenticator: false, conditionalMediation: false, webauthn: false }
         enrollment = new WebAuthnEnrollment()
       })

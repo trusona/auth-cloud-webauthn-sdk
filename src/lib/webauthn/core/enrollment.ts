@@ -1,6 +1,7 @@
 import * as WebAuthn from '@github/webauthn-json/dist/types/basic/json'
 import * as errors from '../utils/errors'
 
+import { KnownUsersService, initKnownUsersService } from '../known-users/known-users.service'
 import { WebAuthnOptions } from './webauthn.options'
 import { Initializer } from './configuration'
 import { Strings } from '../utils/strings'
@@ -33,7 +34,8 @@ export interface Enrollment {
 
 export class WebAuthnEnrollment extends Base implements Enrollment {
   constructor (
-    private readonly webAuthnOptions: WebAuthnOptions = new WebAuthnOptions()
+    private readonly webAuthnOptions: WebAuthnOptions = new WebAuthnOptions(),
+    private readonly knownUsersService: KnownUsersService = initKnownUsersService()
   ) {
     super()
   }
@@ -80,6 +82,10 @@ export class WebAuthnEnrollment extends Base implements Enrollment {
     const response = await fetch(Initializer.registrationsEndpoint, { method: 'POST', body: json, credentials: 'include', headers: Initializer.headers })
 
     await this.recordEvent(response.ok ? 'REGISTRATION' : 'REGISTRATION_FAILED')
+
+    if (response.ok) {
+      this.knownUsersService.add(localStorage.getItem(Initializer._kid) ?? '')
+    }
 
     return response.ok
       ? await Promise.resolve({ status: EnrollmentStatus.SUCCESS })

@@ -4,6 +4,7 @@ import { FailedAuthenticationError } from '../utils/errors'
 import { Strings } from '../utils/strings'
 import { Base } from './base'
 import { PublicKeyCredentialRequestOptionsJSON, PublicKeyCredentialWithAssertionJSON } from '@github/webauthn-json/dist/types/basic/json'
+import { KnownUsersService, initKnownUsersService } from '../known-users/known-users.service'
 
 /**
  * @description
@@ -40,13 +41,26 @@ export enum AuthenticationStatus {
 export interface Authentication {
   authenticate: (abortSignal: AbortSignal, userIdentifier?: string, cui?: boolean) => Promise<AuthenticationResult>
   cui: (abortSignal: AbortSignal) => Promise<AuthenticationResult>
+  lastUserHint: () => string
 }
 
 export class WebAuthnAuthentication extends Base implements Authentication {
   constructor (
-    private readonly webAuthnOptions: WebAuthnOptions = new WebAuthnOptions()
+    private readonly webAuthnOptions: WebAuthnOptions = new WebAuthnOptions(),
+    private readonly knownUsersService: KnownUsersService = initKnownUsersService()
   ) {
     super()
+  }
+
+  /**
+   * @returns Return a "hint" of the last user identifier that successfully enrolled or authenticated at this endpoint.
+   *
+   * If a value is not available, an empty string is returned.
+   *
+   * This feature is only applicable if `useLocalStorage` is enabled for your tenant, which is "on" by default.
+   */
+  lastUserHint (): string {
+    return this.knownUsersService.lastUser()
   }
 
   async cui (abortSignal: AbortSignal): Promise<AuthenticationResult> {
@@ -107,6 +121,10 @@ export class WebAuthnAuthentication extends Base implements Authentication {
     const accessToken = map.accessToken
 
     await this.recordEvent(idToken !== undefined ? 'SIGNIN_SUCCESS' : 'SIGNIN_FAILED')
+
+    if (idToken !== undefined) {
+      this.knownUsersService.add(credentialUserIdentifier)
+    }
 
     return idToken !== undefined
       ? await Promise.resolve({ status: AuthenticationStatus.SUCCESS, idToken, accessToken })

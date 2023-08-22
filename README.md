@@ -191,6 +191,13 @@ async authenticate: (abortSignal: AbortSignal, userIdentifier?: string) => Promi
 //
 async cui: (abortSignal: AbortSignal) => Promise<AuthenticationResult>
 
+// Return a "hint" of the last user identifier that successfully enrolled or authenticated at this endpoint.
+//
+// If a value is not available, an empty (blank) string is returned.
+//
+// This feature is only applicable if `useLocalStorage` is enabled for your tenant, which is "on" by default.
+//
+lastUserHint: () => string
 
 // Instance methods of PasskeyManagement
 //
