@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+# [1.4.0] - August 22, 2023
+- Port in "local storage hinting" to allow for a hint of the last user enrolled or authenticated to be tracked.
+
 # [1.3.1] - July 13, 2023
 - Clean code.
 
