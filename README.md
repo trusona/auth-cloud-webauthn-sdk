@@ -134,8 +134,8 @@ On success, a JWT is going to be provided in the SDK response that you can exami
 > The `subject` claim in the provided JWT will match `subject` that was provided during enrollment. 
 
 ```typescript
-const webAuthnAuthentication = new trusona.WebAuthnAuthentication()
 const controller: AbortController = new AbortController()
+const webAuthnAuthentication = new trusona.WebAuthnAuthentication()
 const usernameHint: string = webAuthnAuthentication.lastUserHint() // optional
 
 webAuthnAuthentication.authenticate(controller.signal, usernameHint)
