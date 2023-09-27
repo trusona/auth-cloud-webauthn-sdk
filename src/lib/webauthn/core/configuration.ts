@@ -105,6 +105,10 @@ export const Initializer = {
     return `${this.configuration?.tenantUrl ?? ''}/api/credentials`
   },
 
+  get credentialsActivityEndpoint (): string {
+    return `${this.configuration?.tenantUrl ?? ''}/api/credentials_activity`
+  },
+
   /**
    * This method is not part of the public SDK.
    */
