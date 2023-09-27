@@ -7,6 +7,15 @@ export interface PassKey {
   userIdentifier: string
 }
 
+export interface PassKeyActivity {
+  credentialId: string
+  userIdentifier: string
+  userAgent: string
+  ipAddress: string
+  operatingSystem: string
+  createdAt: Date
+}
+
 export interface PassKeyManagement {
   /**
    * @returns An array of all passkeys that are active, and not expired for the current user.
@@ -29,6 +38,12 @@ export interface PassKeyManagement {
    *
    */
   getPasskey: (id: string) => Promise<PassKey>
+
+  /**
+   * @returns If found, the passkey activity of the authenticated user - grouped by the passkey ID.
+   *
+   */
+  passKeyActivity: () => Promise<Map<string, PassKeyActivity[]>>
 }
 
 export class DefaultPassKeyManagement implements PassKeyManagement {
@@ -36,6 +51,16 @@ export class DefaultPassKeyManagement implements PassKeyManagement {
 
   async get (): Promise<PassKey[]> {
     const url = `${Initializer.credentialsEndpoint}`
+    const response = await fetch(url, this.httpOptions('GET'))
+    const body = response.ok ? await response.json() : undefined
+
+    return response.ok
+      ? await Promise.resolve(body)
+      : await Promise.reject(new Error('Request failed. Is the provided authentication valid?'))
+  }
+
+  async passKeyActivity (): Promise<Map<string, PassKeyActivity[]>> {
+    const url = `${Initializer.credentialsActivityEndpoint}`
     const response = await fetch(url, this.httpOptions('GET'))
     const body = response.ok ? await response.json() : undefined
 
