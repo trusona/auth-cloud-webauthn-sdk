@@ -95,19 +95,30 @@
   <script src="./index.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", async function (event) {
-      if(await new trusona.DefaultPreflightChecks().isSupported()) {        
-        const tenant = 'thitu.staging.trusonasandbox.com'
+      const tenant = 'thitu.staging.trusonasandbox.com' // unique to this demo
+      trusona.Initializer.initialize(tenant)
+        .then((_) => {
+          const platformAuthenticator = trusona.Initializer.webauthnFeatures.platformAuthenticator
+          const conditionalMediation = trusona.Initializer.webauthnFeatures.conditionalMediation
+          const webauthn = trusona.Initializer.webauthnFeatures.webauthn
 
-        document.getElementById('main').classList.remove('hidden')
-        trusona.Initializer.initialize(tenant)
-          .then((_) => {
-            authenticate(true)
-          })
-      }
-      else {
-        document.getElementById('unsupported').classList.remove('hidden')
-        document.getElementById('main').classList.add('hidden')
-      }
-    });
+          if(webauthn && platformAuthenticator) {
+            document.getElementById('main').classList.remove('hidden')
+
+            if(conditionalMediation) {
+              authenticate(true)
+            }
+          }
+
+          if(!webauthn || !platformAuthenticator) {
+            document.getElementById('unsupported').classList.remove('hidden')
+            document.getElementById('main').classList.add('hidden')
+          }
+        })
+        .catch((e) => {
+          document.getElementById('unsupported').classList.remove('hidden')
+          document.getElementById('main').classList.add('hidden')
+        })
+      });
 </script>
 </html>
