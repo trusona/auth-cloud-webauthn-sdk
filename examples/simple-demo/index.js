@@ -31,7 +31,7 @@ async function authenticate (cui = false) {
     .authenticate(controller.signal, username, cui)
     .then((result) => {
       const jwt = result.accessToken
-      showCredentials(jwt)
+      showCredentialActivity(jwt)
 
       return JSON.parse(window.atob(result.idToken.split('.')[1])).sub
     })
@@ -51,6 +51,7 @@ async function authenticate (cui = false) {
 
 async function jwtApi (username) {
   try {
+    // *** DO NOT USE THIS JWT GENERATOR IN A PRODUCTION ENVIRONMENT ***
     const response = await fetch(`https://jwks-delegate.lab.trusona.net/jwt?sub=${username}`)
     const data = await response.json()
     return await Promise.resolve(data.jwt)
@@ -132,52 +133,6 @@ function nextAction (event, action) {
   event.target.innerText = actionToText(action)
 }
 
-async function showCredentials (token) {
-  const pkm = new trusona.DefaultPassKeyManagement(token)
-  const passkeys = await pkm.get(token)
-
-  const ux = Object.keys(passkeys[0]).indexOf('userIdentifier')
-  const px = Object.keys(passkeys[0]).indexOf('publicKey')
-  const cx = Object.keys(passkeys[0]).indexOf('created')
-
-  const container = $('#credentials')
-  const table = $('<table class="table table-fixed">')
-  const columns = Object.keys(passkeys[0])
-  const thead = $('<thead>')
-  const tr = $('<tr>')
-
-  $.each(columns, function (i, item) {
-    if (i !== ux && i !== px) {
-      const th = $('<th class="px-4">')
-      th.text(item)
-      tr.append(th)
-    }
-  })
-
-  thead.append(tr)
-  table.append(tr)
-
-  $.each(passkeys, function (i, item) {
-    const tr = $('<tr class="px-2">')
-    const values = Object.values(item)
-
-    $.each(values, (i, element) => {
-      if (i !== ux && i !== px) {
-        const td = $('<td class="px-4">')
-
-        if (i === cx) {
-          td.append('<pre>' + moment(element).format('llll') + '</pre>')
-        } else {
-          td.append('<pre>' + element + '</pre>')
-        }
-        tr.append(td)
-      }
-    })
-    table.append(tr)
-  })
-
-  const notice = '<div class="p-4">Below is a list of all passkeys (their identifiers in our system) that you have and when they were created.</div>'
-
-  container.append(notice)
-  container.append(table)
+async function showCredentialActivity (token) {
+  // todo: flesh this out to show credential activity
 }
