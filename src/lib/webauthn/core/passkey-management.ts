@@ -7,7 +7,15 @@ export interface PassKey {
   userIdentifier: string
 }
 
+export enum CredentialActivityType {
+  REGISTRATION = 'REGISTRATION',
+  ASSERTION = 'ASSERTION',
+  AUTO_EXPIRATION = 'AUTO_EXPIRATION',
+  MANUAL_EXPIRATION = 'MANUAL_EXPIRATION'
+}
+
 export interface PassKeyActivity {
+  credentialActivityType: CredentialActivityType
   credentialId: string
   userIdentifier: string
   userAgent: string
@@ -43,7 +51,13 @@ export interface PassKeyManagement {
    * @returns If found, the passkey activity of the authenticated user - grouped by the passkey ID.
    *
    */
-  passKeyActivity: () => Promise<Map<string, PassKeyActivity[]>>
+  passkeyActivity: () => Promise<Map<string, PassKeyActivity[]>>
+
+  /**
+   * @returns If found, a list of the recent passkey activity of the authenticated user.
+   *
+   */
+  latestPasskeyActivity: () => Promise<Map<string, Map<CredentialActivityType, PassKeyActivity>>>
 }
 
 export class DefaultPassKeyManagement implements PassKeyManagement {
@@ -59,8 +73,18 @@ export class DefaultPassKeyManagement implements PassKeyManagement {
       : await Promise.reject(new Error('Request failed. Is the provided authentication valid?'))
   }
 
-  async passKeyActivity (): Promise<Map<string, PassKeyActivity[]>> {
+  async passkeyActivity (): Promise<Map<string, PassKeyActivity[]>> {
     const url = `${Initializer.credentialsActivityEndpoint}`
+    const response = await fetch(url, this.httpOptions('GET'))
+    const body = response.ok ? await response.json() : undefined
+
+    return response.ok
+      ? await Promise.resolve(body)
+      : await Promise.reject(new Error('Request failed. Is the provided authentication valid?'))
+  }
+
+  async latestPasskeyActivity (): Promise<Map<string, Map<CredentialActivityType, PassKeyActivity>>> {
+    const url = `${Initializer.credentialsActivityEndpoint}/latest`
     const response = await fetch(url, this.httpOptions('GET'))
     const body = response.ok ? await response.json() : undefined
 
