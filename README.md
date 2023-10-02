@@ -218,6 +218,11 @@ async deletePasskey: (id: string) => Promise<boolean>
 //
 async getPasskey: (id: string) => Promise<PassKey>
 
+// Returns the latest passkey activity for the authenticated user. This data is only available for 
+// activity since October 2023
+//
+async latestPasskeyActivity: () => Promise<Map<string, Map<CredentialActivityType, PassKeyActivity>>>
+
 ```
 
 # Troubleshooting
