@@ -50,6 +50,10 @@ describe('Configuration', () => {
         expect(Initializer.registrationsEndpoint).toBe('https://sdk.example.com/api/v1/attestation/registrations')
       })
 
+      it('resolves a valid passkey activity endpoint', () => {
+        expect(Initializer.credentialsActivityEndpoint).toBe('https://sdk.example.com/api/credentials_activity')
+      })
+
       it('resolves a valid jwks endpoint', () => {
         expect(Initializer.jwksEndpoint).toBe('https://sdk.example.com/.well-known/jwks')
       })
