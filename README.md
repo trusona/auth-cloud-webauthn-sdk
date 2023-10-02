@@ -165,8 +165,9 @@ An instance of a `PasskeyManagement` is created using the provided `JWT` access 
 
 All active credentials can be returned, and they can be individually deleted.
 
-See the summary below.
+Also, a passkey's recent activity can be queried.
 
+See the summary below.
 
 
 # API Summary
