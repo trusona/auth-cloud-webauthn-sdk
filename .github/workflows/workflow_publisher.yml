@@ -1,0 +1,32 @@
+name: NPM Publisher
+on:
+  workflow_call:
+    secrets:
+      NPMJS_PUBLISHER:
+        required: true
+permissions:
+  id-token: write
+  contents: read
+  packages: read
+jobs:
+  test:
+    name: Typescript
+    runs-on: ubuntu-latest
+    env:
+      NPMJS_PUBLISHER: ${{ secrets.NPMJS_PUBLISHER }}
+    steps:
+    - uses: actions/checkout@v3
+
+    - uses: actions/setup-node@v3
+      with:
+        cache-dependency-path: package-lock.json
+        check-latest: true
+        node-version: 18
+        cache: 'npm'
+
+    - run: npm install
+    - run: npm run build
+    - run: echo '//registry.npmjs.org/:_authToken=${NPMJS_PUBLISHER}' > .npmrc
+    - run: echo 'email=engineering@trusona.com' >> .npmrc
+    - run: echo 'always-auth=true' >> .npmrc
+    - run: npm publish --access public

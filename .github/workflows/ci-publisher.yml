@@ -1,0 +1,46 @@
+name: CI Publishing
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  id-token: write
+  contents: read
+  packages: read
+jobs:
+  test:
+    uses: ./.github/workflows/workflow_test.yml
+
+  analysis:
+    uses: ./.github/workflows/workflow_static-analysis.yml
+
+  publisher:
+    uses: ./.github/workflows/workflow_publisher.yml
+    needs: [ test, analysis ]
+    secrets:
+      NPMJS_PUBLISHER: ${{ secrets.NPMJS_PUBLISHER }}
+
+  success_notification:
+    uses: ./.github/workflows/workflow_slack-notification.yml
+    needs: [ publisher ]
+    if: ${{ success() }}
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    with:
+      DISPLAYED_USERNAME: Auth Cloud TouchPoint SDK CI
+      MESSAGE: 'CI run completed successfully! :tada: :tada:'
+      COLOR: good
+
+  failure_notification:
+    uses: ./.github/workflows/workflow_slack-notification.yml
+    needs: [ publisher ]
+    if: ${{ failure() }}
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    with:
+      DISPLAYED_USERNAME: Auth Cloud TouchPoint SDK CI
+      MESSAGE: 'CI run failed! Shame! Shame! :sadpanda: :sadpanda:'
+      COLOR: danger
