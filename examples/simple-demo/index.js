@@ -134,5 +134,48 @@ function nextAction (event, action) {
 }
 
 async function showCredentialActivity (token) {
-  // todo: flesh this out to show credential activity
+  const pkm = new trusona.DefaultPassKeyManagement(token)
+  const activities = await pkm.latestPasskeyActivity()
+
+  let html = '<div class="flex flex-col text-xs text-left px-2">'
+
+  Object.entries(activities).forEach((entry) => {    
+    const [key, value] = entry
+
+    html += `<table class="table-auto my-4">
+    <thead><tr><th>Passkey ID: ${key}</th></tr></thead>`
+    html += '<tbody>'
+    
+    Object.entries(value).forEach((map) => {    
+      const [_, data] = map
+
+      html += `
+        <tr>
+        <td class="my-1">
+        <div class="py-1">Activity Type: ${data['credentialActivityType']}</div>
+        <div class="py-1">Browser: ${data['userAgent']}</div>
+        <div class="py-1">IP Address: ${data['ipAddress']}</div>
+        <div class="py-1">System OS: ${data['operatingSystem']}</div>
+        <div class="py-1">When? ${moment(data['createdAt']).format('llll')}</div>
+        </td>
+        </tr>
+        <tr><td class="py-1"><hr /></td></tr>
+      `
+    })
+
+    html += '</tbody></table>'
+  })
+
+  const container = $('#credentials')
+  
+  while (container.firstChild) {
+    container.firstChild.remove()
+  }
+
+  const notice = `
+  <div class="px-2 text-xs text-gray-500">Below is a list of all passkeys that you have registered with this tenant, 
+  when they were created, and the most recent assertion event for each.</div>`
+
+  container.append(notice)
+  container.append(html)
 }
