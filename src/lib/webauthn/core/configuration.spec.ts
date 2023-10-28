@@ -1,4 +1,3 @@
-
 import { DefaultPreflightChecks } from '../preflight/preflight-checks'
 import { Initializer } from './configuration'
 

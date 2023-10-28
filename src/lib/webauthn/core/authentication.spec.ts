@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import { Authentication, WebAuthnAuthentication } from './authentication'
+import { type Authentication, WebAuthnAuthentication } from './authentication'
 import { Initializer } from './configuration'
 
 describe('WebAuthnAuthentication', () => {
@@ -27,7 +27,7 @@ describe('WebAuthnAuthentication', () => {
         Initializer.webauthnFeatures = { platformAuthenticator: true, conditionalMediation: true, webauthn: true }
         authentication = new WebAuthnAuthentication()
 
-        // @ts-expect-error
+        // @ts-expect-error - not defined here .. ok
         global.fetch = jest.fn(async () =>
           await Promise.resolve({
             status: 404,
@@ -47,7 +47,7 @@ describe('WebAuthnAuthentication', () => {
         Initializer.webauthnFeatures = { platformAuthenticator: true, conditionalMediation: true, webauthn: true }
         authentication = new WebAuthnAuthentication()
 
-        // @ts-expect-error
+        // @ts-expect-error - not defined here .. ok
         global.fetch = jest.fn(async () =>
           await Promise.resolve({
             status: 202,

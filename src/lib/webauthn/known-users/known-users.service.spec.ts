@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import { DefaultKnownUsersService, KnownUsersService } from '../known-users/known-users.service'
+import { DefaultKnownUsersService, type KnownUsersService } from '../known-users/known-users.service'
 
 describe('KnownUsersService', () => {
   const service: KnownUsersService = new DefaultKnownUsersService()
