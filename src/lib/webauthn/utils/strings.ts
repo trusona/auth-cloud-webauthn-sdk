@@ -1,4 +1,3 @@
-
 export const Strings = {
 
   blank (value: string): boolean {

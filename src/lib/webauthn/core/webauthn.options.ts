@@ -1,5 +1,5 @@
-import { PublicKeyCredentialCreationOptionsJSON } from '@github/webauthn-json/dist/types/basic/json'
-import { AssertionTransaction, CredentialTransaction } from './authentication'
+import { type PublicKeyCredentialCreationOptionsJSON } from '@github/webauthn-json/dist/types/basic/json'
+import { type AssertionTransaction, type CredentialTransaction } from './authentication'
 import { Initializer } from './configuration'
 import * as WebAuthn from '@github/webauthn-json'
 
@@ -21,7 +21,7 @@ export class WebAuthnOptions {
     }
 
     const credential: WebAuthn.PublicKeyCredentialWithAssertionJSON = await WebAuthn.get(params)
-    return requestOptions !== undefined ? { credential, transactionId } : await Promise.resolve(undefined)
+    return requestOptions !== undefined ? await Promise.resolve({ credential, transactionId }) : await Promise.resolve(undefined)
   }
 
   async createCredential (options: PublicKeyCredentialCreationOptionsJSON, abortSignal?: AbortSignal): Promise<WebAuthn.PublicKeyCredentialWithAttestationJSON> {

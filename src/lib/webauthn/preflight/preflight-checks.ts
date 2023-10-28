@@ -49,8 +49,7 @@ export class DefaultPreflightChecks implements PreflightChecks {
   }
 
   private async isConditionalMediationAvailable (): Promise<boolean> {
-    // @ts-expect-error
-    return await window.PublicKeyCredential?.isConditionalMediationAvailable?.() // eslint-disable-line @typescript-eslint/return-await
+    return await window.PublicKeyCredential?.isConditionalMediationAvailable?.()
   }
 
   private async isUserVerifyingPlatformAuthenticatorAvailable (): Promise<boolean> {

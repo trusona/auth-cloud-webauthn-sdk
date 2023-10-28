@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import { Enrollment, WebAuthnEnrollment } from './enrollment'
+import { type Enrollment, WebAuthnEnrollment } from './enrollment'
 import { Initializer } from './configuration'
 
 describe('WebAuthnEnrollment', () => {

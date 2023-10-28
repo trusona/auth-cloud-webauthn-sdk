@@ -1,4 +1,3 @@
-
 export class UnsupportedBrowserError extends Error {
   constructor () {
     super('This browser is not supported')

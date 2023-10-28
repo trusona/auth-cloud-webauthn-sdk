@@ -1,5 +1,4 @@
-
-import { DefaultPreflightChecks, Preflight } from '../preflight/preflight-checks'
+import { DefaultPreflightChecks, type Preflight } from '../preflight/preflight-checks'
 
 export interface Configuration {
   tenantUrl: string
