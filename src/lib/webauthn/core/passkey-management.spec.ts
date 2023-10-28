@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import { Initializer } from './configuration'
-import { DefaultPassKeyManagement, PassKeyManagement } from './passkey-management'
+import { DefaultPassKeyManagement, type PassKeyManagement } from './passkey-management'
 
 describe('PassKeyManagement', () => {
   let passKeyManagement: PassKeyManagement

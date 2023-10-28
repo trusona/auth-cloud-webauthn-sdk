@@ -8,11 +8,11 @@ export interface PassKey {
 }
 
 export enum CredentialFlag {
-  BACKUP_STATE= 'BACKUP_STATE',
-  USER_PRESENT= 'USER_PRESENT',
-  USER_VERIFIED= 'USER_VERIFIED',
-  EXTENSION_DATA= 'EXTENSION_DATA',
-  BACKUP_ELIGIBILITY= 'BACKUP_ELIGIBILITY'
+  BACKUP_STATE = 'BACKUP_STATE',
+  USER_PRESENT = 'USER_PRESENT',
+  USER_VERIFIED = 'USER_VERIFIED',
+  EXTENSION_DATA = 'EXTENSION_DATA',
+  BACKUP_ELIGIBILITY = 'BACKUP_ELIGIBILITY'
 }
 
 export enum CredentialActivityType {
@@ -30,7 +30,7 @@ export interface PassKeyActivity {
   ipAddress: string
   operatingSystem: string
   createdAt: Date
-  credentialFlags:Map<CredentialFlag, boolean>
+  credentialFlags: Map<CredentialFlag, boolean>
 }
 
 export interface PassKeyManagement {

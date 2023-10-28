@@ -3,8 +3,8 @@ import { WebAuthnOptions } from './webauthn.options'
 import { FailedAuthenticationError } from '../utils/errors'
 import { Strings } from '../utils/strings'
 import { Base } from './base'
-import { PublicKeyCredentialRequestOptionsJSON, PublicKeyCredentialWithAssertionJSON } from '@github/webauthn-json/dist/types/basic/json'
-import { KnownUsersService, initKnownUsersService } from '../known-users/known-users.service'
+import { type PublicKeyCredentialRequestOptionsJSON, type PublicKeyCredentialWithAssertionJSON } from '@github/webauthn-json/dist/types/basic/json'
+import { type KnownUsersService, initKnownUsersService } from '../known-users/known-users.service'
 
 /**
  * @description

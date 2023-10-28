@@ -156,6 +156,8 @@ async function showCredentialActivity (token) {
         <div class="py-1">Browser: ${data['userAgent']}</div>
         <div class="py-1">IP Address: ${data['ipAddress']}</div>
         <div class="py-1">System OS: ${data['operatingSystem']}</div>
+        <div class="py-1">Synced: ${data['credentialFlags']?.BACKUP_STATE ?? 'n/a'}</div>
+        <div class="py-1">Sync Eligibility: ${data['credentialFlags']?.BACKUP_ELIGIBILITY ?? 'n/a'}</div>
         <div class="py-1">When? ${moment(data['createdAt']).format('llll')}</div>
         </td>
         </tr>

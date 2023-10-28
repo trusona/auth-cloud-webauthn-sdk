@@ -1,7 +1,7 @@
-import * as WebAuthn from '@github/webauthn-json/dist/types/basic/json'
+import type * as WebAuthn from '@github/webauthn-json/dist/types/basic/json'
 import * as errors from '../utils/errors'
 
-import { KnownUsersService, initKnownUsersService } from '../known-users/known-users.service'
+import { type KnownUsersService, initKnownUsersService } from '../known-users/known-users.service'
 import { WebAuthnOptions } from './webauthn.options'
 import { Initializer } from './configuration'
 import { Strings } from '../utils/strings'
