@@ -13,7 +13,6 @@ async function enroll (event) {
       nextAction(event, 'sign_in')
     })
     .catch((e) => {
-      // console.error(e)
       addClass(document.getElementById('authAgain'), 'hidden')
       message(e.message)
     })
@@ -42,8 +41,6 @@ async function authenticate (cui = false) {
     .then((_) => { resetSignals() })
     .then((_) => { authenticate(true) })
     .catch((e) => {
-      // console.error(e)
-
       addClass(document.getElementById('authAgain'), 'hidden')
 
       if (!cui) {
