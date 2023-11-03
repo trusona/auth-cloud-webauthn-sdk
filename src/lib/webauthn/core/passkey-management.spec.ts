@@ -2,10 +2,10 @@
  * @jest-environment jsdom
  */
 import { Initializer } from './configuration'
-import { DefaultPassKeyManagement, type PassKeyManagement } from './passkey-management'
+import { DefaultPasskeyManagement, type PasskeyManagement } from './passkey-management'
 
-describe('PassKeyManagement', () => {
-  let passKeyManagement: PassKeyManagement
+describe('PasskeyManagement', () => {
+  let passkeyManagement: PasskeyManagement
 
   function fetchStub (data: any) {
     return async function stub (_: any) {
@@ -25,12 +25,12 @@ describe('PassKeyManagement', () => {
     global.fetch = jest.fn().mockImplementation(fetchStub({}))
     await Initializer.initialize('tenant-id')
 
-    passKeyManagement = new DefaultPassKeyManagement('jwt')
+    passkeyManagement = new DefaultPasskeyManagement('jwt')
   })
 
   describe('#get', () => {
     beforeEach(async () => {
-      await passKeyManagement.get()
+      await passkeyManagement.get()
     })
 
     it('uses the JWT to invoke the credentials endpoint', () => {
@@ -51,7 +51,7 @@ describe('PassKeyManagement', () => {
 
   describe('#deletePasskey', () => {
     beforeEach(async () => {
-      await passKeyManagement.deletePasskey('credential-id')
+      await passkeyManagement.deletePasskey('credential-id')
     })
 
     it('uses the JWT to invoke the credentials endpoint', () => {
@@ -72,7 +72,7 @@ describe('PassKeyManagement', () => {
 
   describe('#getPasskey', () => {
     beforeEach(async () => {
-      await passKeyManagement.getPasskey('credential-id')
+      await passkeyManagement.getPasskey('credential-id')
     })
 
     it('uses the JWT to invoke the credentials endpoint', () => {

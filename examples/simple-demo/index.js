@@ -13,6 +13,7 @@ async function enroll (event) {
       nextAction(event, 'sign_in')
     })
     .catch((e) => {
+      // console.error(e)
       addClass(document.getElementById('authAgain'), 'hidden')
       message(e.message)
     })
@@ -41,6 +42,8 @@ async function authenticate (cui = false) {
     .then((_) => { resetSignals() })
     .then((_) => { authenticate(true) })
     .catch((e) => {
+      // console.error(e)
+
       addClass(document.getElementById('authAgain'), 'hidden')
 
       if (!cui) {
@@ -65,7 +68,7 @@ function message (msg) {
 }
 
 function resetSignals () {
-  controller.abort()
+  controller.abort('reset')
   controller = new AbortController()
 }
 
@@ -134,7 +137,7 @@ function nextAction (event, action) {
 }
 
 async function showCredentialActivity (token) {
-  const pkm = new trusona.DefaultPassKeyManagement(token)
+  const pkm = new trusona.DefaultPasskeyManagement(token)
   const activities = await pkm.latestPasskeyActivity()
 
   let html = '<div class="flex flex-col text-xs text-left px-2">'
