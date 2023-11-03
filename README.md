@@ -209,7 +209,7 @@ const passkeyManagement = new DefaultPasskeyManagement(authenticationResult.acce
 
 // Returns an array of all active and unexpired passkeys for the currently authenticated user.
 //
-async get: () => Promise<PassKey[]>
+async get: () => Promise<Passkey[]>
 
 // Returns a Promise of true indicating that the specified passkey was successfully deleted.
 //
@@ -217,12 +217,12 @@ async deletePasskey: (id: string) => Promise<boolean>
 
 // If found, returns the specified passkey. Inactive, or expired passkeys cannot be retrieved.
 //
-async getPasskey: (id: string) => Promise<PassKey>
+async getPasskey: (id: string) => Promise<Passkey>
 
 // Returns the latest passkey activity for the authenticated user. This data is only available for 
 // activity since October 2023
 //
-async latestPasskeyActivity: () => Promise<Map<string, Map<CredentialActivityType, PassKeyActivity>>>
+async latestPasskeyActivity: () => Promise<Map<string, Map<CredentialActivityType, PasskeyActivity>>>
 
 ```
 

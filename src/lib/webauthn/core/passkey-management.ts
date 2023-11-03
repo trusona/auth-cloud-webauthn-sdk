@@ -1,6 +1,6 @@
 import { Initializer } from './configuration'
 
-export interface PassKey {
+export interface Passkey {
   id: string
   expires?: string
   created: string
@@ -22,7 +22,7 @@ export enum CredentialActivityType {
   MANUAL_EXPIRATION = 'MANUAL_EXPIRATION'
 }
 
-export interface PassKeyActivity {
+export interface PasskeyActivity {
   credentialActivityType: CredentialActivityType
   credentialId: string
   userIdentifier: string
@@ -33,11 +33,11 @@ export interface PassKeyActivity {
   credentialFlags: Map<CredentialFlag, boolean>
 }
 
-export interface PassKeyManagement {
+export interface PasskeyManagement {
   /**
    * @returns An array of all passkeys that are active, and not expired for the current user.
    */
-  get: () => Promise<PassKey[]>
+  get: () => Promise<Passkey[]>
 
   /**
    * @param id The unique passkey ID, as provided
@@ -54,25 +54,25 @@ export interface PassKeyManagement {
    * passkeys cannot be retrieved.
    *
    */
-  getPasskey: (id: string) => Promise<PassKey>
+  getPasskey: (id: string) => Promise<Passkey>
 
   /**
    * @returns If found, the passkey activity of the authenticated user - grouped by the passkey ID.
    *
    */
-  passkeyActivity: () => Promise<Map<string, PassKeyActivity[]>>
+  passkeyActivity: () => Promise<Map<string, PasskeyActivity[]>>
 
   /**
    * @returns If found, a list of the recent passkey activity of the authenticated user.
    *
    */
-  latestPasskeyActivity: () => Promise<Map<string, Map<CredentialActivityType, PassKeyActivity>>>
+  latestPasskeyActivity: () => Promise<Map<string, Map<CredentialActivityType, PasskeyActivity>>>
 }
 
-export class DefaultPassKeyManagement implements PassKeyManagement {
+export class DefaultPasskeyManagement implements PasskeyManagement {
   constructor (private readonly accessToken: string) {}
 
-  async get (): Promise<PassKey[]> {
+  async get (): Promise<Passkey[]> {
     const url = `${Initializer.credentialsEndpoint}`
     const response = await fetch(url, this.httpOptions('GET'))
     const body = response.ok ? await response.json() : undefined
@@ -82,7 +82,7 @@ export class DefaultPassKeyManagement implements PassKeyManagement {
       : await Promise.reject(new Error('Request failed. Is the provided authentication valid?'))
   }
 
-  async passkeyActivity (): Promise<Map<string, PassKeyActivity[]>> {
+  async passkeyActivity (): Promise<Map<string, PasskeyActivity[]>> {
     const url = `${Initializer.credentialsActivityEndpoint}`
     const response = await fetch(url, this.httpOptions('GET'))
     const body = response.ok ? await response.json() : undefined
@@ -92,7 +92,7 @@ export class DefaultPassKeyManagement implements PassKeyManagement {
       : await Promise.reject(new Error('Request failed. Is the provided authentication valid?'))
   }
 
-  async latestPasskeyActivity (): Promise<Map<string, Map<CredentialActivityType, PassKeyActivity>>> {
+  async latestPasskeyActivity (): Promise<Map<string, Map<CredentialActivityType, PasskeyActivity>>> {
     const url = `${Initializer.credentialsActivityEndpoint}/latest`
     const response = await fetch(url, this.httpOptions('GET'))
     const body = response.ok ? await response.json() : undefined
@@ -111,7 +111,7 @@ export class DefaultPassKeyManagement implements PassKeyManagement {
       : await Promise.reject(new Error('deletion failed or authentication is not valid'))
   }
 
-  async getPasskey (id: string): Promise<PassKey> {
+  async getPasskey (id: string): Promise<Passkey> {
     const url = `${Initializer.credentialsEndpoint}/${id}`
     const response = await fetch(url, this.httpOptions('GET'))
     const body = response.ok ? await response.json() : undefined
