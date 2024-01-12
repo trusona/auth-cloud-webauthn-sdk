@@ -141,11 +141,19 @@ const usernameHint: string = webAuthnAuthentication.lastUserHint() // optional
 webAuthnAuthentication.authenticate(controller.signal, usernameHint)
   .then((map) => {
      // JWT from Trusona identifying the authenticated user
+     //
     const idToken:string = map.idToken
+
+    // JWT from Trusona that can be used to access protected resources e.g. Passkey Management
+    //
+    const accessToken:string = map.accessToken
+
+
     const jwksEndpoint:string = trusona.Initializer.jwksEndpoint
 
     //
-    // Verify the JWT against the Trusona's JWKS implementation endpoint.
+    // Verify the JWT against the Trusona's JWKS implementation endpoint. You would
+    // do this in your backend services.
     //
     // A "subject" claim will have the username of the authenticated user.
     //
