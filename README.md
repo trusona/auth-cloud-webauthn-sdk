@@ -105,6 +105,8 @@ trusona.Initializer.initialize(origin)
 
 ## Enroll Your Users
 
+![Enrollment sequence diagram](docs/images/tac-passkey-sdk-enrollment.png)
+
 To enroll a user, from within your backend, generate a `JWT` token with the `subject` claim as a user's identifier or username.
 
 This identifier does not need to be an email address, but it should uniquely identify the user and they should be able to recognize it as their username.
@@ -126,6 +128,9 @@ new trusona.WebAuthnEnrollment().enroll(jwt, controller.signal)
 ```
 
 ## Authenticate Your Users
+
+![Authentication sequence diagram](docs/images/tac-passkey-sdk-authentication.png)
+
 
 To authenticate a user, you can provide a username hint to the SDK or not - `lastUserHint()` is available to provide such a hint.
 
