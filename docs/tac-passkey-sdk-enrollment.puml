@@ -9,14 +9,14 @@ participant "Trusona Auth Cloud" as core
 bro -> cust: Sign in using existing authentication method
 cust --> bro: Success
 bro -> sdk: enroll with JWT
-sdk -> core: POST /api/v1/attestation/options (JWT)
-core -> cust: GET /somepath/jwks
-cust --> core: jwks 
+sdk -> core: POST /attestation/options (JWT)
+core -> cust: GET /jwks_endpoint
+cust --> core: jwks response
 core -> core: Validate JWT with jwks
 core --> sdk: attestation_options, transaction_id
 sdk -> bro: create webauthn credentials using attestation_options
 bro --> sdk: attestation_options
-sdk -> core: POST /api/v1/attestation/registrations (attestation_options, transaction_id)
+sdk -> core: POST /enrollments (attestation_options, transaction_id)
 core -> core: create passkey credential
 core --> sdk: enrollment result
 sdk --> bro: enrollment result

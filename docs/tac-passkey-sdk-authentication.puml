@@ -6,15 +6,17 @@ participant "Trusona SDK" as sdk
 participant "Customer Backend" as cust
 participant "Trusona Auth Cloud" as core
 
+== Authentication ==
 bro -> sdk: authenticate (optional user hint)
-sdk -> core: POST /fido2/assertion/options
-core --> sdk: JWT
+sdk -> core: POST /authentications
+core --> sdk: authentication response
 sdk --> bro: (idToken, accessToken)
+== Verification of accessToken ==
 bro -> sdk: get Initializer.jwksEndpoint
 sdk --> bro: jwks_endpoint
 bro -> cust: verify accessToken with jwks_endpoint
 cust -> core: GET /jwks_endpoint
-core --> cust: jwks
+core --> cust: jwks response
 cust -> cust: verify accessToken with jwks
 cust --> bro: verification success
 bro -> cust: access with accessToken
