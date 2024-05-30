@@ -1,0 +1,24 @@
+@startuml
+!include ../../../../style_puml.config
+
+participant "Browser" as bro
+participant "Trusona SDK" as sdk
+participant "Customer Backend" as cust
+participant "Trusona Auth Cloud" as core
+
+bro -> cust: Sign in using existing authentication method
+cust --> bro: Success
+bro -> sdk: enroll with JWT
+sdk -> core: POST /attestation/options (JWT)
+core -> cust: GET /jwks_endpoint
+cust --> core: jwks response
+core -> core: Validate JWT with jwks
+core --> sdk: attestation_options, transaction_id
+sdk -> bro: create webauthn credentials using attestation_options
+bro --> sdk: attestation_options
+sdk -> core: POST /enrollments (attestation_options, transaction_id)
+core -> core: create passkey credential
+core --> sdk: enrollment result
+sdk --> bro: enrollment result
+
+@enduml
