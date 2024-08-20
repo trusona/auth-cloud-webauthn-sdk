@@ -18,7 +18,7 @@ jobs:
         check-latest: true
         node-version: 20
         cache: 'npm'
-    - run: npm install
+    - run: npm install --legacy-peer-deps
     - uses: dependency-check/Dependency-Check_Action@main
       with:
         project: ${{ github.repository }}
