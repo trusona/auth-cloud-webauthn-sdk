@@ -31,7 +31,7 @@ export class WebAuthnOptions {
   }
 
   private async requestOptions (userIdentifier?: string): Promise<AssertionTransaction> {
-    const url = `${Initializer.assertionOptionsEndpoint}?userIdentifier=${userIdentifier ?? ''}`
+    const url = `${Initializer.assertionOptionsEndpoint}?userIdentifier=${encodeURIComponent(userIdentifier ?? '')}`
     const response = await fetch(url, { credentials: 'include', headers: Initializer.headers })
     return response.ok ? await response.json() : await Promise.reject(new Error('Failed to get assertion options.'))
   }
