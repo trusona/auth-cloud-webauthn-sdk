@@ -138,7 +138,6 @@ export class WebAuthnAuthentication extends Base implements Authentication {
     const map = await response.json()
 
     localStorage.setItem(Initializer._chl, map?.login_challenge)
-    await this.recordEvent('BIOMETRIC_START')
 
     return await Promise.resolve(map?.login_challenge)
   }

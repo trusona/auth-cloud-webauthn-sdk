@@ -15,8 +15,8 @@ jobs:
       with:
         cache-dependency-path: package-lock.json
         check-latest: true
-        node-version: 16
+        node-version: 20
         cache: 'npm'
 
-    - run: npm install
+    - run: npm install --legacy-peer-deps
     - run: npm run jest
