@@ -19,7 +19,7 @@ async function enroll (event) {
 }
 
 async function authenticate (cui = false) {
-  const username = document.getElementById('username').value
+  const username = encodeURIComponent(document.getElementById('username').value)
   const authentication = new trusona.WebAuthnAuthentication()
   document.getElementById('credentials').replaceChildren([])
 
@@ -52,7 +52,7 @@ async function authenticate (cui = false) {
 async function jwtApi (username) {
   try {
     // *** DO NOT USE THIS JWT GENERATOR IN A PRODUCTION ENVIRONMENT ***
-    const response = await fetch(`https://jwks-delegate.lab.trusona.net/jwt?sub=${username}`)
+    const response = await fetch(`https://jwks-delegate.lab.trusona.net/jwt?sub=${encodeURIComponent(username)}`)
     const data = await response.json()
     return await Promise.resolve(data.jwt)
   } catch (e) {
